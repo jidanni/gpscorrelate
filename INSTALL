@@ -1,14 +1,43 @@
-Installation of GPSCorrelate.
+Installation of GPS Correlate
+=============================
+To build, you will need these prerequisites:
 
-- Make sure you have the appropriate development libraries.
-  You will need: libxml2, libgtk2.0, libexiv2.
-  To create the manpage you need: 
-  - xsltproc from http://xmlsoft.org/XSLT/
-  - manpages/docbook.xsl properly installed from http://docbook.sourceforge.net/projects/xsl/
-    or internet access (xsltproc will download it automatically if it is not installed)
-- Compile the program:
+* The Exiv2 library (C++ EXIF tag handling): http://www.exiv2.org/
+* libxml2 (XML parsing): http://www.xmlsoft.org/
+* pkgconfig: http://pkg-config.freedesktop.org/
+* make, such as GNU make: http://www.gnu.org/software/make/make.html
+* GTK+ (only if compiling the GUI): http://www.gtk.org
+* xsltproc (only for building the man page): http://xmlsoft.org/XSLT/
+  with manpages/docbook.xsl properly installed from
+  http://docbook.sourceforge.net/projects/xsl/ or Internet access (xsltproc
+  will download it automatically if it is not installed)
+
+You can build the command line version and the GUI together simply with:
   make
-- Install the program:
-  make install
+and install it with:
+  sudo make install
+Run the regression test suite with:
+  make check
 
-... and that should be it.
+If the compiler can't find the necessary libraries, then set the
+PKG_CONFIG_PATH environment variable to the location of the .pc files first.
+
+To build only the command-line tool without the GTK dependencies, do:
+  make gpscorrelate
+In both cases, pkg-config must be available to determine the compilation
+arguments for libxml2 and exiv2.
+
+gpscorrelate uses only standard features available in C99, POSIX and X/Open.
+Some C environments may not provide all the necessary features, and some
+environments may require compiling with the make command-line argument
+CFLAGS='-D_POSIX_C_SOURCE=200112L -D_XOPEN_SOURCE=600' to enable them.
+Alternately, you can compile gpscorrelate entirely with a C++ toolchain by
+compiling with make CC='$(CXX)'
+
+gpscorrelate comes translated into a number of languages, but support is not
+enabled by default as the gettext function is not universally available.
+To enable foreign language support, compile with
+"make CFLAGS=-DENABLE_NLS" (and LIBS=-lintl if required) and use the
+additional command "sudo make install-po" to install the message catalogs.
+Note that GNU make is required for this step.
+

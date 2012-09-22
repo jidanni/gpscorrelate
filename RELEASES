@@ -114,7 +114,8 @@ v1.6.1: 13 February 2010
 	- Added a patch to fix future build issues on Fedora.
 
 v1.6.2git: TBD
-	- Dan Fandrich took over maintenance of gpscorrelate
+	- Dan Fandrich took over maintenance of gpscorrelate. The new home page
+	  is TBD.
 	- Now writing GPSTimeStamp tag as unsigned rational, as per spec
 	- Now writing GPSDateStamp tag as ASCII, as per spec
 	- Added automatic time zone offset detection by default (the previous

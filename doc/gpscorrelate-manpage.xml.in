@@ -4,7 +4,7 @@
 
   <!ENTITY dhfirstname "<firstname>Stefano</firstname>">
   <!ENTITY dhsurname   "<surname>Zacchiroli</surname>">
-  <!ENTITY dhdate      "<date>11 Dec 2012</date>">
+  <!ENTITY dhdate      "<date>29 Dec 2012</date>">
   <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
   <!ENTITY dhemail     "<email>zack@debian.org</email>">
   <!ENTITY dhusername  "Stefano Zacchiroli">
@@ -101,11 +101,6 @@
       </group>
       
       <group>
-        <arg choice="plain">-f</arg>
-        <arg choice="plain">--fix-timestamps</arg>
-      </group>
-      
-      <group>
         <arg choice="plain">--degmins</arg>
       </group>
 
@@ -142,7 +137,24 @@
       </group>
       <arg rep="repeat" choice="plain"><replaceable>image.jpg</replaceable></arg>
     </cmdsynopsis>
-    
+
+    <cmdsynopsis>
+      <command>&dhpackage;</command>
+      <group choice="req">
+        <arg choice="plain">-f</arg>
+        <arg choice="plain">--fix-timestamps</arg>
+      </group>
+
+      <group choice="req">
+        <arg choice="plain">-z</arg>
+        <arg choice="plain">
+          --timeadd +/-<replaceable>HH</replaceable>[:<replaceable>MM</replaceable>]
+        </arg>
+      </group>
+
+      <arg rep="repeat" choice="plain"><replaceable>image.jpg</replaceable></arg>
+    </cmdsynopsis>
+
     <cmdsynopsis>
       <command>&dhpackage;</command>
       <group choice="plain">
@@ -160,17 +172,16 @@
   <refsect1>
     <title>DESCRIPTION</title>
 
-    <para>This manual page documents briefly the <command>&dhpackage;</command>
-      and <command>&dhpackage;-gui</command> commands.</para>
-
-    <para>There is an extended documentation available in HTML format; see below.</para>
+    <para>This manual page documents the <command>&dhpackage;</command>
+      and <command>&dhpackage;-gui</command> commands.
+    There is extended documentation available in HTML format; see below.</para>
 
     <para><command>&dhpackage;</command> is a program that acts on digital images
-      in JPEG format filling EXIF (Exchangeable Image File Format) fields
+      in JPEG format, filling in the EXIF (Exchangeable Image File Format) fields
       related to GPS (Global Positioning System) information.  Source for the
-      GPS data is a record of GPS information encoded in GPX (GPS Exchange
-      Format) Format. The act of filling those fields is referred to as
-      <emphasis>correlation</emphasis>.</para>
+      GPS data is a GPX (GPS Exchange Format) file, which records GPS location
+      information in an XML-based format. The act of filling those fields is
+      referred to as <emphasis>correlation</emphasis>.</para>
 
     <para> If GPS data are available at the precise moment the image was taken
       (with a 1-second granularity) the GPS data are stored unmodified in EXIF
@@ -179,7 +190,9 @@
 
     <para><command>&dhpackage;</command> is a command line tool implementing
       correlation whereas <command>&dhpackage;-gui</command> is the
-      corresponding GTK+ graphical user interface. </para>
+      corresponding GTK+ graphical user interface. The following options apply
+      to <command>&dhpackage;</command> only; <command>&dhpackage;-gui</command>
+      accepts only the standard GTK+ command-line options. </para>
 
   </refsect1>
   <refsect1>
@@ -197,12 +210,13 @@
           <replaceable>file.gpx</replaceable>
         </term>
         <listitem>
-	  <para>correlate using the specified GPX file with GPS data.
-            This option can be given many times to specify multiple GPX
-            files.  For each photo being correlated, the first file
-            containing a track covering the time the photo was taken
-            will be the one used.
-	  </para>
+          <para>Correlate images using the specified GPX file containing
+          GPS track points.  This option can be given many times to
+          specify multiple GPX files.  For each photo being correlated,
+          the first file containing a track covering the time the photo
+          was taken will be the one used. All
+          <userinput>&lt;trk&gt;</userinput> segments in each file are
+          used. </para>
         </listitem>
     </varlistentry>
 
@@ -212,7 +226,8 @@
           <option>--show</option>
         </term>
         <listitem>
-          <para>only show the GPS data of the given images</para>
+          <para>Only show the GPS data already in the given image's EXIF tags
+          instead of correlating them.</para>
         </listitem>
       </varlistentry>
 
@@ -222,8 +237,9 @@
           <option>--machine</option>
         </term>
         <listitem>
-          <para>only show the GPS data of the given images in a machine
-            readable output, if there is any</para>
+          <para>Only show the GPS data of the given images in a
+          machine-readable CSV format. Images without GPS tags are
+          ignored.</para>
         </listitem>
       </varlistentry>
 
@@ -233,7 +249,7 @@
           <option>--remove</option>
         </term>
         <listitem>
-          <para>only remove GPS EXIF data from the given images</para>
+          <para>Remove all GPS EXIF data from the given images.</para>
         </listitem>
       </varlistentry>
 
@@ -244,12 +260,12 @@
           <userinput>+/-</userinput><replaceable>MM</replaceable>[<userinput>:</userinput><replaceable>SS</replaceable>]
         </term>
         <listitem>
-          <para>time to add to GPS data to make it match the timestamps of the
+          <para>Time to add to GPS points to make them match the timestamps of the
             images. GPS timestamps are in UTC; image timestamps are generally
-            in local time.  Enter the timezone used when taking the images: e.g.
+            in local time.  Enter the timezone used when taking the images; e.g.
             <userinput>+8</userinput> for Perth.
             This defaults to the UTC offset of the local time zone as of the
-            time of the first image processed (versions up to 1.6.1 defaulted to
+            time of the first image processed (versions before 1.7 defaulted to
             00:00). </para>
         </listitem>
       </varlistentry>
@@ -261,10 +277,11 @@
           <replaceable>seconds</replaceable>
         </term>
         <listitem>
-          <para>time in seconds to add to the photo timestamp to make it match
-            the GPS timestamp.  To determine the amount of seconds needed, just
-            create a picture of your GPS device showing the current time and
-            compare it with the timestamp of your photo file. </para>
+          <para>Time in seconds to add to the photo timestamp to make it match
+            the GPS timestamp.  To determine the number of seconds needed, just
+            create a photograph of your GPS device showing the current time and
+            compare it with the timestamp of your photo file. The EXIF time
+	    tags in the image are not modified based on this value.</para>
         </listitem>
       </varlistentry>
 
@@ -274,8 +291,12 @@
           <option>--no-interpolation</option>
         </term>
         <listitem>
-          <para>disable interpolation between points.  Interpolation is linear,
-            points are rounded if disabled </para>
+          <para>Disable linear interpolation between points.
+          With this flag, the nearest exact point (within
+          <userinput>--max-dist</userinput>) is used. Without this flag,
+          photos taken between the time of two recorded GPS coordinates
+          are correlated based on linear interpolation between those two
+          points. </para>
         </listitem>
       </varlistentry>
 
@@ -285,7 +306,9 @@
           <option>--verbose</option>
         </term>
         <listitem>
-          <para>show which GPS data has been selected for each image</para>
+          <para>Show slightly more information during the image
+          correlation process, such as the GPS data selected for each
+          image.</para>
         </listitem>
       </varlistentry>
 
@@ -295,7 +318,9 @@
           <option>--datum</option> <replaceable>datum</replaceable>
         </term>
         <listitem>
-          <para>specify measurement datum. If not set, WGS-84 used</para>
+          <para>Specify GPS measurement datum. If not
+          set, <userinput>WGS-84</userinput> is used
+          (<userinput>TOKYO</userinput> is another possibility).</para>
         </listitem>
       </varlistentry>
 
@@ -305,8 +330,9 @@
           <option>--no-write</option>
         </term>
         <listitem>
-          <para>do not write the exif data. Useful with
-            <userinput>--verbose</userinput></para>
+          <para>Do not write the correlated EXIF data back into the
+          image. Useful with <userinput>--verbose</userinput> to see
+          what would happen during image correlation.</para>
         </listitem>
       </varlistentry>
 
@@ -316,8 +342,16 @@
           <option>--max-dist</option> <replaceable>time</replaceable>
         </term>
         <listitem>
-          <para>max time outside points that image will be matched. Time is in
-            seconds </para>
+          <para>Maximum time in seconds from the photo time which a
+          logged GPS point can refer and still be used for
+          correlation.  This defaults to 0, which means to disable this
+	  check. Only one of the two points need be within this range
+	  for correlation to take place.</para>
+          <para> If the accuracy of the location is paramount and you
+          would rather not correlate a position for a photo at all if
+          the nearest GPS coordinates were recorded too long ago in the
+          past or too far into the future (relative to when the photo
+          was taken), then set this to a nonzero value.</para>
         </listitem>
       </varlistentry>
 
@@ -327,7 +361,14 @@
           <option>--ignore-tracksegs</option>
         </term>
         <listitem>
-          <para>Interpolate between track segments, too</para>
+          <para>Interpolate between track segments, too.  Since
+          interpolation honours the <userinput>--max-dist</userinput>
+          flag, even track segments with wide time gaps can
+          safely be used if both flags are set.  Without this
+          flag, photos taken within the time gap between two
+          <userinput>&lt;trkseg&gt;</userinput> tracks in the GPX file
+          are not correlated.
+	  </para>
         </listitem>
       </varlistentry>
 
@@ -337,7 +378,8 @@
           <option>--no-mtime</option>
         </term>
         <listitem>
-          <para>Do not change mtime of modified files</para>
+          <para>Do not change the last modification time of changed
+          files.</para>
         </listitem>
       </varlistentry>
 
@@ -347,9 +389,12 @@
           <option>--fix-timestamps</option>
         </term>
         <listitem>
-	  <para>Fix broken GPS datestamps written with versions &lt; 1.5.2 by
-	  replacing them with the photo's time stamp. This option implies
-	  <userinput>--no-mtime</userinput></para>
+	  <para>Fix broken GPS datestamps written with <command>gpscorrelate</command>
+          versions &lt; 1.5.2 by replacing them with the photo's time stamp.
+          This option implies <userinput>--no-mtime</userinput>. The
+          <userinput>--timeadd</userinput> option must also be given when this
+          is used.
+  </para>
         </listitem>
       </varlistentry>
       
@@ -358,7 +403,10 @@
           <option>--degmins</option>
         </term>
         <listitem>
-          <para>Write location as DD MM.MM as was default before &lt; 1.5.3</para>
+          <para>Write location as DD MM.MM (instead of DD MM SS.SS) as
+          was the default in <command>gpscorrelate</command> versions
+	  &lt; 1.5.3. There is no good reason to use this option unless some
+	  broken program expects this style.</para>
         </listitem>
       </varlistentry>
 
@@ -368,7 +416,7 @@
           <option>--help</option>
         </term>
         <listitem>
-          <para>Only show summary of options</para>
+          <para>Only show a summary of options.</para>
         </listitem>
       </varlistentry>
 
@@ -378,7 +426,8 @@
           <option>--version</option>
         </term>
         <listitem>
-          <para>Only print the version</para>
+          <para>Only print the <command>gpscorrelate</command> version number
+	  and copyright information.</para>
         </listitem>
       </varlistentry>
     </variablelist>
@@ -415,11 +464,12 @@
     <title>LICENSE</title>
 
     <para>This manual page was initially written by &dhusername; &dhemail; for
-      the &debian; system.  It was extended by Till Maas
-      <email>opensource@till.name</email>. Permission is granted to copy,
-      distribute and/or modify this document under the terms of the &gnu;
-      General Public License, Version 2 any later version published by the Free
-      Software Foundation.  </para>
+    the &debian; system.  It was extended by Till Maas
+    <email>opensource@till.name</email> and Dan Fandrich
+    <email>dan@coneharvesters.com</email>. Permission is granted to
+    copy, distribute and/or modify this document under the terms of
+    the &gnu; General Public License, Version 2 or any later version
+    published by the Free Software Foundation. </para>
 
     <para> On Debian systems, the complete text of the GNU General Public
       License can be found in /usr/share/common-licenses/GPL.  </para>
