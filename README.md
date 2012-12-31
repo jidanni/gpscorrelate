@@ -38,7 +38,17 @@ To build, you will need:
 * GTK+ (if compiling the GUI): http://www.gtk.org
 
 You can build the command line version and the GUI together simply with
-"make" and install it with "sudo make install"
+"make" and install it with "sudo make install". Add "prefix=/usr" to the
+install command-line to install the package to /usr instead of /usr/local.
+
+## Internationalization
+
+gpscorrelate comes translated into a number of languages, but support is not
+enabled by default as the gettext function is not universally available.
+To enable foreign language support, compile with
+"make CFLAGS=-DENABLE_NLS" (and LDFLAGS=-lintl if required) and use the
+additional command "sudo make install-po" to install the message catalogs.
+Note that GNU make is required for this step.
 
 ## Release History
 

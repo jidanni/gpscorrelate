@@ -71,6 +71,15 @@ gpscorrelate.1: doc/gpscorrelate-manpage.xml
 gpscorrelate.html: doc/gpscorrelate-manpage.xml
 	xsltproc $(XSLTFLAGS) http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl $< > $@
 
+build-po:
+	(cd po && $(MAKE) VERSION="$(PACKAGE_VERSION)" prefix="$(prefix)" top_srcdir="$(PWD)")
+
+install-po: build-po
+	(cd po && $(MAKE) VERSION="$(PACKAGE_VERSION)" prefix="$(prefix)" top_srcdir="$(PWD)" install)
+
+clean-po:
+	(cd po && $(MAKE) VERSION="$(PACKAGE_VERSION)" prefix="$(prefix)" top_srcdir="$(PWD)" clean)
+
 dist:
 	mkdir gpscorrelate-$(PACKAGE_VERSION)
 	git archive --prefix=gpscorrelate-$(PACKAGE_VERSION)/ HEAD | tar xf -

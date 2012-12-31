@@ -1,0 +1,5 @@
+*.gmo
+*.mo
+gpscorrelate.pot
+remove-potcdate.sed
+stamp-po
