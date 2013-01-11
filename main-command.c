@@ -67,7 +67,8 @@ static const struct option program_options[] = {
 /* Function to print the version - near the top for easy modification. */
 static void PrintVersion(const char* ProgramName)
 {
-	printf(_("%s, ver. %s. Daniel Foote, et. al. 2005-2012. GNU GPL.\n"), ProgramName, PACKAGE_VERSION);
+	printf(_("%s, ver. %s. Daniel Foote, et. al. 2005-2013. GNU GPL\n"),
+	       ProgramName, PACKAGE_VERSION);
 }
 
 /* Function to print the usage info. */
@@ -89,7 +90,7 @@ static void PrintUsage(const char* ProgramName)
 	puts(  _("-f, --fix-datestamps     Fix broken GPS datestamps written with ver. < 1.5.2"));
 	puts(  _("    --degmins            Write location as DD MM.MM (was default before v1.5.3)"));
 	puts(  _("-O, --photooffset SECS   Offset added to photo time to make it match the GPS"));
-	puts(  _("-h, --help               Display usage/help message"));
+	puts(  _("-h, --help               Display this help message"));
 	puts(  _("-v, --verbose            Show more detailed output"));
 	puts(  _("-V, --version            Display version information"));
 }
@@ -136,7 +137,7 @@ static int ShowFileDetails(const char* File, int MachineReadable)
 			{
 				char *EscapedFile = CsvEscape(File);
 				if (!EscapedFile) {
-					printf(_("Out of memory\n"));
+					fprintf(stderr, _("Out of memory.\n"));
 					exit(EXIT_FAILURE);
 				}
 				printf("\"%s\",\"%s\",%f,%f,%.3f\n",
@@ -290,7 +291,7 @@ int main(int argc, char** argv)
 	Track = (struct GPSTrack*) calloc(1, sizeof(*Track));
 	if (!Track)
 	{
-		printf(_("Out of memory\n"));
+		fprintf(stderr, _("Out of memory.\n"));
 		exit(EXIT_FAILURE);
 	}
 
@@ -326,7 +327,7 @@ int main(int argc, char** argv)
 					Track = (struct GPSTrack*) realloc(Track, sizeof(*Track)*(NumTracks+1));
 					if (!Track)
 					{
-						printf(_("Out of memory\n"));
+						fprintf(stderr, _("Out of memory.\n"));
 						exit(EXIT_FAILURE);
 					}
 					memset(&Track[NumTracks], 0, sizeof(*Track));
@@ -388,6 +389,8 @@ int main(int argc, char** argv)
 			case 'V':
 				/* Display version information, and then quit. */
 				PrintVersion(argv[0]);
+				printf(_("This is free software; see the source for copying conditions.  There is NO\n"
+					 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"));
 				exit(EXIT_SUCCESS);
 				break;
 			case 'f':
@@ -420,8 +423,7 @@ int main(int argc, char** argv)
 				break;
 			case '?':
 				/* Unrecognised option. Or, missing argument. */
-				/* We should inform the user and let them correct this. */
-				printf(_("Next time, please pass a parameter with that!\n"));
+				/* The user has already been informed, so just exit. */
 				exit(EXIT_FAILURE);
 				break;
 			default:
@@ -438,7 +440,7 @@ int main(int argc, char** argv)
 		/* You passed some files. Handy! */
 	} else {
 		/* Hmm. It seems there were no other files... that doesn't work. */
-		printf(_("Nice try! However, next time, pass a few JPEG files to match!\n"));
+		fprintf(stderr, _("At least one image file name must be given.\n"));
 		exit(EXIT_FAILURE);
 	}
 
@@ -471,7 +473,7 @@ int main(int argc, char** argv)
 	{
 		if (!HaveTimeAdjustment)
 		{
-			printf(_("You must give a time adjustment for the photos with -z to fix photos.\n"));
+			fprintf(stderr, _("A time offset must be given with the -z option to fix photos.\n"));
 			exit(EXIT_FAILURE);
 		}
 		
@@ -495,7 +497,7 @@ int main(int argc, char** argv)
 		/* Tell the user we are bailing.
 		 * Not really required, seeing as ReadGPX should
 		 * inform the user anyway... but, doesn't hurt! */
-		printf(_("Cannot continue since no GPS data is available.\n"));
+		fprintf(stderr, _("Cannot continue since no GPS data is available.\n"));
 		exit(EXIT_FAILURE);
 	}
 
@@ -503,8 +505,8 @@ int main(int argc, char** argv)
 	 * If we're not being verbose. Otherwise, this would be pointless. */
 	if (!ShowDetails)
 	{
-		printf(_("Legend: . = Ok, / = Interpolated, < = Rounded, - = No match, ^ = Too far.\n"
-			 "        w = Write Fail, ? = No EXIF date, ! = GPS already present.\n"));
+		printf(_("Legend: . = Ok, / = Interpolated, < = Rounded, - = No match, ^ = Too far\n"
+			 "        w = Write Fail, ? = No EXIF date, ! = GPS already present\n"));
 	}
 
 	/* Set up our options structure for the correlation function. */

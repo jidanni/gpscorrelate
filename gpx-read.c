@@ -245,7 +245,7 @@ int ReadGPX(const char* File, struct GPSTrack* Track)
 
 	if (GPXRoot == NULL)
 	{
-		fprintf(stderr, _("GPX file has no root. Not healthy.\n"));
+		fprintf(stderr, _("Invalid GPX file has no root.\n"));
 		xmlFreeDoc(GPXData);
 		xmlCleanupParser();
 		return 0;

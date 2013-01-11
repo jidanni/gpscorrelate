@@ -305,7 +305,7 @@ GtkWidget* CreateMatchWindow (void)
   gtk_widget_show (GPSDataVBox);
   gtk_container_add (GTK_CONTAINER (GPSDataAlignment), GPSDataVBox);
 
-  GPSSelectedLabel = gtk_label_new (_("Reading from: No file"));  /* FIX ME: Label not appropriately sized/placed for data. */
+  GPSSelectedLabel = gtk_label_new (_("Read from: No file"));  /* FIX ME: Label not appropriately sized/placed for data. */
   gtk_widget_show (GPSSelectedLabel);
   gtk_box_pack_start (GTK_BOX (GPSDataVBox), GPSSelectedLabel, FALSE, FALSE, 0);
   gtk_label_set_ellipsize(GTK_LABEL(GPSSelectedLabel), PANGO_ELLIPSIZE_END); 
@@ -316,8 +316,8 @@ GtkWidget* CreateMatchWindow (void)
   gtk_widget_show (SelectGPSButton);
   gtk_box_pack_start (GTK_BOX (GPSDataVBox), SelectGPSButton, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, SelectGPSButton,
-	_("Choose GPX file to read GPS data from. If the GPS data is not in the "
-	  "GPX format, use a converter like GPSBabel to convert it to GPX."), NULL);
+	_("Choose GPX file from which to read GPS data. If the GPS data is not in the "
+	  "GPX format, use a converter like GPSBabel to convert it to GPX first."), NULL);
   g_signal_connect (G_OBJECT (SelectGPSButton), "clicked",
   		G_CALLBACK (SelectGPSButtonPress), NULL);
 
@@ -351,7 +351,9 @@ GtkWidget* CreateMatchWindow (void)
   NoWriteCheck = gtk_check_button_new_with_mnemonic (_("Don't write"));
   gtk_widget_show (NoWriteCheck);
   gtk_box_pack_start (GTK_BOX (OptionsVBox), NoWriteCheck, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, NoWriteCheck, _("Don't write EXIF data back to the photos."), NULL);
+  gtk_tooltips_set_tip (tooltips, NoWriteCheck,
+	_("Don't write EXIF data back to the photos. This is useful for "
+	  "testing the settings without modifying the photos."), NULL);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (NoWriteCheck), g_key_file_get_boolean(GUISettings, "default", "dontwrite", NULL));
 
   NoMtimeCheck = gtk_check_button_new_with_mnemonic (_("Don't change mtime"));
@@ -366,7 +368,7 @@ GtkWidget* CreateMatchWindow (void)
   gtk_box_pack_start (GTK_BOX (OptionsVBox), BetweenSegmentsCheck, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, BetweenSegmentsCheck,
 	_("Interpolate between track segments. Generally the data is segmented "
-	  "to show where data was available and not available, but you might "
+	  "to show where location data was available and not available, but you might "
 	  "still want to interpolate between segments."), NULL);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (BetweenSegmentsCheck), g_key_file_get_boolean(GUISettings, "default", "betweensegments", NULL));
 
@@ -417,9 +419,10 @@ GtkWidget* CreateMatchWindow (void)
                     (GtkAttachOptions) (0),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_tooltips_set_tip (tooltips, GapTimeEntry,
-	_("Maximum time \"away\" from a point that the photo will be matched, "
-	  "in seconds. If a photos time is outside this value from any point, "
-	  "it will not be matched."), NULL);
+        _("Maximum time \"away\" from a point that the photo can be taken "
+          "yet still match, in seconds. If a photo's time is outside "
+          "this value (from both points on either side), the location will "
+	  "not match."), NULL);
   gtk_entry_set_text (GTK_ENTRY (GapTimeEntry), g_key_file_get_value(GUISettings, "default", "maxgap", NULL));
   gtk_entry_set_width_chars (GTK_ENTRY (GapTimeEntry), 7);
 
@@ -429,9 +432,9 @@ GtkWidget* CreateMatchWindow (void)
                     (GtkAttachOptions) (0),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_tooltips_set_tip (tooltips, TimeZoneEntry,
-	_("The timezone that the cameras time was set to when the photos were "
-	  "taken. For example, if a camera is set to AWST or +8:00 hours. "
-	  "Enter +8:00 here so that the correct adjustment to the photos time "
+	_("The timezone that the camera's time was set to when the photos were "
+	  "taken. For example, if a camera is set to AWST or +8:00 hours from UTC, "
+	  "enter +8:00 here so that the correct adjustment to the photo's time "
 	  "can be made. GPS data is always in UTC."), NULL);
   gtk_entry_set_text (GTK_ENTRY (TimeZoneEntry), g_key_file_get_value(GUISettings, "default", "timezone", NULL));
   gtk_entry_set_width_chars (GTK_ENTRY (TimeZoneEntry), 7);
@@ -935,16 +938,16 @@ void SetListItem(GtkTreeIter* Iter, const char* Filename, const char* Time, doub
 			/* Lat can't be greater than 90 degrees. */
 			if (Lat < 200)
 			{
-				snprintf(LatScratch, sizeof(LatScratch), "%f (%c)",
-					Lat, (Lat < 0) ? 'S' : 'N');
+				snprintf(LatScratch, sizeof(LatScratch), "%f (%s)",
+					Lat, (Lat < 0) ? _("S") : _("N"));
 			} else {
 				snprintf(LatScratch, sizeof(LatScratch), " ");
 			}
 			/* Long can't be greater than 180 degrees. */
 			if (Long < 200)
 			{
-				snprintf(LongScratch, sizeof(LongScratch), "%f (%c)",
-					Long, (Long < 0) ? 'W' : 'E');
+				snprintf(LongScratch, sizeof(LongScratch), "%f (%s)",
+					Long, (Long < 0) ? _("W") : _("E"));
 			} else {
 				snprintf(LongScratch, sizeof(LongScratch), " ");
 			}
@@ -1103,14 +1106,14 @@ void SelectGPSButtonPress( GtkWidget *Widget, gpointer Data )
 		} else {
 			/* Not good. Say so. */
 			/* Set the label... */
-			snprintf(Scratch, ScratchLength, _("Reading from: No file"));
+			snprintf(Scratch, ScratchLength, _("Read from: No file"));
 			gtk_label_set_text(GTK_LABEL(GPSSelectedLabel), Scratch);
 			/* Show an error dialog. */
 			ErrorDialog = gtk_message_dialog_new (GTK_WINDOW(MatchWindow),
 					GTK_DIALOG_DESTROY_WITH_PARENT,
 					GTK_MESSAGE_ERROR,
 					GTK_BUTTONS_CLOSE,
-					_("Unable to read file %s for some reason. Please try again"),
+					_("Unable to read file %s for some reason. Please try again."),
 					FirstOrBadFileName);
 			gtk_dialog_run (GTK_DIALOG (ErrorDialog));
 			gtk_widget_destroy (ErrorDialog);
@@ -1150,7 +1153,7 @@ void CorrelateButtonPress( GtkWidget *Widget, gpointer Data )
 				GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_MESSAGE_ERROR,
 				GTK_BUTTONS_CLOSE,
-				_("No photos selected to match! Please add photos with first!"));
+				_("No photos selected to match! Please use Add to add photos first!"));
 		gtk_dialog_run (GTK_DIALOG (ErrorDialog));
 		gtk_widget_destroy (ErrorDialog);
 		return;
@@ -1163,7 +1166,7 @@ void CorrelateButtonPress( GtkWidget *Widget, gpointer Data )
 				GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_MESSAGE_ERROR,
 				GTK_BUTTONS_CLOSE,
-				_("No GPS data loaded! Please select a file to read GPS data from."));
+				_("No GPS data loaded! Please select a GPX file to read GPS data from."));
 		gtk_dialog_run (GTK_DIALOG (ErrorDialog));
 		gtk_widget_destroy (ErrorDialog);
 		return;
