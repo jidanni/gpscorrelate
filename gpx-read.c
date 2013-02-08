@@ -236,6 +236,7 @@ int ReadGPX(const char* File, struct GPSTrack* Track)
 	if (GPXData == NULL)
 	{
 		fprintf(stderr, _("Failed to parse GPX data from %s.\n"), File);
+		xmlCleanupParser();
 		return 0;
 	}
 
