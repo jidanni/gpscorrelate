@@ -1,0 +1,9 @@
+TITLE='Correlate a file with automatic time zone detection, DST'
+PRECOMMAND='cat "$STAGINGDIR/point2-1.jpg" >"$LOGDIR/test.jpg"'
+# This time zone is equivalent to America/Vancouver (at least, in 2012)
+# but should be more portable than using the symbolic name.
+# Run in C locale to avoid errors when comparing numbers in output
+COMMAND='env LC_ALL=C TZ="PST8PDT,M3.2.0,M11.1.0" $PROGRAM -v -g "$STAGINGDIR/track4.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=0
+SEDCOMMAND='s@^/.*/|.*GPL@@' # strip path and copyright line

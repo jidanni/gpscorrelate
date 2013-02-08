@@ -1,0 +1,5 @@
+TITLE='Read an invalid GPX file (XML)'
+PRECOMMAND='cat "$STAGINGDIR/point1-1.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM -g "$STAGINGDIR/dummy.xhtml" "$LOGDIR/test.jpg" 2> "$OUTFILE" > /dev/null'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=1

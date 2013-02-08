@@ -1,0 +1,21 @@
+Daniel GPL
+Reading GPS Data...
+
+Correlate: 
+test-baddate.jpg: GPS Data already present.
+test-noexif.jpg: No EXIF date tag present.
+test-notime.jpg: No EXIF date tag present.
+test-point1-1.jpg: Interpolated: Lat 31.458741, Long 35.399847, Elev -422.244.
+test-point1-2.jpg: EXIF write failure: Lat 31.458805, Long 35.399771, Elev -419.713.
+test-point2-1.jpg: No match.
+test-point2-2.jpg: No match.
+test-point7-1.jpg: No match.
+test-point3-1.jpg: No match.
+test-point4-1.jpg: No match.
+test-withgps.jpg: GPS Data already present.
+
+Completed correlation process.
+Used time zone offset 0:00
+Matched:     1 (0 Exact, 1 Interpolated, 0 Rounded).
+Failed:     10 (5 Not matched, 1 Write failure, 0 Too Far,
+                2 No Date, 2 GPS Already Present.)

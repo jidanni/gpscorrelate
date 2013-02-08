@@ -1,0 +1,4 @@
+TITLE='Show GPS data on non-JPEG file'
+COMMAND='$PROGRAM -s "$STAGINGDIR/dummy.xhtml" > "$OUTFILE" 2>&1'
+RESULTCODE=1
+SEDCOMMAND='s@^.*/@@' # strip path

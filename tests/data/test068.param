@@ -1,0 +1,5 @@
+TITLE='Correlate a file on Feb 29 on a leap year'
+PRECOMMAND='cat "$STAGINGDIR/point6-1.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM -z +1 -g "$STAGINGDIR/track8.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=0

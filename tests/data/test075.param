@@ -1,0 +1,4 @@
+TITLE='Test -V option'
+COMMAND='$PROGRAM -V > "$OUTFILE" 2>&1'
+RESULTCODE=0
+SEDCOMMAND='s@^(.*/)?(gpscorrelate, ver. ).*(\. Dan).*(2005-20).*(GPL).*$@\2X\3 \4XX \5@' # ignore nonconstant parts of version string

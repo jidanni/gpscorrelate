@@ -47,6 +47,9 @@ gpscorrelate-gui: $(GOBJS)
 # Hack to recompile everything if a header changes
 *.o: *.h
 
+check: gpscorrelate
+	(cd tests && ./testsuite)
+
 clean:
 	rm -f *.o gpscorrelate{,.exe} gpscorrelate-gui{,.exe} doc/gpscorrelate-manpage.xml gpscorrelate.html $(TARGETS)
 

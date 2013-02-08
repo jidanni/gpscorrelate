@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx
+  version="1.0"
+  creator="GPSBabel - http://www.gpsbabel.org"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/0"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+<time>2012-11-22T13:00:00Z</time>
+<bounds minlat="47.421180000" minlon="10.985200000" maxlat="47.421240000" maxlon="10.985900000"/>
+<trk>
+  <name>12345</name>
+<trkseg>
+<trkpt lat="47.421180000" lon="10.985900000">
+  <ele>2930.000000</ele>
+  <time>2012-11-22T12:34:00Z</time>
+</trkpt>
+<trkpt lat="47.421240000" lon="10.985200000">
+  <ele>2962.000000</ele>
+  <time>2012-11-22T12:35:00Z</time>
+</trkpt>
+</trkseg>
+</trk>
+</gpx>

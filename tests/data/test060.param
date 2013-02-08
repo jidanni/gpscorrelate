@@ -1,0 +1,18 @@
+TITLE='Test that --no-mtime is implied by --fix-datestamps'
+# This is a strange way to test this, but I haven't found a better means that's
+# both simple && highly portable. This method just compares the relative mtime
+# of the file under test and a just-created file with ls -t and ensures that
+# the file under test is older than the other.
+#
+# This makes several assumptions:
+# 1) the filesystem and ls command operate at one second resolution
+# 2) when two files have the same mtime, ls -t will output them in
+#    lexicographic order
+# The failure of either assumption is designed to cause a false negative
+# result, so they should not disrupt operation of the test suite.
+PRECOMMAND='cat "$STAGINGDIR/baddate.jpg" >"$LOGDIR/test.jpg" && touch -t 201001020304.05 "$LOGDIR/test.jpg" && touch "$LOGDIR/ztest.jpg"'
+# Run in C locale to avoid errors when comparing days of week in output
+COMMAND='env LC_ALL=C $PROGRAM --fix-datestamps -z -7 "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && ls -t "$LOGDIR/ztest.jpg" "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg" "$LOGDIR/ztest.jpg"'
+RESULTCODE=0
+SEDCOMMAND='s@/[^ ].*/@@' # strip paths

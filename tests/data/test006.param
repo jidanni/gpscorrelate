@@ -1,0 +1,6 @@
+TITLE='Remove GPS tags from file without EXIF tags'
+PRECOMMAND='cat "$STAGINGDIR/noexif.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM -r "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=1
+SEDCOMMAND='s@^.*/@@' # strip path

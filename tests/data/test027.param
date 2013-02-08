@@ -1,0 +1,5 @@
+TITLE='Read a GPX file with no segments'
+PRECOMMAND='cat "$STAGINGDIR/point1-1.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM -g "$STAGINGDIR/nosegments.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=2

@@ -1,0 +1,12 @@
+Reading GPS Data...
+Legend: . = Ok, / = Interpolated, < = Rounded, - = No match, ^ = Too far
+        w = Write Fail, ? = No EXIF date, ! = GPS already present
+
+Correlate: .
+
+Completed correlation process.
+Matched:     1 (1 Exact, 0 Interpolated, 0 Rounded).
+Failed:      0 (0 Not matched, 0 Write failure, 0 Too Far,
+                0 No Date, 0 GPS Already Present.)
+ztest.jpg
+test.jpg

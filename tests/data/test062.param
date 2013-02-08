@@ -1,0 +1,5 @@
+TITLE='Correlate a file in the southern hemisphere'
+PRECOMMAND='cat "$STAGINGDIR/point5-1.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM -z -14:00 -g "$STAGINGDIR/track7.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=0

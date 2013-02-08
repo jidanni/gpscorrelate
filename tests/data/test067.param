@@ -1,0 +1,5 @@
+TITLE='Correlate a file with several GPX files, including a corrupt one'
+PRECOMMAND='cat "$STAGINGDIR/point1-1.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM -z 0 -g "$STAGINGDIR/track4.gpx" -g "$STAGINGDIR/dummy.xhtml" -g "$STAGINGDIR/track1.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=1

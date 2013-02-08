@@ -1,0 +1,5 @@
+TITLE='Correlate a file without a proper date tag'
+PRECOMMAND='cat "$STAGINGDIR/notime.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM -g "$STAGINGDIR/track1.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=2

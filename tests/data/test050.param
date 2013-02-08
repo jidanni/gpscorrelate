@@ -1,0 +1,3 @@
+TITLE='Correlate missing image file'
+COMMAND='$PROGRAM -g "$STAGINGDIR/track1.gpx" > "$OUTFILE" 2>&1'
+RESULTCODE=1

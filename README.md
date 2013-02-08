@@ -40,6 +40,7 @@ To build, you will need:
 You can build the command line version and the GUI together simply with
 "make" and install it with "sudo make install". Add "prefix=/usr" to the
 install command-line to install the package to /usr instead of /usr/local.
+Run the regression test suite with "make check".
 
 ## Internationalization
 

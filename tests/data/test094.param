@@ -1,0 +1,5 @@
+TITLE='Correlate a file at extremely high altitude'
+PRECOMMAND='cat "$STAGINGDIR/point4-1.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM -z -6 -g "$STAGINGDIR/track12.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=0

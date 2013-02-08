@@ -1,0 +1,5 @@
+TITLE='Correlate a file with GPX containing multiple tracks, point in second track'
+PRECOMMAND='cat "$STAGINGDIR/point1-2.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM -z -7 -g "$STAGINGDIR/track10.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=0

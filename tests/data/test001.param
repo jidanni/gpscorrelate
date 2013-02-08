@@ -1,0 +1,4 @@
+TITLE='Show GPS data on file without GPS tags'
+COMMAND='$PROGRAM -s "$STAGINGDIR/point1-1.jpg" > "$OUTFILE" 2>&1'
+RESULTCODE=0
+SEDCOMMAND='s@^.*/@@' # strip path

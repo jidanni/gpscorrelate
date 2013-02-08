@@ -1,0 +1,6 @@
+TITLE='Use --fix-datestamps with missing --timeadd'
+PRECOMMAND='cat "$STAGINGDIR/point1-1.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM --fix-datestamps "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=1
+SEDCOMMAND='s@^/.*/@@' # strip path

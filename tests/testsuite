@@ -1,0 +1,164 @@
+#!/bin/sh
+# Simple regression test suite for gpscorrelate
+# Based on the test suite for gphoto2
+# Dan Fandrich <dan@coneharvesters.com>
+
+# We expect English text throughout the tests...
+LANG=C
+export LANG
+LANGUAGE=C
+export LANGUAGE
+
+if [ "$1" = "-h" ] ; then
+	echo "Usage: $0 [-v] [-m]"
+	exit
+fi
+
+VERBOSECOMMAND=
+if [ "$1" = "-v" ] ; then
+	shift
+	VERBOSECOMMAND='set -x ;'
+fi
+
+USEVALGRIND=
+if [ "$1" = "-m" ] ; then
+	shift
+	USEVALGRIND=true
+fi
+
+test -z "$srcdir" && srcdir=`pwd`
+
+DATADIR="$srcdir/data"
+if [ ! -e "$DATADIR" ] ; then
+	echo Must run tests from the tests directory
+	exit 1
+fi
+
+STAGINGDIR="$srcdir/staging"
+# Make all files in the staging area read only to prevent
+# accidental modification
+chmod -w "$STAGINGDIR"/*
+
+LOGDIR="`pwd`/log"
+if [ -e "$LOGDIR" ] ; then
+	rm -f "$LOGDIR/"*
+else
+	mkdir "$LOGDIR"
+fi
+
+
+if [ -n "$1" ] ; then
+	TESTLIST="$@"
+else
+	TESTLIST="$DATADIR"/*.param
+fi
+
+POSTCOMMAND=
+# Clean up on test abort
+trap 'eval $POSTCOMMAND; exit 1' SIGINT SIGHUP SIGTERM
+
+FAILEDTESTS=0
+
+for TEST in $TESTLIST ; do
+  echo ''
+
+  # These variables are unlikely to be needed in the test parameters file
+  TESTNAME=`echo $TEST | sed -e 's@^.*data/@@' -e 's/\..*$//'`
+  RESULTFILE="$DATADIR/$TESTNAME.result"
+
+  # Initialize variables that can be used within the test parameters file
+  PROGRAM='../gpscorrelate'
+  if [ -n "$USEVALGRIND" ] ; then
+	  PROGRAM="valgrind --error-exitcode=126 --tool=memcheck --leak-check=yes --num-callers=30 --log-file=$LOGDIR/$TESTNAME-valgrind.log $PROGRAM"
+  fi
+  OUTFILE="$LOGDIR/$TESTNAME.out"
+  ERRFILE="$LOGDIR/$TESTNAME.err"
+
+  # Initialize variables that must be set for each test
+  TITLE=
+  COMMAND=
+  PRECOMMAND=
+  POSTCOMMAND=
+  SEDCOMMAND=
+  RESULTCODE=0
+  SKIP=
+
+  # Load the test parameters, which can override the above
+  if [ ! -e "$TEST" ] ; then
+	echo "Test $TESTNAME FAILED: invalid test parameter file $TEST"
+	FAILEDTESTS=$(($FAILEDTESTS + 1))
+	continue
+  fi
+  . "$TEST"
+
+  if [ -n "$SKIP" ] ; then
+	echo '***' Skipping \"$TITLE\" test
+	continue
+  fi
+  echo '***' Running \"$TITLE\" test
+
+  # Run a pre-test command
+  if ! eval $PRECOMMAND ; then
+	echo Test $TESTNAME FAILED: pre test command failure
+	FAILEDTESTS=$(($FAILEDTESTS + 1))
+	# Unconditionally run post command to clean up
+	eval $POSTCOMMAND
+	POSTCOMMAND=
+	continue
+  fi
+
+  #eval echo `echo "$COMMAND" | sed -e 's/>/\\\\>/g' -e "s/'/\\\\'/g" -e 's/\"/\\\\"/g'`
+  eval $VERBOSECOMMAND $COMMAND
+  EXITCODE=$?
+  set +x
+  if [ $EXITCODE -ne "$RESULTCODE" ] ; then
+	echo "Test $TESTNAME FAILED: got exit $EXITCODE, expected $RESULTCODE"
+	# Don't abort now--run the post-test command to clean up first
+	FAILEDTESTS=$(($FAILEDTESTS + 1))
+	test -n "$VERBOSECOMMAND" && test -e "$ERRFILE" && cat "$ERRFILE"
+  fi
+
+  # Run a post-test command
+  if ! eval $POSTCOMMAND ; then
+	POSTCOMMAND=
+	echo Test $TESTNAME FAILED: post test command failure
+	FAILEDTESTS=$(($FAILEDTESTS + 1))
+	continue
+  fi
+  POSTCOMMAND=
+
+  if  [ $EXITCODE -ne "$RESULTCODE" ] ; then
+	# Delayed exit
+	continue
+  fi
+
+  if [ -n "$SEDCOMMAND" ] ; then
+	mv -f "$OUTFILE" "$OUTFILE".orig
+	# Need sed to parse extended regular expressions
+	sed -E "$SEDCOMMAND" < "$OUTFILE.orig" > "$OUTFILE"
+  fi
+
+  # Older versions of exiv2 (e.g. 0.15) have slightly different whitespace and
+  # handle the GPS IFD tag differently. This alternate comparison program can
+  # be used in place of "cmp" to relax the comparison and use such a version:
+  #  ! diff -I GPSTag -qw
+  if ! cmp "$RESULTFILE" "$OUTFILE" >/dev/null ; then
+	echo Test $TESTNAME FAILED: unexpected output
+	test -n "$VERBOSECOMMAND" && diff -u "$RESULTFILE" "$OUTFILE"
+	FAILEDTESTS=$(($FAILEDTESTS + 1))
+	continue
+  fi
+
+  echo Test $TESTNAME PASSED
+done
+
+echo ''
+if [ $FAILEDTESTS -eq 0 ] ; then
+  echo All tests have PASSED
+else
+  echo "$FAILEDTESTS test(s) have FAILED"
+  test -z "$VERBOSECOMMAND" && echo "Run with -v to see details"
+fi
+
+# Set the exit code
+test "$FAILEDTESTS" -eq 0

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="EasyGPS 4.45" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.topografix.com/GPX/gpx_overlay/0/3 http://www.topografix.com/GPX/gpx_overlay/0/3/gpx_overlay.xsd http://www.topografix.com/GPX/gpx_modified/0/1 http://www.topografix.com/GPX/gpx_modified/0/1/gpx_modified.xsd">
+<metadata>
+<bounds minlat="40.80833327" minlon="-119.14999998" maxlat="42.98216343" maxlon="-95.14357568"/>
+<extensions>
+<time xmlns="http://www.topografix.com/GPX/gpx_modified/0/1">2012-11-22T19:55:45.640Z</time>
+</extensions>
+</metadata>
+<wpt lat="40.80833327" lon="-119.14999998">
+<ele>405.559</ele>
+<time>2012-11-22T19:55:46.187Z</time>
+<name>BALLS</name>
+<sym>Waypoint</sym>
+<type>Summit</type>
+<extensions>
+<label xmlns="http://www.topografix.com/GPX/gpx_overlay/0/3">
+<label_text>BALLS</label_text>
+</label>
+</extensions>
+</wpt>
+<wpt lat="42.97990040" lon="-95.69358082">
+<ele>406.520</ele>
+<time>2012-11-22T19:55:46.187Z</time>
+<name>H0ME</name>
+<sym>Waypoint</sym>
+<type>Summit</type>
+<extensions>
+<label xmlns="http://www.topografix.com/GPX/gpx_overlay/0/3">
+<label_text>H0ME</label_text>
+</label>
+</extensions>
+</wpt>
+<trk>
+<name>ACTIVE LOG-POST-FIRST STAGE IGNITION</name>
+<type>GPS Tracklog</type>
+<extensions>
+<label xmlns="http://www.topografix.com/GPX/gpx_overlay/0/3">
+<label_text>ACTIVE LOG</label_text>
+</label>
+</extensions>
+<trkseg>
+<trkpt lat="42.97960814" lon="-95.69331456">
+<ele>847.113</ele>
+<time>2012-11-22T16:01:35Z</time>
+</trkpt>
+<trkpt lat="42.97980309" lon="-95.69349290">
+<ele>15398.814</ele>
+<time>2012-11-22T18:34:35Z</time>
+</trkpt>
+<trkpt lat="42.97986746" lon="-95.69355727">
+<ele>15552.736</ele>
+<time>2012-11-22T18:34:56Z</time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<name>ACTIVE LOG-POST-SECOND STAGE IGNITION</name>
+<type>GPS Tracklog</type>
+<extensions>
+<label xmlns="http://www.topografix.com/GPX/gpx_overlay/0/3">
+<label_text>ACTIVE LOG</label_text>
+</label>
+</extensions>
+<trkseg>
+<trkpt lat="42.41664648" lon="-95.15494824">
+<ele>999996.971</ele>
+<time>2012-11-22T19:34:00Z</time>
+</trkpt>
+<trkpt lat="42.41653920" lon="-95.15458346">
+<ele>1000000.000</ele>
+<time>2012-11-22T19:35:30Z</time>
+</trkpt>
+<trkpt lat="42.41598130" lon="-95.15321017">
+<ele>1005630.213</ele>
+<time>2012-11-22T19:35:53Z</time>
+</trkpt>
+<trkpt lat="42.41555214" lon="-95.15185834">
+<ele>1005654.727</ele>
+<time>2012-11-22T19:35:01Z</time>
+</trkpt>
+<trkpt lat="42.41501570" lon="-95.15050651">
+<ele>1005677.797</ele>
+<time>2012-11-22T19:35:09Z</time>
+</trkpt>
+<trkpt lat="42.41443634" lon="-95.14926196">
+<ele>1055701.830</ele>
+<time>2012-11-22T19:35:17Z</time>
+</trkpt>
+<trkpt lat="42.41396428" lon="-95.14825345">
+<ele>1095724.424</ele>
+<time>2012-11-22T19:35:24Z</time>
+</trkpt>
+<trkpt lat="42.41334200" lon="-95.14709474">
+<ele>11515752.301</ele>
+<time>2012-11-22T19:35:33Z</time>
+</trkpt>
+<trkpt lat="42.41280556" lon="-95.14587165">
+<ele>11915780.658</ele>
+<time>2012-11-22T19:35:42Z</time>
+</trkpt>
+<trkpt lat="42.41216183" lon="-95.14473439">
+<ele>1305809.979</ele>
+<time>2012-11-22T19:35:52Z</time>
+</trkpt>
+<trkpt lat="42.41166830" lon="-95.14387608">
+<ele>1455832.570</ele>
+<time>2012-11-22T19:36:00Z</time>
+</trkpt>
+<trkpt lat="42.41149664" lon="-95.14357568">
+<ele>1555842.182</ele>
+<time>2012-11-22T19:36:03Z</time>
+</trkpt>
+</trkseg>
+</trk>
+<extensions>
+</extensions>
+</gpx>

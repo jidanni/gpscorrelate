@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpsies="http://www.gpsies.com/GPX/1/0" creator="GPSies http://www.gpsies.com - WalserrundKarfreitag" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.gpsies.com/GPX/1/0 http://www.gpsies.com/gpsies.xsd">
+  <metadata>
+    <name>Leap Year</name>
+    <link href="http://www.gpsies.com/map.do?fileId=xyzzyxyzzyxyzzyx">
+      <text>Leap Year on GPSies.com</text>
+    </link>
+    <time>2012-02-29T09:09:13Z</time>
+    <extensions>
+      <gpsies:property>round trip</gpsies:property>
+      <gpsies:trackLengthMeter>13.0647521613</gpsies:trackLengthMeter>
+      <gpsies:totalAscentMeter>5.72705</gpsies:totalAscentMeter>
+      <gpsies:totalDescentMeter>1.975585</gpsies:totalDescentMeter>
+      <gpsies:minHeightMeter>1062.874731</gpsies:minHeightMeter>
+      <gpsies:maxHeightMeter>1067.200667</gpsies:maxHeightMeter>
+    </extensions>
+  </metadata>
+  <trk>
+    <name>Leap Year on GPSies.com</name>
+    <link href="http://www.gpsies.com/map.do?fileId=xyzzyxyzzyxyzzyx" />
+    <trkseg>
+      <trkpt lat="47.35509700" lon="10.18241110">
+        <ele>1062.8747</ele>
+        <time>2012-02-29T09:09:13Z</time>
+      </trkpt>
+      <trkpt lat="47.35506400" lon="10.18241400">
+        <ele>1062.8747</ele>
+        <time>2012-02-29T09:09:14Z</time>
+      </trkpt>
+      <trkpt lat="47.35499350" lon="10.18268340">
+        <ele>1064.3166</ele>
+        <time>2012-02-29T09:09:19Z</time>
+      </trkpt>
+      <trkpt lat="47.35468790" lon="10.18271520">
+        <ele>1067.2006</ele>
+        <time>2012-02-29T09:09:27Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
+

@@ -1,0 +1,29 @@
+test.jpg: Wrong timestamp:
+   Photo:     Thu Nov 22 06:35:00 2012 UTC
+   GPS:       Sat Dec 22 05:35:00 2012 UTC
+   Corrected: Thu Nov 22 06:35:00 2012 UTC
+0x011a Image        XResolution                 Rational    1  72/1
+0x011b Image        YResolution                 Rational    1  72/1
+0x0128 Image        ResolutionUnit              Short       1  2
+0x0132 Image        DateTime                    Ascii      20  2012:11:21 23:35:00
+0x0213 Image        YCbCrPositioning            Short       1  1
+0x8769 Image        ExifTag                     Long        1  134
+0x9000 Photo        ExifVersion                 Undefined   4  48 50 49 48
+0x9003 Photo        DateTimeOriginal            Ascii      20  2012:11:21 23:35:00
+0x9004 Photo        DateTimeDigitized           Ascii      20  2012:11:21 23:35:00
+0x9101 Photo        ComponentsConfiguration     Undefined   4  1 2 3 0
+0xa000 Photo        FlashpixVersion             Undefined   4  48 49 48 48
+0xa001 Photo        ColorSpace                  Short       1  65535
+0xa002 Photo        PixelXDimension             Long        1  64
+0xa003 Photo        PixelYDimension             Long        1  64
+0x8825 Image        GPSTag                      Long        1  276
+0x0000 GPSInfo      GPSVersionID                Byte        4  2 0 0 0
+0x0001 GPSInfo      GPSLatitudeRef              Ascii       2  N
+0x0002 GPSInfo      GPSLatitude                 SRational   3  37/1 2522/100 0/1
+0x0003 GPSInfo      GPSLongitudeRef             Ascii       2  W
+0x0004 GPSInfo      GPSLongitude                SRational   3  122/1 504/100 0/1
+0x0005 GPSInfo      GPSAltitudeRef              Byte        1  0
+0x0006 GPSInfo      GPSAltitude                 SRational   1  10/1
+0x0007 GPSInfo      GPSTimeStamp                SRational   3  5/1 35/1 0/1
+0x0012 GPSInfo      GPSMapDatum                 Ascii       7  WGS-84
+0x001d GPSInfo      GPSDateStamp                SRational   3  2012/1 12/1 22/1

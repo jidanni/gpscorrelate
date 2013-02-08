@@ -1,0 +1,6 @@
+TITLE='Show machine-readable GPS data on file with double quote in name'
+PRECOMMAND='cat "$STAGINGDIR/withgps.jpg" >"$LOGDIR/test\"\".jpg"'
+COMMAND='$PROGRAM --machine "$LOGDIR/test\"\".jpg" > "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test\"\".jpg"'
+RESULTCODE=0
+SEDCOMMAND='s@/.*/@@' # strip path

@@ -1,0 +1,4 @@
+TITLE='Show machine-readable GPS data on file without GPS tags'
+COMMAND='$PROGRAM -o "$STAGINGDIR/point1-1.jpg" > "$OUTFILE" 2>&1'
+RESULTCODE=0
+RESULTFILE=/dev/null

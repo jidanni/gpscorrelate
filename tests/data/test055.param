@@ -1,0 +1,4 @@
+TITLE='Show GPS data on file without a proper date tag'
+COMMAND='$PROGRAM -s "$STAGINGDIR/notime.jpg" > "$OUTFILE" 2>&1'
+RESULTCODE=1
+SEDCOMMAND='s@^.*/@@' # strip path

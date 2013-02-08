@@ -1,0 +1,21 @@
+<?xml version="1.0" standalone="yes" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="Created by ATLSoft GPSViewer" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+<trk>
+<name>9</name>
+<number>1</number>
+<trkseg>
+<trkpt lat="51.394300" lon="8.568190">
+<ele>0.0</ele>
+<type>Trackpoint</type>
+</trkpt>
+<trkpt lat="51.394440" lon="8.570560">
+<ele>0.0</ele>
+<type>Trackpoint</type>
+</trkpt>
+<trkpt lat="51.394180" lon="8.572860">
+<ele>0.0</ele>
+<type>Trackpoint</type>
+</trkpt>
+</trkseg>
+</trk>
+</gpx>

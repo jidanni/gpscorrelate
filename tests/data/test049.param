@@ -1,0 +1,3 @@
+TITLE='Correlate a non-JPEG file'
+COMMAND='$PROGRAM -z 0 -g "$STAGINGDIR/track1.gpx" "$STAGINGDIR/dummy.xhtml" > "$OUTFILE" 2>&1'
+RESULTCODE=2

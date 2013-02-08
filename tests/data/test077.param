@@ -1,0 +1,8 @@
+TITLE='Test unrecognized option'
+COMMAND='$PROGRAM --not-a-supported-option > "$OUTFILE" 2>&1'
+RESULTCODE=1
+# Some getopts (e.g. FreeBSD) don't include the file path when displaying bad
+# options.
+# Older versions of glibc surrounded bad options with a backtick
+# instead of apostrophe.
+SEDCOMMAND="s@^(.*/)?([^\`']*)[\`']@\2'@"

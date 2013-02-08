@@ -1,0 +1,7 @@
+TITLE='Test -h option'
+# Uses two lines of the help output as a canary, assuming that if the display
+# fine, the rest do, too. This avoids having to update the test data for
+# every minor change to the help output.
+COMMAND='$PROGRAM -h > "$OUTFILE" 2>&1'
+RESULTCODE=0
+SEDCOMMAND='/Display/!d' # Delete non-canary lines

@@ -1,0 +1,15 @@
+test.jpg: Removed GPS tags.
+1
+1
+0x0128 Image        ResolutionUnit              Short       1  2
+0x0132 Image        DateTime                    Ascii      20  2012:11:22 12:34:56
+0x0213 Image        YCbCrPositioning            Short       1  1
+0x8769 Image        ExifTag                     Long        1  122
+0x9000 Photo        ExifVersion                 Undefined   4  48 50 49 48
+0x9003 Photo        DateTimeOriginal            Ascii      20  2012:11:22 12:34:56
+0x9004 Photo        DateTimeDigitized           Ascii      20  2012:11:22 12:34:56
+0x9101 Photo        ComponentsConfiguration     Undefined   4  1 2 3 0
+0xa000 Photo        FlashpixVersion             Undefined   4  48 49 48 48
+0xa001 Photo        ColorSpace                  Short       1  65535
+0xa002 Photo        PixelXDimension             Long        1  64
+0xa003 Photo        PixelYDimension             Long        1  64
