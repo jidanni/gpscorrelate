@@ -199,8 +199,6 @@ char* ReadExifData(const char* File, double* Lat, double* Long, double* Elev, in
 		// Just return.
 		*IncludesGPS = 0;
 	} else {
-		// Seems to include GPS data...
-		*IncludesGPS = 1;
 		// Read it out and send it up!
 		// What we are trying to do here is convert the
 		// three rationals:
@@ -223,6 +221,9 @@ char* ReadExifData(const char* File, double* Lat, double* Long, double* Elev, in
 		if (GPSData.count() < 3)
 			*Lat = nan("invalid");
 		else {
+			// This is enough to say it includes GPS data...
+			*IncludesGPS = 1;
+
 			RatNum = GPSData.toRational(0);
 			*Lat = (double)RatNum.first / (double)RatNum.second;
 			RatNum = GPSData.toRational(1);
@@ -264,14 +265,14 @@ char* ReadExifData(const char* File, double* Lat, double* Long, double* Elev, in
 		else {
 			RatNum = GPSData.toRational(0);
 			*Elev = (double)RatNum.first / (double)RatNum.second;
-		}
 
-		// Is the altitude below sea level? If so, negate the value.
-		GPSData = ExifRead["Exif.GPSInfo.GPSAltitudeRef"];
-		if (GPSData.count() >= 1 && GPSData.toLong() == 1)
-		{
-			// Negate the elevation.
-			*Elev = -*Elev;
+			// Is the altitude below sea level? If so, negate the value.
+			GPSData = ExifRead["Exif.GPSInfo.GPSAltitudeRef"];
+			if (GPSData.count() >= 1 && GPSData.toLong() == 1)
+			{
+					// Negate the elevation.
+					*Elev = -*Elev;
+			}
 		}
 	}
 

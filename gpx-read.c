@@ -115,7 +115,7 @@ static void ExtractTrackPoints(xmlNodePtr Start)
 			}
 
 			/* Check that we have all the data. If we're missing something,
-			 * then skip this point... */
+			 * then skip this point... NOTE: Elev is not required. */
 			if (Time == NULL || Long == NULL || Lat == NULL)
 			{
 				/* Missing some data. */

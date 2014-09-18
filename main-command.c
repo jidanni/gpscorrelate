@@ -32,6 +32,7 @@
 #include <getopt.h>
 #include <string.h>
 #include <locale.h>
+#include <math.h>
 
 #include "i18n.h"
 #include "gpsstructure.h"
@@ -117,7 +118,8 @@ static int ShowFileDetails(const char* File, int MachineReadable)
 {
 	double Lat, Long, Elev;
 	int IncludesGPS = 0;
-	Lat = Long = Elev = 0;
+	Lat = Long = 0;
+	Elev = NAN; /* Elevation is optional, so this means it's missing */
 	char* Time = ReadExifData(File, &Lat, &Long, &Elev, &IncludesGPS);
 	int rc = 1;
 	char* OldLocale = NULL;
@@ -140,12 +142,22 @@ static int ShowFileDetails(const char* File, int MachineReadable)
 					fprintf(stderr, _("Out of memory.\n"));
 					exit(EXIT_FAILURE);
 				}
-				printf("\"%s\",\"%s\",%f,%f,%.3f\n",
-					EscapedFile, Time, Lat, Long, Elev);
+				printf("\"%s\",\"%s\",%f,%f,",
+					EscapedFile, Time, Lat, Long);
+
+				if (!isnan(Elev))
+					printf("%.3f", Elev);
+				printf("\n");
 				free(EscapedFile);
 			} else {
-				printf(_("%s: %s, Lat %f, Long %f, Elevation %.3f.\n"),
-					File, Time, Lat, Long, Elev);
+				printf(_("%s: %s, Lat %f, Long %f, Elevation "),
+					File, Time, Lat, Long);
+				if (!isnan(Elev))
+					printf("%.3f", Elev);
+                                else
+					printf(_("(unknown)"));
+
+				printf(".\n");
 			}
 		} else {
 			/* Don't display anything if we want machine
@@ -606,9 +618,12 @@ int main(int argc, char** argv)
 			if (ShowDetails)
 			{
 				/* Print out the "point". */
-				printf(_("Lat %f, Long %f, Elev %.3f.\n"),
-					Result->Lat, Result->Long,
-					Result->Elev);
+				printf(_("Lat %f, Long %f, Elev "),
+					Result->Lat, Result->Long);
+				if (Result->ElevDecimals >=0)
+					printf("%.3f.\n", Result->Elev);
+				else
+					printf(_("(unknown).\n"));
 			}
 			free(Result);
 			/* Ok, that's all from this part... */
