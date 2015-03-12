@@ -51,7 +51,7 @@ check: gpscorrelate
 	(cd tests && ./testsuite)
 
 clean:
-	rm -f *.o gpscorrelate{,.exe} gpscorrelate-gui{,.exe} doc/gpscorrelate-manpage.xml gpscorrelate.html $(TARGETS)
+	rm -f *.o gpscorrelate{,.exe} gpscorrelate-gui{,.exe} doc/gpscorrelate-manpage.xml gpscorrelate.html tests/log/* $(TARGETS)
 
 install: all
 	install -d $(DESTDIR)$(bindir)
