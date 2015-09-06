@@ -189,93 +189,95 @@ char* ReadExifData(const char* File, double* Lat, double* Long, double* Elev, in
 	char* Copy = strdup(Value.c_str());
 	
 	// Check if we have GPS tags.
+	*IncludesGPS = 0;
 	Exiv2::Exifdatum GPSData = ExifRead["Exif.GPSInfo.GPSVersionID"];
 
 	Value = GPSData.toString();
 
 	if (Value.length() == 0)
 	{
-		// No GPS data.
-		// Just return.
-		*IncludesGPS = 0;
-	} else {
-		// Read it out and send it up!
-		// What we are trying to do here is convert the
-		// three rationals:
-		//    dd/v mm/v ss/v
-		// To a decimal
-		//    dd.dddddd...
-		// dd/v is easy: result = dd/v.
-		// mm/v is harder:
-		//    mm
-		//    -- / 60 = result.
-		//     v
-		// ss/v is sorta easy.
-		//     ss   
-		//     -- / 3600 = result
-		//      v   
-		// Each part is added to the final number.
-		Exiv2::URational RatNum;
+		// No GPS version tag.
+		DEBUGLOG("No GPSVersionID.\n");
 
-		GPSData = ExifRead["Exif.GPSInfo.GPSLatitude"];
-		if (GPSData.count() < 3)
-			*Lat = nan("invalid");
-		else {
-			// This is enough to say it includes GPS data...
-			*IncludesGPS = 1;
+		// The EXIF spec says that this tag is mandatory if the GPS IFD
+		// exists, but some cameras skip it anyway.
+	}
 
-			RatNum = GPSData.toRational(0);
-			*Lat = (double)RatNum.first / (double)RatNum.second;
-			RatNum = GPSData.toRational(1);
-			*Lat = *Lat + (((double)RatNum.first / (double)RatNum.second) / 60);
-			RatNum = GPSData.toRational(2);
-			*Lat = *Lat + (((double)RatNum.first / (double)RatNum.second) / 3600);
+	// Read it out and send it up!
+	// What we are trying to do here is convert the
+	// three rationals:
+	//    dd/v mm/v ss/v
+	// To a decimal
+	//    dd.dddddd...
+	// dd/v is easy: result = dd/v.
+	// mm/v is harder:
+	//    mm
+	//    -- / 60 = result.
+	//     v
+	// ss/v is sorta easy.
+	//     ss   
+	//     -- / 3600 = result
+	//      v   
+	// Each part is added to the final number.
+	Exiv2::URational RatNum;
 
-			GPSData = ExifRead["Exif.GPSInfo.GPSLatitudeRef"];
-			if (strcmp(GPSData.toString().c_str(), "S") == 0)
-			{
-				// Negate the value - Western Hemisphere.
-				*Lat = -*Lat;
-			}
+	GPSData = ExifRead["Exif.GPSInfo.GPSLatitude"];
+	if (GPSData.count() < 3)
+		*Lat = nan("invalid");
+	else {
+		// This is enough to say it includes GPS data...
+		*IncludesGPS = 1;
+
+		RatNum = GPSData.toRational(0);
+		*Lat = (double)RatNum.first / (double)RatNum.second;
+		RatNum = GPSData.toRational(1);
+		*Lat = *Lat + (((double)RatNum.first / (double)RatNum.second) / 60);
+		RatNum = GPSData.toRational(2);
+		*Lat = *Lat + (((double)RatNum.first / (double)RatNum.second) / 3600);
+
+		GPSData = ExifRead["Exif.GPSInfo.GPSLatitudeRef"];
+		if (strcmp(GPSData.toString().c_str(), "S") == 0)
+		{
+			// Negate the value - Western Hemisphere.
+			*Lat = -*Lat;
 		}
-		
-		GPSData = ExifRead["Exif.GPSInfo.GPSLongitude"];
-		if (GPSData.count() < 3)
-			*Long = nan("invalid");
-		else {
-			RatNum = GPSData.toRational(0);
-			*Long = (double)RatNum.first / (double)RatNum.second;
-			RatNum = GPSData.toRational(1);
-			*Long = *Long + (((double)RatNum.first / (double)RatNum.second) / 60);
-			RatNum = GPSData.toRational(2);
-			*Long = *Long + (((double)RatNum.first / (double)RatNum.second) / 3600);
+	}
+	
+	GPSData = ExifRead["Exif.GPSInfo.GPSLongitude"];
+	if (GPSData.count() < 3)
+		*Long = nan("invalid");
+	else {
+		RatNum = GPSData.toRational(0);
+		*Long = (double)RatNum.first / (double)RatNum.second;
+		RatNum = GPSData.toRational(1);
+		*Long = *Long + (((double)RatNum.first / (double)RatNum.second) / 60);
+		RatNum = GPSData.toRational(2);
+		*Long = *Long + (((double)RatNum.first / (double)RatNum.second) / 3600);
 
-			GPSData = ExifRead["Exif.GPSInfo.GPSLongitudeRef"];
-			if (strcmp(GPSData.toString().c_str(), "W") == 0)
-			{
-				// Negate the value - Western Hemisphere.
-				*Long = -*Long;
-			}
-		}
-
-		// Finally, read elevation out. This one is simple.
-		GPSData = ExifRead["Exif.GPSInfo.GPSAltitude"];
-		if (GPSData.count() < 1)
-			*Elev = nan("invalid");
-		else {
-			RatNum = GPSData.toRational(0);
-			*Elev = (double)RatNum.first / (double)RatNum.second;
-
-			// Is the altitude below sea level? If so, negate the value.
-			GPSData = ExifRead["Exif.GPSInfo.GPSAltitudeRef"];
-			if (GPSData.count() >= 1 && GPSData.toLong() == 1)
-			{
-					// Negate the elevation.
-					*Elev = -*Elev;
-			}
+		GPSData = ExifRead["Exif.GPSInfo.GPSLongitudeRef"];
+		if (strcmp(GPSData.toString().c_str(), "W") == 0)
+		{
+			// Negate the value - Western Hemisphere.
+			*Long = -*Long;
 		}
 	}
 
+	// Finally, read elevation out. This one is simple.
+	GPSData = ExifRead["Exif.GPSInfo.GPSAltitude"];
+	if (GPSData.count() < 1)
+		*Elev = nan("invalid");
+	else {
+		RatNum = GPSData.toRational(0);
+		*Elev = (double)RatNum.first / (double)RatNum.second;
+
+		// Is the altitude below sea level? If so, negate the value.
+		GPSData = ExifRead["Exif.GPSInfo.GPSAltitudeRef"];
+		if (GPSData.count() >= 1 && GPSData.toLong() == 1)
+		{
+				// Negate the elevation.
+				*Elev = -*Elev;
+		}
+	}
 
 	// Now return, passing a pointer to the date string.
 	return Copy; // It's up to the caller to free this.
