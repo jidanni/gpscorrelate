@@ -1,7 +1,2 @@
 /dev/null:1: parser error : Document is empty
-
-^
-/dev/null:1: parser error : Start tag expected, '<' not found
-
-^
 Failed to parse GPX data from /dev/null.

@@ -3,3 +3,5 @@ PRECOMMAND='cat "$STAGINGDIR/point1-1.jpg" >"$LOGDIR/test.jpg"'
 COMMAND='$PROGRAM -g /dev/null "$LOGDIR/test.jpg" 2> "$OUTFILE" > /dev/null'
 POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
 RESULTCODE=1
+# libxml2 versions 2.9.1 and below have slightly different diagnostic output
+# that causes this test to fail
