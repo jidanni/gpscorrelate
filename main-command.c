@@ -537,12 +537,6 @@ int main(int argc, char** argv)
 
 	Options.Track         = Track;
 
-	if (!ShowDetails)
-	{
-		/* Unbuffer stdout so dots appear immediately */
-		setvbuf(stdout, NULL, _IONBF, 0);
-	}
-
 	/* Make it all look nice and pretty... so the user knows what's going on. */
 	printf(_("\nCorrelate: "));
 	if (ShowDetails) printf("\n");
@@ -672,6 +666,9 @@ int main(int argc, char** argv)
 			/* Handled all those errors, now... */
 		} /* End if Result. */
 
+		/* Display the character code immediately */
+		fflush(stdout);
+
 		/* And, once we've got here, we've finished with that file.
 		 * We can now do the next one. Now wasn't that too easy? */
 		
@@ -683,7 +680,6 @@ int main(int argc, char** argv)
 	if (!ShowDetails)
 	{
 		printf("\n");
-		setvbuf(stdout, NULL, _IOLBF, 0);
 	}
 
 	/* Print details of what happened. */
