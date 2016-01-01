@@ -81,7 +81,9 @@ Some test cases don't do a good job of cleaning up after themselves after
 failures. If you get persistent test failures, try deleting the 'log'
 directory and running the tests again.
 
-The test suite has been tested using exiv2 0.21.1. Older versions have
-slightly different whitespace that causes the test output comparison to
-fail. There is a hack in testsuite that can be used to relax the comparison
-and use such an older version.
+The test suite has been tested using exiv2 0.21.1 and libxml2 2.9.3. Older
+versions have slightly different output that causes the test output comparison
+to fail. There is a hack in testsuite that can be used to relax the comparison
+and use such an older version of exiv2. When using MUSL 1.1, an issue allows
+exiv2 to erronously overwrite read-only files which causes tests that check
+this condition to fail.
