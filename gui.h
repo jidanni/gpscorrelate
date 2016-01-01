@@ -5,7 +5,7 @@
  * This file contains the function prototypes for the
  * stuff in gui.c */
 
-/* Copyright 2005 Daniel Foote.
+/* Copyright 2005-2013 Daniel Foote, Dan Fandrich.
  *
  * This file is part of gpscorrelate.
  *
