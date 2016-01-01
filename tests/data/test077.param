@@ -5,4 +5,5 @@ RESULTCODE=1
 # options.
 # Older versions of glibc surrounded bad options with a backtick
 # instead of apostrophe.
-SEDCOMMAND="s@^(.*/)?([^\`']*)[\`']@\2'@"
+# MUSL doesn't include any quotes or the leading -- in the option name
+SEDCOMMAND="s@^(.*/)?(.*)(: | [\`'])(--)?([^\`']*)[\`']?@\2 '--\5'@"
