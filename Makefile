@@ -12,6 +12,7 @@ CFLAGS   = -Wall -O2
 CFLAGSINC := $(shell pkg-config --cflags libxml-2.0 exiv2)
 # Add the gtk+ flags only when building the GUI
 gpscorrelate-gui: CFLAGSINC += $(shell pkg-config --cflags gtk+-2.0)
+LIBS :=
 LDFLAGS   = -Wall -O2
 LDFLAGSALL := $(shell pkg-config --libs libxml-2.0 exiv2) -lm
 LDFLAGSGUI := $(shell pkg-config --libs gtk+-2.0)
@@ -33,10 +34,10 @@ TARGETS = gpscorrelate-gui gpscorrelate gpscorrelate.1
 all:	$(TARGETS)
 
 gpscorrelate: $(COBJS)
-	$(CXX) -o $@ $(COBJS) $(LDFLAGS) $(LDFLAGSALL)
+	$(CXX) -o $@ $(COBJS) $(LDFLAGS) $(LDFLAGSALL) $(LIBS)
 
 gpscorrelate-gui: $(GOBJS)
-	$(CXX) -o $@ $(GOBJS) $(LDFLAGS) $(LDFLAGSGUI) $(LDFLAGSALL)
+	$(CXX) -o $@ $(GOBJS) $(LDFLAGS) $(LDFLAGSGUI) $(LDFLAGSALL) $(LIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) $(CFLAGSINC) $(DEFS) -c -o $@ $<
