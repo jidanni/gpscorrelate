@@ -6,8 +6,8 @@ PACKAGE_VERSION = 1.6.2git
 CC = gcc
 CXX = g++
 
-COBJS    = main-command.o unixtime.o gpx-read.o correlate.o exif-gps.o
-GOBJS    = main-gui.o gui.o unixtime.o gpx-read.o correlate.o exif-gps.o
+COBJS    = main-command.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
+GOBJS    = main-gui.o gui.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
 CFLAGS   = -Wall -O2
 CFLAGSINC := $(shell pkg-config --cflags libxml-2.0 exiv2)
 # Add the gtk+ flags only when building the GUI

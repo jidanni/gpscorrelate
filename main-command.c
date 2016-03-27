@@ -39,6 +39,7 @@
 #include "exif-gps.h"
 #include "unixtime.h"
 #include "gpx-read.h"
+#include "latlong.h"
 #include "correlate.h"
 
 #define GPS_EXIT_WARNING 2
@@ -46,6 +47,7 @@
 /* Command line options structure. */
 static const struct option program_options[] = {
 	{ "gps", required_argument, 0, 'g' },
+	{ "latlong", required_argument, 0, 'l' },
 	{ "timeadd", required_argument, 0, 'z'},
 	{ "no-interpolation", no_argument, 0, 'i'},
 	{ "help", no_argument, 0, 'h'},
@@ -77,6 +79,7 @@ static void PrintUsage(const char* ProgramName)
 {
 	printf(_("Usage: %s [options] file.jpg ...\n"), ProgramName);
 	puts(  _("-g, --gps file.gpx       Specifies GPX file with GPS data"));
+	puts(  _("-l, --latlong            Specifies latitude/longitude/elevation directly"));
 	puts(  _("-z, --timeadd +/-HH[:MM] Time to add to GPS data to make it match photos"));
 	puts(  _("-i, --no-interpolation   Disable interpolation between points; interpolation\n"
 	         "                         is linear, points rounded if disabled"));
@@ -297,7 +300,7 @@ int main(int argc, char** argv)
 	int FixDatestamps = 0;
 	int DegMinSecs = 1;
 	int PhotoOffset = 0;
-	int HaveTrack = 0;
+	struct GPSPoint LatLong;
 
 	/* Create the empty terminating array entry */
 	Track = (struct GPSTrack*) calloc(1, sizeof(*Track));
@@ -311,7 +314,7 @@ int main(int argc, char** argv)
 	{
 		/* Call getopt to do all the hard work
 		 * for us... */
-		c = getopt_long(argc, argv, "g:z:ihvd:m:nsortMVfO:",
+		c = getopt_long(argc, argv, "g:z:il:hvd:m:nsortMVfO:",
 				program_options, 0);
 
 		if (c == -1) break;
@@ -321,9 +324,11 @@ int main(int argc, char** argv)
 		{
 			case 'g':
 				/* This parameter specifies the GPS data.
-				 * It must be present at least once. */
+				 * It or 'l' must be present at least once. */
 				if (optarg)
 				{
+					int HaveTrack;
+
 					/* Read the XML file into memory and extract the "points". */
 					printf(_("Reading GPS Data..."));
 					fflush(stdout);
@@ -345,6 +350,32 @@ int main(int argc, char** argv)
 					memset(&Track[NumTracks], 0, sizeof(*Track));
 				}
 				break;
+			case 'l':
+				/* This parameter specifies a direct latitude/longitude
+				   coordinate to use for all images.
+				   It or 'g' must be present at least once. */
+				if (!ParseLatLong(optarg, &LatLong))
+				{
+					printf(_("Error parsing location.\n"));
+					exit(EXIT_FAILURE);
+				}
+				if (!MakeTrackFromLatLong(&LatLong, &Track[NumTracks]))
+				{
+					printf(_("Out of memory\n"));
+					exit(EXIT_FAILURE);
+				}
+
+				/* Make room for a new end-of-array entry */
+				++NumTracks;
+				Track = (struct GPSTrack*) realloc(Track, sizeof(*Track)*(NumTracks+1));
+				if (!Track)
+				{
+					printf(_("Out of memory\n"));
+					exit(EXIT_FAILURE);
+				}
+				memset(&Track[NumTracks], 0, sizeof(*Track));
+				break;
+
 			case 'z':
 				/* This parameter specifies the time to add to the
 				 * GPS data to make it match the timezone for
@@ -503,7 +534,7 @@ int main(int argc, char** argv)
 		Datum = strdup("WGS-84");
 	}
 
-	if (!HaveTrack)
+	if (!NumTracks)
 	{
 		/* GPS Data was not read correctly... */
 		/* Tell the user we are bailing.

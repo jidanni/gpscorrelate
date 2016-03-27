@@ -1,0 +1,5 @@
+TITLE='Geotag a file from a specified latitude/longitude/elevation (dms integer forms)'
+PRECOMMAND='cat "$STAGINGDIR/point1-1.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM -z+1 -l 34d56m7s,-87d6m54s "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=0

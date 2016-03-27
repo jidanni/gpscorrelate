@@ -35,20 +35,11 @@
 #include "gpx-read.h"
 #include "unixtime.h"
 #include "gpsstructure.h"
+#include "latlong.h"
 
 /* Pointers to the first and last points, used during parsing */
 static struct GPSPoint* FirstPoint;
 static struct GPSPoint* LastPoint;
-
-/* Returns the number of decimal places in the given decimal number string */
-static int NumDecimals(const char *Decimal)
-{
-	const char *Dec = strchr(Decimal, '.');
-	if (Dec) {
-		return strspn(Dec+1,"0123456789");
-	}
-	return 0;
-}
 
 static void ExtractTrackPoints(xmlNodePtr Start)
 {

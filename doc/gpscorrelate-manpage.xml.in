@@ -4,7 +4,7 @@
 
   <!ENTITY dhfirstname "<firstname>Stefano</firstname>">
   <!ENTITY dhsurname   "<surname>Zacchiroli</surname>">
-  <!ENTITY dhdate      "<date>29 Dec 2012</date>">
+  <!ENTITY dhdate      "<date>16 Mar 2016</date>">
   <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
   <!ENTITY dhemail     "<email>zack@debian.org</email>">
   <!ENTITY dhusername  "Stefano Zacchiroli">
@@ -27,7 +27,7 @@
       &dhsurname;, Till Maas
     </author>
     <copyright>
-      <year>2006-2012</year>
+      <year>2006-2016</year>
       <holder>&dhusername; &dhemail;, Till Maas, Dan Fandrich</holder>
     </copyright>
     <version>
@@ -105,9 +105,16 @@
       </group>
 
       
-      <arg choice="plain">
-        -g <replaceable>file.gpx</replaceable>
-      </arg>
+      <group>
+        <arg choice="plain">
+          -g <replaceable>file.gpx</replaceable>
+        </arg>
+
+          <arg choice="plain">-l</arg>
+          <arg choice="plain">--latlong</arg>
+          <replaceable>lat/long/elev</replaceable>
+      </group>
+
       <arg rep="repeat" choice="plain">
         <replaceable>image.jpg</replaceable>
       </arg>
@@ -217,6 +224,30 @@
           was taken will be the one used. All
           <userinput>&lt;trk&gt;</userinput> segments in each file are
           used. </para>
+        </listitem>
+    </varlistentry>
+
+      <varlistentry>
+        <term>
+          <option>-l</option>,
+          <option>--latlong</option>
+          <replaceable>latitude,longitude,elevation</replaceable>
+        </term>
+        <listitem>
+          <para>Provide a specific geographic coordinate to use for all images
+            instead correlating along a path in a GPX file. The format must be
+            of the general form
+            <userinput>latitude,longitude,elevation</userinput> where latitude
+            and longitude must each be in either decimal form, such as
+            <userinput>-123.45678</userinput> or in degrees/minutes/seconds
+            form, such as <userinput>-123°45'67.8"</userinput> or
+            <userinput>-123d45m67s</userinput>. Providing an elevation is
+            optional. Each component can be separated by commas, spaces or tabs.
+          </para>
+          <para>Note that this option has a known bug in that it does not parse
+            numbers correctly in locales that use other than "." as a decimal
+            separator.
+          </para>
         </listitem>
     </varlistentry>
 

@@ -1,0 +1,5 @@
+TITLE='Specify out-of-range longitude (dms form)'
+PRECOMMAND='cat "$STAGINGDIR/point1-1.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM -l 9d61m0s,123d0m61s "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=1
