@@ -146,3 +146,5 @@ v1.6.2git: TBD
 	- Only write an altitude tag if it exists in the GPX file
 	- Prevent duplicate GPS tags in the final file (which could
 	  happen if some tags already existed before correlation)
+	- Stop overwriting files when --no-write is used with --remove
+	  (Debian bug #576744)

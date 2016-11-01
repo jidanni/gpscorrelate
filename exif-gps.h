@@ -37,7 +37,7 @@ char* ReadGPSTimestamp(const char* File, char* DateStamp, char* TimeStamp, int* 
 int WriteGPSData(const char* File, const struct GPSPoint* Point,
 		 const char* Datum, int NoChangeMtime, int DegMinSecs);
 int WriteFixedDatestamp(const char* File, time_t TimeStamp);
-int RemoveGPSExif(const char* File, int NoChangeMtime);
+int RemoveGPSExif(const char* File, int NoChangeMtime, int NoWriteExif);
 
 #ifdef __cplusplus
 }

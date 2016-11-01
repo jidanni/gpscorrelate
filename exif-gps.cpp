@@ -686,7 +686,7 @@ int WriteFixedDatestamp(const char* File, time_t Time)
 	return 1;
 }
 
-int RemoveGPSExif(const char* File, int NoChangeMtime)
+int RemoveGPSExif(const char* File, int NoChangeMtime, int NoWriteExif)
 {
 	struct stat statbuf;
 	struct stat statbuf2;
@@ -722,14 +722,16 @@ int RemoveGPSExif(const char* File, int NoChangeMtime)
 
 	EraseGpsTags(ExifInfo);
 	
-	try {
-		Image->writeMetadata();
-	} catch (Exiv2::Error e) {
-		DEBUGLOG("Failed to write to file %s.\n", File);
-		return 0;
+	if (!NoWriteExif) {
+		try {
+			Image->writeMetadata();
+		} catch (Exiv2::Error e) {
+			DEBUGLOG("Failed to write to file %s.\n", File);
+			return 0;
+		}
 	}
 
-	if (NoChangeMtime)
+	if (NoChangeMtime && !NoWriteExif)
 	{
 		stat(File, &statbuf2);
 		utb.actime = statbuf2.st_atime;

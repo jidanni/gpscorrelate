@@ -191,9 +191,9 @@ static int ShowFileDetails(const char* File, int MachineReadable)
 }
 			
 /* Remove all GPS exif tags from a file. Not really that useful, but... */
-static int RemoveGPSTags(const char* File, int NoChangeMtime)
+static int RemoveGPSTags(const char* File, int NoChangeMtime, int NoWriteExif)
 {
-	if (RemoveGPSExif(File, NoChangeMtime))
+	if (RemoveGPSExif(File, NoChangeMtime, NoWriteExif))
 	{
 		printf(_("%s: Removed GPS tags.\n"), File);
 		return 1;
@@ -504,7 +504,7 @@ int main(int argc, char** argv)
 		int result = 1;
 		while (optind < argc)
 		{
-			result = RemoveGPSTags(argv[optind++], NoChangeMtime) && result;
+			result = RemoveGPSTags(argv[optind++], NoChangeMtime, NoWriteExif) && result;
 		}
 		exit(result ? EXIT_SUCCESS : EXIT_FAILURE);
 	}
