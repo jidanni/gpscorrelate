@@ -5,3 +5,6 @@ POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
 RESULTCODE=1
 # libxml2 versions 2.9.1 and below have slightly different diagnostic output
 # that causes this test to fail
+# libxml2 versions 2.9.4 (at least) adds some unuseful diagnostic lines that
+# are removed here
+SEDCOMMAND='/^\^?$/d'
