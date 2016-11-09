@@ -136,8 +136,8 @@ struct GUIPhotoList {
 struct GUIPhotoList* FirstPhoto = NULL;
 struct GUIPhotoList* LastPhoto = NULL;
 
-struct GPSTrack* GPSData;  	// Array of track entries; empty entry is last
-int NumTracks;			// Number of entries at GPSData
+struct GPSTrack* GPSData;  	/* Array of track entries; empty entry is last */
+int NumTracks;			/* Number of entries at GPSData */
 
 static const char* const ConfigDefaults[] = {
 	"interpolate", "true",
