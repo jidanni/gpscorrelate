@@ -1,0 +1,35 @@
+# Travis CI configuration file
+
+sudo: false
+
+language: cpp
+
+# Install needed packages on Ubuntu (OS X is done with brew below)
+addons:
+  apt:
+    packages:
+        - exiv2
+        - libexiv2-dev
+
+install:
+# Install exiv2 on OS X
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install exiv2; fi
+
+# Only build the command-line tool for now
+script:
+    - if [ "$TRAVIS_OS_NAME" != "osx" ]; then make CFLAGS="-Wall -O2 -DENABLE_NLS=1" CC="$CC" CXX="$CXX" gpscorrelate; fi
+    # Explicitly point to brew's gettext installation on OS X
+    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then make CFLAGS="-Wall -O2 -DENABLE_NLS=1 -I/usr/local/opt/gettext/include" LDFLAGS="-Wall -O2 -L/usr/local/opt/gettext/lib -lintl" CC="$CC" CXX="$CXX" gpscorrelate; fi
+    - make check
+# This can only be installed if the GTK target is also built
+#     - make install DESTDIR="${HOME}"
+# Ensure brew gettext is in the PATH so xgettext is found on OS X
+    - PATH="$PATH:/usr/local/opt/gettext/bin" make install-po prefix= DESTDIR="${HOME}"
+
+compiler:
+  - clang
+  - gcc
+
+os:
+  - linux
+  - osx
