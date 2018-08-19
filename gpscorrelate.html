@@ -1,210 +1,359 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>GPSCORRELATE</title><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry"><a name="idp1398292348"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>gpscorrelate &#8212; correlates digital images with GPS data filling EXIF fields</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">gpscorrelate</code>  [ -z  |   
-          --timeadd +/-<em class="replaceable"><code>HH</code></em>[:<em class="replaceable"><code>MM</code></em>]
-         ] [ -O  |   
-          --photooffset <em class="replaceable"><code>seconds</code></em>
-         ] [ -i  |   --no-interpolation ] [ -v  |   --verbose ] [ -d  |   --datum <em class="replaceable"><code>datum</code></em>
-         ] [ -n  |   --no-write ] [ -m  |   --max-dist <em class="replaceable"><code>time</code></em>
-         ] [ -t  |   --ignore-tracksegs ] [ -M  |   --no-mtime ] [ --degmins ] [ 
-          -g <em class="replaceable"><code>file.gpx</code></em>
-          |   -l  |   --latlong <em class="replaceable"><code>lat/long/elev</code></em>]  
-        <em class="replaceable"><code>image.jpg</code></em>
-      ... </p></div><div class="cmdsynopsis"><p><code class="command">gpscorrelate</code>    -s  |   --show  |   -o  |   --machine    <em class="replaceable"><code>image.jpg</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command">gpscorrelate</code>  [ -M  |   --no-mtime ] { -r  |   --remove }  <em class="replaceable"><code>image.jpg</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command">gpscorrelate</code>  { -f  |   --fix-datestamps } { -z  |   
-          --timeadd +/-<em class="replaceable"><code>HH</code></em>[:<em class="replaceable"><code>MM</code></em>]
-         }  <em class="replaceable"><code>image.jpg</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command">gpscorrelate</code>    -V  |   --version  |   -h  |   --help  </p></div><div class="cmdsynopsis"><p><code class="command">gpscorrelate-gui</code> </p></div></div><div class="refsect1"><a name="idp1401135188"></a><h2>DESCRIPTION</h2><p>This manual page documents the <span class="command"><strong>gpscorrelate</strong></span>
-      and <span class="command"><strong>gpscorrelate-gui</strong></span> commands.
-    There is extended documentation available in HTML format; see below.</p><p><span class="command"><strong>gpscorrelate</strong></span> is a program that acts on digital images
-      in JPEG format, filling in the EXIF (Exchangeable Image File Format) fields
-      related to GPS (Global Positioning System) information.  Source for the
-      GPS data is a GPX (GPS Exchange Format) file, which records GPS location
-      information in an XML-based format. The act of filling those fields is
-      referred to as <span class="emphasis"><em>correlation</em></span>.</p><p> If GPS data are available at the precise moment the image was taken
-      (with a 1-second granularity) the GPS data are stored unmodified in EXIF
-      fields. If they are not, linear interpolation of GPS data available at
-      moments before and after the image was taken can be used. </p><p><span class="command"><strong>gpscorrelate</strong></span> is a command line tool implementing
-      correlation whereas <span class="command"><strong>gpscorrelate-gui</strong></span> is the
-      corresponding GTK+ graphical user interface. The following options apply
-      to <span class="command"><strong>gpscorrelate</strong></span> only; <span class="command"><strong>gpscorrelate-gui</strong></span>
-      accepts only the standard GTK+ command-line options. </p></div><div class="refsect1"><a name="idp1400348380"></a><h2>OPTIONS</h2><p>These programs follow the usual <acronym class="acronym">GNU</acronym> command line syntax, with long
-      options starting with two dashes (`-').  A summary of options is included
-      below.  For a complete description, see the HTML documentation. </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-          <code class="option">-g</code>,
-          <code class="option">--gps</code>
-          <em class="replaceable"><code>file.gpx</code></em>
-        </span></dt><dd><p>Correlate images using the specified GPX file containing
-          GPS track points.  This option can be given many times to
-          specify multiple GPX files.  For each photo being correlated,
-          the first file containing a track covering the time the photo
-          was taken will be the one used. All
-          <strong class="userinput"><code>&lt;trk&gt;</code></strong> segments in each file are
-          used. </p></dd><dt><span class="term">
-          <code class="option">-l</code>,
-          <code class="option">--latlong</code>
-          <em class="replaceable"><code>latitude,longitude,elevation</code></em>
-        </span></dt><dd><p>Provide a specific geographic coordinate to use for all images
-            instead correlating along a path in a GPX file. The format must be
-            of the general form
-            <strong class="userinput"><code>latitude,longitude,elevation</code></strong> where latitude
-            and longitude must each be in either decimal form, such as
-            <strong class="userinput"><code>-123.45678</code></strong> or in degrees/minutes/seconds
-            form, such as <strong class="userinput"><code>-123°45'67.8"</code></strong> or
-            <strong class="userinput"><code>-123d45m67s</code></strong>. Providing an elevation is
-            optional. Each component can be separated by commas, spaces or tabs.
-          </p><p>Note that this option has a known bug in that it does not parse
-            numbers correctly in locales that use other than "." as a decimal
-            separator.
-          </p></dd><dt><span class="term">
-          <code class="option">-s</code>,
-          <code class="option">--show</code>
-        </span></dt><dd><p>Only show the GPS data already in the given image's EXIF tags
-          instead of correlating them.</p></dd><dt><span class="term">
-          <code class="option">-o</code>,
-          <code class="option">--machine</code>
-        </span></dt><dd><p>Only show the GPS data of the given images in a
-          machine-readable CSV format. Images without GPS tags are
-          ignored. The fields output are file name, date and time, latitude,
-          longitude, elevation, where the first value is the filename, as
-          passed, the second is the timestamp, and the last three are floating
-          point values with an optional leading plus or minus.</p></dd><dt><span class="term">
-          <code class="option">-r</code>,
-          <code class="option">--remove</code>
-        </span></dt><dd><p>Remove all GPS EXIF data from the given images.  Note that
-            this only removes the GPS tags that the program could add; it
-            does not delete all possible GPS EXIF tags. All other tags are
-            left alone.</p></dd><dt><span class="term">
-          <code class="option">-z</code>,
-          <code class="option">--timeadd</code>
-          <strong class="userinput"><code>+/-</code></strong><em class="replaceable"><code>HH</code></em>[<strong class="userinput"><code>:</code></strong><em class="replaceable"><code>MM</code></em>]
-        </span></dt><dd><p>Time to add to GPS points to make them match the timestamps of the
-            images. GPS timestamps are in UTC; image timestamps are generally
-            in local time.  Enter the timezone used when taking the images; e.g.,
-            <strong class="userinput"><code>+8</code></strong> for Perth, Western Australia or
-            <strong class="userinput"><code>-2:30</code></strong> for St. John's, Newfoundland.
-            This defaults to the UTC offset of the local time zone as of the
-            time of the first image processed (versions before 1.7 defaulted to
-            00:00). </p></dd><dt><span class="term">
-          <code class="option">-O</code>,
-          <code class="option">--photooffset</code>
-          <em class="replaceable"><code>seconds</code></em>
-        </span></dt><dd><p>Time in seconds to add to the photo timestamp to make it match
-          the GPS timestamp.  To determine the number of seconds needed, just
-          create a photograph of your GPS device showing the current time and
-          compare it with the timestamp of your photo file. The EXIF time
-          tags in the image are not modified based on this value.</p></dd><dt><span class="term">
-          <code class="option">-i</code>,
-          <code class="option">--no-interpolation</code>
-        </span></dt><dd><p>Disable linear interpolation between points.
-          With this flag, the nearest exact point (within
-          <strong class="userinput"><code>--max-dist</code></strong>) is used. Without this flag,
-          photos taken between the time of two recorded GPS coordinates
-          are correlated based on linear interpolation between those two
-          points. </p></dd><dt><span class="term">
-          <code class="option">-v</code>,
-          <code class="option">--verbose</code>
-        </span></dt><dd><p>Show slightly more information during the image
-          correlation process, such as the GPS data selected for each
-          image.</p></dd><dt><span class="term">
-          <code class="option">-d</code>,
-          <code class="option">--datum</code> <em class="replaceable"><code>datum</code></em>
-        </span></dt><dd><p>Specify GPS measurement datum. If not
-          set, <strong class="userinput"><code>WGS-84</code></strong> is used
-          (<strong class="userinput"><code>TOKYO</code></strong> is another possibility).  However, GPX
-          is not supposed to store anything but WGS-84, so this should only
-          ever be needed with the <strong class="userinput"><code>--latlong</code></strong>
-          option.</p></dd><dt><span class="term">
-          <code class="option">-n</code>,
-          <code class="option">--no-write</code>
-        </span></dt><dd><p>Do not write the correlated EXIF data back into the
-          image. Useful with <strong class="userinput"><code>--verbose</code></strong> to see
-          what would happen during image correlation.</p></dd><dt><span class="term">
-          <code class="option">-m</code>,
-          <code class="option">--max-dist</code> <em class="replaceable"><code>time</code></em>
-        </span></dt><dd><p>Maximum time in seconds from the photo time which a
-          logged GPS point can refer and still be used for
-          correlation.  This defaults to 0, which means to disable this
-	  check. Only one of the two points need be within this range
-	  for correlation to take place.</p><p> If the accuracy of the location is paramount and you
-          would rather not correlate a position for a photo at all if
-          the nearest GPS coordinates were recorded too long ago in the
-          past or too far into the future (relative to when the photo
-          was taken), then set this to a nonzero value.</p></dd><dt><span class="term">
-          <code class="option">-t</code>,
-          <code class="option">--ignore-tracksegs</code>
-        </span></dt><dd><p>Interpolate between track segments, too.
-          Generally, track segments show multiple sessions of GPS logging;
-          between them is generally when the GPS was not logging.
-          Since interpolation honours the <strong class="userinput"><code>--max-dist</code></strong>
-          flag, even track segments with wide time gaps can
-          safely be used if both flags are set.  Without this
-          flag, photos taken within the time gap between two
-          <strong class="userinput"><code>&lt;trkseg&gt;</code></strong> tracks in the GPX file
-          are not correlated.</p></dd><dt><span class="term">
-          <code class="option">-M</code>,
-          <code class="option">--no-mtime</code>
-        </span></dt><dd><p>Do not change the last modification time of changed
-          files.</p></dd><dt><span class="term">
-          <code class="option">-f</code>,
-          <code class="option">--fix-datestamps</code>
-        </span></dt><dd><p>Fix broken GPS datestamps written with
-          <span class="command"><strong>gpscorrelate</strong></span> versions &lt; 1.5.2 by replacing
-          them with the photo's time stamp.  Prior to 1.5.2,  two bugs
-          wrote the wrong value for the GPSDateStamp and GPSTimeStamp tags.
-          This option will check each supplied filename for the problem and
-          correct it. Use with <strong class="userinput"><code>--no-write</code></strong> to prevent
-          writing these changes (useful for checking for the issue).  This
-          option also implies <strong class="userinput"><code>--no-mtime</code></strong>. You will
-          also need to use <strong class="userinput"><code>--timeadd</code></strong> to specify the
-          difference between localtime and UTC time for the supplied
-          photos.</p></dd><dt><span class="term">
-          <code class="option">--degmins</code>
-        </span></dt><dd><p>Write location as DD MM.MM (instead of the more accurate DD MM
-          SS.SS) as was the default in <span class="command"><strong>gpscorrelate</strong></span>
-          versions &lt; 1.5.3. There is no good reason to use this option
-          unless some broken program expects this style.</p></dd><dt><span class="term">
-          <code class="option">-h</code>,
-          <code class="option">--help</code>
-        </span></dt><dd><p>Only show a summary of options.</p></dd><dt><span class="term">
-          <code class="option">-V</code>,
-          <code class="option">--version</code>
-        </span></dt><dd><p>Only print the <span class="command"><strong>gpscorrelate</strong></span> version number
-	  and copyright information.</p></dd></dl></div></div><div class="refsect1"><a name="idp1398364092"></a><h2>EXAMPLES</h2><p>
-    To correlate all photos in a directory taken in western Europe in the
-    summer:</p><p>
-    <strong class="userinput"><code>gpscorrelate -g Test.gpx -z 2 *.jpg</code></strong>
-    </p><p>
-    Show GPS tags in a photo:
-    </p><p>
-    <strong class="userinput"><code>gpscorrelate --show photo.jpg</code></strong>
-    </p><p>
-    Remove GPS tags from photos:
-    </p><p>
-    <strong class="userinput"><code>gpscorrelate --remove *.jpg</code></strong>
-    </p><p>
-    Correlate all photos in a directory from a track spread out over two
-    different track files and taken in the computer's current time zone,
-    interpolating between segments and between files while ignoring photos
-    taken too far away from a recorded point, without changing the file time
-    stamp of the files, while showing details of the process:</p><p>
-    <strong class="userinput"><code>gpscorrelate -g track1.gpx -g track2.gpx -m 120 -t -M -v *.jpg</code></strong>
-    </p><p>
-    Add a GPS location tag to a photo taken at Ulmer Münster:</p><p>
-    <strong class="userinput"><code>gpscorrelate -l 48.398620,9.991417,522 -z 2 ulm.jpg</code></strong>
-    </p></div><div class="refsect1"><a name="idp1398368372"></a><h2>EXIT STATUS</h2><p>
-	    <span class="command"><strong>gpscorrelate</strong></span> returns <span class="errorcode">0</span> in
-	    case of success, <span class="errorcode">1</span> in case of major error
-	    (such as a read or write error) and <span class="errorcode">2</span> in
-	    case of minor error (such as the given GPS track not covering the
-	    time of an image).
-    </p></div><div class="refsect1"><a name="idp1398370548"></a><h2>SEE ALSO</h2><p><span class="citerefentry"><span class="refentrytitle">gpsd</span>(1)</span>,
-	  <span class="citerefentry"><span class="refentrytitle">gpsbabel</span>(1)</span>,
-	  <span class="citerefentry"><span class="refentrytitle">gpxlogger</span>(1)</span>,
-	  <span class="citerefentry"><span class="refentrytitle">cgpxlogger</span>(1)</span>.
-    </p><p>The documentation of gpscorrelate and gpscorrelate-gui in HTML format
-      are available on the filesystem at <code class="filename">/usr/local/share/doc/gpscorrelate</code>.
-    </p></div><div class="refsect1"><a name="idp1398373556"></a><h2>LICENSE</h2><p>This manual page was initially written by Stefano Zacchiroli <code class="email">&lt;<a class="email" href="mailto:zack@debian.org">zack@debian.org</a>&gt;</code> for
-    the <span class="productname">Debian</span>&#8482; system.  It was extended by Till Maas
-    <code class="email">&lt;<a class="email" href="mailto:opensource@till.name">opensource@till.name</a>&gt;</code> and Dan Fandrich
-    <code class="email">&lt;<a class="email" href="mailto:dan@coneharvesters.com">dan@coneharvesters.com</a>&gt;</code>. Permission is granted to
-    copy, distribute and/or modify this document under the terms of
-    the <acronym class="acronym">GNU</acronym> General Public License, Version 2 or any later version
-    published by the Free Software Foundation. </p><p> On Debian systems, the complete text of the GNU General Public
-      License can be found in /usr/share/common-licenses/GPL.  </p></div></div></body></html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Linux/x86 (vers 25 March 2009), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<title>GPSCORRELATE</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084"
+alink="#0000FF">
+<div class="refentry"><a name="idp1382173284" id=
+"idp1382173284"></a>
+<div class="titlepage"></div>
+<div class="refnamediv">
+<h2>Name</h2>
+<p>gpscorrelate &mdash; correlates digital images with GPS data
+filling EXIF fields</p>
+</div>
+<div class="refsynopsisdiv">
+<h2>Synopsis</h2>
+<div class="cmdsynopsis">
+<p><code class="command">gpscorrelate</code> [ -z | --timeadd
++/-<em class="replaceable"><code>HH</code></em>[:<em class=
+"replaceable"><code>MM</code></em>] ] [ -O | --photooffset
+<em class="replaceable"><code>seconds</code></em> ] [ -i |
+--no-interpolation ] [ -v | --verbose ] [ -d | --datum <em class=
+"replaceable"><code>datum</code></em> ] [ -n | --no-write ] [ -m |
+--max-dist <em class="replaceable"><code>time</code></em> ] [ -t |
+--ignore-tracksegs ] [ -M | --no-mtime ] [ --degmins ] [ -g
+<em class="replaceable"><code>file.gpx</code></em> | -l | --latlong
+<em class="replaceable"><code>lat/long/elev</code></em>] <em class=
+"replaceable"><code>image.jpg</code></em> ...</p>
+</div>
+<div class="cmdsynopsis">
+<p><code class="command">gpscorrelate</code> -s | --show | -o |
+--machine <em class=
+"replaceable"><code>image.jpg</code></em>...</p>
+</div>
+<div class="cmdsynopsis">
+<p><code class="command">gpscorrelate</code> [ -M | --no-mtime ] {
+-r | --remove } <em class=
+"replaceable"><code>image.jpg</code></em>...</p>
+</div>
+<div class="cmdsynopsis">
+<p><code class="command">gpscorrelate</code> { -f |
+--fix-datestamps } { -z | --timeadd +/-<em class=
+"replaceable"><code>HH</code></em>[:<em class=
+"replaceable"><code>MM</code></em>] } <em class=
+"replaceable"><code>image.jpg</code></em>...</p>
+</div>
+<div class="cmdsynopsis">
+<p><code class="command">gpscorrelate</code> -V | --version | -h |
+--help</p>
+</div>
+<div class="cmdsynopsis">
+<p><code class="command">gpscorrelate-gui</code></p>
+</div>
+</div>
+<div class="refsect1"><a name="idp1397585172" id=
+"idp1397585172"></a>
+<h2>DESCRIPTION</h2>
+<p>This manual page documents the <span class=
+"command"><strong>gpscorrelate</strong></span> and <span class=
+"command"><strong>gpscorrelate-gui</strong></span> commands. There
+is extended documentation available in HTML format; see below.</p>
+<p><span class="command"><strong>gpscorrelate</strong></span> is a
+program that acts on digital images in JPEG format, filling in the
+EXIF (Exchangeable Image File Format) fields related to GPS (Global
+Positioning System) information. Source for the GPS data is a GPX
+(GPS Exchange Format) file, which records GPS location information
+in an XML-based format. The act of filling those fields is referred
+to as <span class="emphasis"><em>correlation</em></span>.</p>
+<p>If GPS data are available at the precise moment the image was
+taken (with a 1-second granularity) the GPS data are stored
+unmodified in EXIF fields. If they are not, linear interpolation of
+GPS data available at moments before and after the image was taken
+can be used.</p>
+<p><span class="command"><strong>gpscorrelate</strong></span> is a
+command line tool implementing correlation whereas <span class=
+"command"><strong>gpscorrelate-gui</strong></span> is the
+corresponding GTK+ graphical user interface. The following options
+apply to <span class="command"><strong>gpscorrelate</strong></span>
+only; <span class=
+"command"><strong>gpscorrelate-gui</strong></span> accepts only the
+standard GTK+ command-line options.</p>
+</div>
+<div class="refsect1"><a name="idp1397589932" id=
+"idp1397589932"></a>
+<h2>OPTIONS</h2>
+<p>These programs follow the usual <acronym class=
+"acronym">GNU</acronym> command line syntax, with long options
+starting with two dashes (`-'). A summary of options is included
+below. For a complete description, see the HTML documentation.</p>
+<div class="variablelist">
+<dl class="variablelist">
+<dt><span class="term"><code class="option">-g</code>, <code class=
+"option">--gps</code> <em class=
+"replaceable"><code>file.gpx</code></em></span></dt>
+<dd>
+<p>Correlate images using the specified GPX file containing GPS
+track points. This option can be given many times to specify
+multiple GPX files. For each photo being correlated, the first file
+containing a track covering the time the photo was taken will be
+the one used. All <strong class=
+"userinput"><code>&lt;trk&gt;</code></strong> segments in each file
+are used.</p>
+</dd>
+<dt><span class="term"><code class="option">-l</code>, <code class=
+"option">--latlong</code> <em class=
+"replaceable"><code>latitude,longitude,elevation</code></em></span></dt>
+<dd>
+<p>Provide a specific geographic coordinate to use for all images
+instead correlating along a path in a GPX file. The format must be
+of the general form <strong class=
+"userinput"><code>latitude,longitude,elevation</code></strong>
+where latitude and longitude must each be in either decimal form,
+such as <strong class="userinput"><code>-123.45678</code></strong>
+or in degrees/minutes/seconds form, such as <strong class=
+"userinput"><code>-123&deg;45'67.8"</code></strong> or
+<strong class="userinput"><code>-123d45m67s</code></strong>.
+Providing an elevation is optional. Each component can be separated
+by commas, spaces or tabs.</p>
+<p>Note that this option has a known bug in that it does not parse
+numbers correctly in locales that use other than "." as a decimal
+separator.</p>
+</dd>
+<dt><span class="term"><code class="option">-s</code>, <code class=
+"option">--show</code></span></dt>
+<dd>
+<p>Only show the GPS data already in the given image's EXIF tags
+instead of correlating them.</p>
+</dd>
+<dt><span class="term"><code class="option">-o</code>, <code class=
+"option">--machine</code></span></dt>
+<dd>
+<p>Only show the GPS data of the given images in a machine-readable
+CSV format. Images without GPS tags are ignored. The fields output
+are file name, date and time, latitude, longitude, elevation, where
+the first value is the filename, as passed, the second is the
+timestamp, and the last three are floating point values with an
+optional leading plus or minus.</p>
+</dd>
+<dt><span class="term"><code class="option">-r</code>, <code class=
+"option">--remove</code></span></dt>
+<dd>
+<p>Remove all GPS EXIF data from the given images. Note that this
+only removes the GPS tags that the program could add; it does not
+delete all possible GPS EXIF tags. All other tags are left
+alone.</p>
+</dd>
+<dt><span class="term"><code class="option">-z</code>, <code class=
+"option">--timeadd</code> <strong class=
+"userinput"><code>+/-</code></strong><em class=
+"replaceable"><code>HH</code></em>[<strong class=
+"userinput"><code>:</code></strong><em class=
+"replaceable"><code>MM</code></em>]</span></dt>
+<dd>
+<p>Time to add to GPS points to make them match the timestamps of
+the images. GPS timestamps are in UTC; image timestamps are
+generally in local time. Enter the timezone used when taking the
+images; e.g., <strong class="userinput"><code>+8</code></strong>
+for Perth, Western Australia or <strong class=
+"userinput"><code>-2:30</code></strong> for St. John's,
+Newfoundland. This defaults to the UTC offset of the local time
+zone as of the time of the first image processed (versions before
+1.7 defaulted to 00:00).</p>
+</dd>
+<dt><span class="term"><code class="option">-O</code>, <code class=
+"option">--photooffset</code> <em class=
+"replaceable"><code>seconds</code></em></span></dt>
+<dd>
+<p>Time in seconds to add to the photo timestamp to make it match
+the GPS timestamp. To determine the number of seconds needed, just
+create a photograph of your GPS device showing the current time and
+compare it with the timestamp of your photo file. The EXIF time
+tags in the image are not modified based on this value.</p>
+</dd>
+<dt><span class="term"><code class="option">-i</code>, <code class=
+"option">--no-interpolation</code></span></dt>
+<dd>
+<p>Disable linear interpolation between points. With this flag, the
+nearest exact point (within <strong class=
+"userinput"><code>--max-dist</code></strong>) is used. Without this
+flag, photos taken between the time of two recorded GPS coordinates
+are correlated based on linear interpolation between those two
+points.</p>
+</dd>
+<dt><span class="term"><code class="option">-v</code>, <code class=
+"option">--verbose</code></span></dt>
+<dd>
+<p>Show slightly more information during the image correlation
+process, such as the GPS data selected for each image.</p>
+</dd>
+<dt><span class="term"><code class="option">-d</code>, <code class=
+"option">--datum</code> <em class=
+"replaceable"><code>datum</code></em></span></dt>
+<dd>
+<p>Specify GPS measurement datum. If not set, <strong class=
+"userinput"><code>WGS-84</code></strong> is used (<strong class=
+"userinput"><code>TOKYO</code></strong> is another possibility).
+However, GPX is not supposed to store anything but WGS-84, so this
+should only ever be needed with the <strong class=
+"userinput"><code>--latlong</code></strong> option.</p>
+</dd>
+<dt><span class="term"><code class="option">-n</code>, <code class=
+"option">--no-write</code></span></dt>
+<dd>
+<p>Do not write the correlated EXIF data back into the image.
+Useful with <strong class=
+"userinput"><code>--verbose</code></strong> to see what would
+happen during image correlation.</p>
+</dd>
+<dt><span class="term"><code class="option">-m</code>, <code class=
+"option">--max-dist</code> <em class=
+"replaceable"><code>time</code></em></span></dt>
+<dd>
+<p>Maximum time in seconds from the photo time which a logged GPS
+point can refer and still be used for correlation. This defaults to
+0, which means to disable this check. Only one of the two points
+need be within this range for correlation to take place.</p>
+<p>If the accuracy of the location is paramount and you would
+rather not correlate a position for a photo at all if the nearest
+GPS coordinates were recorded too long ago in the past or too far
+into the future (relative to when the photo was taken), then set
+this to a nonzero value.</p>
+</dd>
+<dt><span class="term"><code class="option">-t</code>, <code class=
+"option">--ignore-tracksegs</code></span></dt>
+<dd>
+<p>Interpolate between track segments, too. Generally, track
+segments show multiple sessions of GPS logging; between them is
+generally when the GPS was not logging. Since interpolation honours
+the <strong class="userinput"><code>--max-dist</code></strong>
+flag, even track segments with wide time gaps can safely be used if
+both flags are set. Without this flag, photos taken within the time
+gap between two <strong class=
+"userinput"><code>&lt;trkseg&gt;</code></strong> tracks in the GPX
+file are not correlated.</p>
+</dd>
+<dt><span class="term"><code class="option">-M</code>, <code class=
+"option">--no-mtime</code></span></dt>
+<dd>
+<p>Do not change the last modification time of changed files.</p>
+</dd>
+<dt><span class="term"><code class="option">-f</code>, <code class=
+"option">--fix-datestamps</code></span></dt>
+<dd>
+<p>Fix broken GPS datestamps written with <span class=
+"command"><strong>gpscorrelate</strong></span> versions &lt; 1.5.2
+by replacing them with the photo's time stamp. Prior to 1.5.2, two
+bugs wrote the wrong value for the GPSDateStamp and GPSTimeStamp
+tags. This option will check each supplied filename for the problem
+and correct it. Use with <strong class=
+"userinput"><code>--no-write</code></strong> to prevent writing
+these changes (useful for checking for the issue). This option also
+implies <strong class="userinput"><code>--no-mtime</code></strong>.
+You will also need to use <strong class=
+"userinput"><code>--timeadd</code></strong> to specify the
+difference between localtime and UTC time for the supplied
+photos.</p>
+</dd>
+<dt><span class="term"><code class=
+"option">--degmins</code></span></dt>
+<dd>
+<p>Write location as DD MM.MM (instead of the more accurate DD MM
+SS.SS) as was the default in <span class=
+"command"><strong>gpscorrelate</strong></span> versions &lt; 1.5.3.
+There is no good reason to use this option unless some broken
+program expects this style.</p>
+</dd>
+<dt><span class="term"><code class="option">-h</code>, <code class=
+"option">--help</code></span></dt>
+<dd>
+<p>Only show a summary of options.</p>
+</dd>
+<dt><span class="term"><code class="option">-V</code>, <code class=
+"option">--version</code></span></dt>
+<dd>
+<p>Only print the <span class=
+"command"><strong>gpscorrelate</strong></span> version number and
+copyright information.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="refsect1"><a name="idp1400647628" id=
+"idp1400647628"></a>
+<h2>EXAMPLES</h2>
+<p>To correlate all photos in a directory taken in western Europe
+in the summer:</p>
+<p><strong class="userinput"><code>gpscorrelate -g Test.gpx -z 2
+*.jpg</code></strong></p>
+<p>Show GPS tags in a photo:</p>
+<p><strong class="userinput"><code>gpscorrelate --show
+photo.jpg</code></strong></p>
+<p>Remove GPS tags from photos:</p>
+<p><strong class="userinput"><code>gpscorrelate --remove
+*.jpg</code></strong></p>
+<p>Correlate all photos in a directory from a track spread out over
+two different track files and taken in the computer's current time
+zone, interpolating between segments and between files while
+ignoring photos taken too far away from a recorded point, without
+changing the file time stamp of the files, while showing details of
+the process:</p>
+<p><strong class="userinput"><code>gpscorrelate -g track1.gpx -g
+track2.gpx -m 120 -t -M -v *.jpg</code></strong></p>
+<p>Add a GPS location tag to a photo taken at Ulmer
+M&uuml;nster:</p>
+<p><strong class="userinput"><code>gpscorrelate -l
+48.398620,9.991417,522 -z 2 ulm.jpg</code></strong></p>
+</div>
+<div class="refsect1"><a name="idp1400652220" id=
+"idp1400652220"></a>
+<h2>EXIT STATUS</h2>
+<p><span class="command"><strong>gpscorrelate</strong></span>
+returns <span class="errorcode">0</span> in case of success,
+<span class="errorcode">1</span> in case of major error (such as a
+read or write error) and <span class="errorcode">2</span> in case
+of minor error (such as the given GPS track not covering the time
+of an image).</p>
+</div>
+<div class="refsect1"><a name="idp1400654228" id=
+"idp1400654228"></a>
+<h2>SEE ALSO</h2>
+<p><span class="citerefentry"><span class=
+"refentrytitle">gpsd</span>(1)</span>, <span class=
+"citerefentry"><span class=
+"refentrytitle">gpsbabel</span>(1)</span>, <span class=
+"citerefentry"><span class=
+"refentrytitle">gpxlogger</span>(1)</span>, <span class=
+"citerefentry"><span class=
+"refentrytitle">cgpxlogger</span>(1)</span>.</p>
+<p>The documentation of gpscorrelate and gpscorrelate-gui in HTML
+format are available on the filesystem at <code class=
+"filename">/usr/local/share/doc/gpscorrelate</code>.</p>
+</div>
+<div class="refsect1"><a name="idp1400657020" id=
+"idp1400657020"></a>
+<h2>LICENSE</h2>
+<p>This manual page was initially written by Stefano Zacchiroli
+<code class="email">&lt;<a class="email" href=
+"mailto:zack@debian.org">zack@debian.org</a>&gt;</code> for the
+<span class="productname">Debian</span>&trade; system. It was
+extended by Till Maas <code class="email">&lt;<a class="email"
+href="mailto:opensource@till.name">opensource@till.name</a>&gt;</code>
+and Dan Fandrich <code class="email">&lt;<a class="email" href=
+"mailto:dan@coneharvesters.com">dan@coneharvesters.com</a>&gt;</code>.
+Permission is granted to copy, distribute and/or modify this
+document under the terms of the <acronym class=
+"acronym">GNU</acronym> General Public License, Version 2 or any
+later version published by the Free Software Foundation.</p>
+<p>On Debian systems, the complete text of the GNU General Public
+License can be found in /usr/share/common-licenses/GPL.</p>
+</div>
+</div>
+</body>
+</html>
