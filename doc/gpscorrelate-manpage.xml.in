@@ -4,7 +4,7 @@
 
   <!ENTITY dhfirstname "<firstname>Stefano</firstname>">
   <!ENTITY dhsurname   "<surname>Zacchiroli</surname>">
-  <!ENTITY dhdate      "<date>16 Mar 2016</date>">
+  <!ENTITY dhdate      "<date>19 Aug 2018</date>">
   <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
   <!ENTITY dhemail     "<email>zack@debian.org</email>">
   <!ENTITY dhusername  "Stefano Zacchiroli">
@@ -149,7 +149,7 @@
       <command>&dhpackage;</command>
       <group choice="req">
         <arg choice="plain">-f</arg>
-        <arg choice="plain">--fix-timestamps</arg>
+        <arg choice="plain">--fix-datestamps</arg>
       </group>
 
       <group choice="req">
@@ -270,7 +270,10 @@
         <listitem>
           <para>Only show the GPS data of the given images in a
           machine-readable CSV format. Images without GPS tags are
-          ignored.</para>
+          ignored. The fields output are file name, date and time, latitude,
+          longitude, elevation, where the first value is the filename, as
+          passed, the second is the timestamp, and the last three are floating
+          point values with an optional leading plus or minus.</para>
         </listitem>
       </varlistentry>
 
@@ -280,7 +283,10 @@
           <option>--remove</option>
         </term>
         <listitem>
-          <para>Remove all GPS EXIF data from the given images.</para>
+            <para>Remove all GPS EXIF data from the given images.  Note that
+            this only removes the GPS tags that the program could add; it
+            does not delete all possible GPS EXIF tags. All other tags are
+            left alone.</para>
         </listitem>
       </varlistentry>
 
@@ -288,13 +294,14 @@
         <term>
           <option>-z</option>,
           <option>--timeadd</option>
-          <userinput>+/-</userinput><replaceable>MM</replaceable>[<userinput>:</userinput><replaceable>SS</replaceable>]
+          <userinput>+/-</userinput><replaceable>HH</replaceable>[<userinput>:</userinput><replaceable>MM</replaceable>]
         </term>
         <listitem>
           <para>Time to add to GPS points to make them match the timestamps of the
             images. GPS timestamps are in UTC; image timestamps are generally
-            in local time.  Enter the timezone used when taking the images; e.g.
-            <userinput>+8</userinput> for Perth.
+            in local time.  Enter the timezone used when taking the images; e.g.,
+            <userinput>+8</userinput> for Perth, Western Australia or
+            <userinput>-2:30</userinput> for St. John's, Newfoundland.
             This defaults to the UTC offset of the local time zone as of the
             time of the first image processed (versions before 1.7 defaulted to
             00:00). </para>
@@ -309,10 +316,10 @@
         </term>
         <listitem>
           <para>Time in seconds to add to the photo timestamp to make it match
-            the GPS timestamp.  To determine the number of seconds needed, just
-            create a photograph of your GPS device showing the current time and
-            compare it with the timestamp of your photo file. The EXIF time
-	    tags in the image are not modified based on this value.</para>
+          the GPS timestamp.  To determine the number of seconds needed, just
+          create a photograph of your GPS device showing the current time and
+          compare it with the timestamp of your photo file. The EXIF time
+          tags in the image are not modified based on this value.</para>
         </listitem>
       </varlistentry>
 
@@ -351,7 +358,10 @@
         <listitem>
           <para>Specify GPS measurement datum. If not
           set, <userinput>WGS-84</userinput> is used
-          (<userinput>TOKYO</userinput> is another possibility).</para>
+          (<userinput>TOKYO</userinput> is another possibility).  However, GPX
+          is not supposed to store anything but WGS-84, so this should only
+          ever be needed with the <userinput>--latlong</userinput>
+          option.</para>
         </listitem>
       </varlistentry>
 
@@ -392,14 +402,15 @@
           <option>--ignore-tracksegs</option>
         </term>
         <listitem>
-          <para>Interpolate between track segments, too.  Since
-          interpolation honours the <userinput>--max-dist</userinput>
+          <para>Interpolate between track segments, too.
+          Generally, track segments show multiple sessions of GPS logging;
+          between them is generally when the GPS was not logging.
+          Since interpolation honours the <userinput>--max-dist</userinput>
           flag, even track segments with wide time gaps can
           safely be used if both flags are set.  Without this
           flag, photos taken within the time gap between two
           <userinput>&lt;trkseg&gt;</userinput> tracks in the GPX file
-          are not correlated.
-	  </para>
+          are not correlated.</para>
         </listitem>
       </varlistentry>
 
@@ -417,15 +428,20 @@
       <varlistentry>
         <term>
           <option>-f</option>,
-          <option>--fix-timestamps</option>
+          <option>--fix-datestamps</option>
         </term>
         <listitem>
-	  <para>Fix broken GPS datestamps written with <command>gpscorrelate</command>
-          versions &lt; 1.5.2 by replacing them with the photo's time stamp.
-          This option implies <userinput>--no-mtime</userinput>. The
-          <userinput>--timeadd</userinput> option must also be given when this
-          is used.
-  </para>
+          <para>Fix broken GPS datestamps written with
+          <command>gpscorrelate</command> versions &lt; 1.5.2 by replacing
+          them with the photo's time stamp.  Prior to 1.5.2,  two bugs
+          wrote the wrong value for the GPSDateStamp and GPSTimeStamp tags.
+          This option will check each supplied filename for the problem and
+          correct it. Use with <userinput>--no-write</userinput> to prevent
+          writing these changes (useful for checking for the issue).  This
+          option also implies <userinput>--no-mtime</userinput>. You will
+          also need to use <userinput>--timeadd</userinput> to specify the
+          difference between localtime and UTC time for the supplied
+          photos.</para>
         </listitem>
       </varlistentry>
       
@@ -434,10 +450,10 @@
           <option>--degmins</option>
         </term>
         <listitem>
-          <para>Write location as DD MM.MM (instead of DD MM SS.SS) as
-          was the default in <command>gpscorrelate</command> versions
-	  &lt; 1.5.3. There is no good reason to use this option unless some
-	  broken program expects this style.</para>
+          <para>Write location as DD MM.MM (instead of the more accurate DD MM
+          SS.SS) as was the default in <command>gpscorrelate</command>
+          versions &lt; 1.5.3. There is no good reason to use this option
+          unless some broken program expects this style.</para>
         </listitem>
       </varlistentry>
 
@@ -463,6 +479,46 @@
       </varlistentry>
     </variablelist>
 
+  </refsect1>
+  <refsect1>
+    <title>EXAMPLES</title>
+
+    <para>
+    To correlate all photos in a directory taken in western Europe in the
+    summer:</para>
+    <para>
+    <userinput>gpscorrelate -g Test.gpx -z 2 *.jpg</userinput>
+    </para>
+
+    <para>
+    Show GPS tags in a photo:
+    </para>
+    <para>
+    <userinput>gpscorrelate --show photo.jpg</userinput>
+    </para>
+
+    <para>
+    Remove GPS tags from photos:
+    </para>
+    <para>
+    <userinput>gpscorrelate --remove *.jpg</userinput>
+    </para>
+
+    <para>
+    Correlate all photos in a directory from a track spread out over two
+    different track files and taken in the computer's current time zone,
+    interpolating between segments and between files while ignoring photos
+    taken too far away from a recorded point, without changing the file time
+    stamp of the files, while showing details of the process:</para>
+    <para>
+    <userinput>gpscorrelate -g track1.gpx -g track2.gpx -m 120 -t -M -v *.jpg</userinput>
+    </para>
+
+    <para>
+    Add a GPS location tag to a photo taken at Ulmer Münster:</para>
+    <para>
+    <userinput>gpscorrelate -l 48.398620,9.991417,522 -z 2 ulm.jpg</userinput>
+    </para>
   </refsect1>
   <refsect1>
     <title>EXIT STATUS</title>

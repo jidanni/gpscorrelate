@@ -1,18 +1,50 @@
-<html><head><title>GPS Correlate Documentation</title></head>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><title>GPS Correlate</title></head>
 
 <body>
 
-<h1 align="center">GPS Correlate Documentation</h1>
+<h1 align="center">GPS Correlate</h1>
 
-<p align="center">Written by Daniel Foote.</p>
+<h2>What is it?</h2>
 
-<h2>Contents</h2>
+Digital cameras are cool. So is GPS. And, EXIF tags are really cool too.
+<p>
+What happens when you merge the three? You end up with a set of photos taken
+with a digital camera that are "stamped" with the location at which they were
+taken.
+<p>
+GPS Correlate takes a GPS track stored by any of a number of GPS devices and
+phone apps and correlates the time stamp of a digital photo with the location
+of the track at that same moment. The location of the image is then stamped
+directly into the image file using the appropriate EXIF GPS tags. The resulting
+image then contains not just the time the photo was taken but its exact
+location, too. The location is used by various other applications and services
+(such as Google Photos) to display a map of where the photo was taken.
+<p>
+A typical use case would be to start a GPS tracking app on the phone in your
+pocket while taking pictures. After the shoot, download the track in GPX format
+to your computer along with the photos, then use gpscorrelate to combine the two.
+
+
+<h2>Documentation</h2>
 
 <ul>
 <li><a href="concepts.html">GPS Photo Correlation Concepts</a></li>
-<li><a href="command.html">Usage of the command line client</a></li>
+<li><a href="gpscorrelate.html">Manual page of the command line client</a></li>
 <li><a href="gui.html">Usage of the GUI version</a></li>
 </ul>
+
+<h2>Source Code</h2>
+
+<p>
+Source code is available from the
+<a href="https://github.com/dfandrich/gpscorrelate">Github project</a>.</p>
+
+<h2>Bug Reports</h2>
+
+<p>
+If you've found a problem with gpscorrelate, please open an
+<a href="https://github.com/dfandrich/gpscorrelate/issues">issue</a>.</p>
 
 <h2>Important Note for users before 1.5.2</h2>
 
@@ -28,7 +60,11 @@
 
 <h2>More information</h2>
 
-<p>For more information, later versions, or comments/questions, please visit <a href="http://freefoote.dview.net">http://freefoote.dview.net</a>.</p>
+<p>For more information, later versions, or bug reports, please visit
+<a href="https://github.com/dfandrich/gpscorrelate">github.com/dfandrich/gpscorrelate</a>.
+To see the latest version of this documentation on-line, visit
+<a href="https://dfandrich.github.io/gpscorrelate">dfandrich.github.io/gpscorrelate</a>.</p>
+
 
 </body>
 </html>

@@ -29,7 +29,7 @@ applicationsdir = $(datadir)/applications
 
 DEFS = -DPACKAGE_VERSION=\"$(PACKAGE_VERSION)\"
 
-TARGETS = gpscorrelate-gui gpscorrelate gpscorrelate.1
+TARGETS = gpscorrelate-gui gpscorrelate doc/gpscorrelate.1 doc/gpscorrelate.html
 
 all:	$(TARGETS)
 
@@ -52,13 +52,13 @@ check: gpscorrelate
 	(cd tests && ./testsuite)
 
 clean:
-	rm -f *.o gpscorrelate{,.exe} gpscorrelate-gui{,.exe} doc/gpscorrelate-manpage.xml gpscorrelate.html tests/log/* $(TARGETS)
+	rm -f *.o gpscorrelate{,.exe} gpscorrelate-gui{,.exe} doc/gpscorrelate-manpage.xml tests/log/* $(TARGETS)
 
 install: all
 	install -d $(DESTDIR)$(bindir)
 	install gpscorrelate gpscorrelate-gui $(DESTDIR)$(bindir)
 	install -d $(DESTDIR)$(mandir)/man1
-	install -m 0644 gpscorrelate.1 $(DESTDIR)$(mandir)/man1
+	install -m 0644 doc/gpscorrelate.1 $(DESTDIR)$(mandir)/man1
 	install -d $(DESTDIR)$(docdir)
 	install -m 0644 doc/*.html doc/*.png $(DESTDIR)$(docdir)
 
@@ -66,13 +66,15 @@ install-desktop-file:
 	desktop-file-install --vendor="" --dir="$(DESTDIR)$(applicationsdir)" gpscorrelate.desktop
 	install -p -m0644 -D gpscorrelate-gui.svg $(DESTDIR)$(datadir)/icons/hicolor/scalable/apps/gpscorrelate-gui.svg
 
+docs: doc/gpscorrelate.1  doc/gpscorrelate.html
+
 doc/gpscorrelate-manpage.xml: doc/gpscorrelate-manpage.xml.in
 	sed -e 's,@DOCDIR@,$(docdir),' -e 's,@PACKAGE_VERSION@,$(PACKAGE_VERSION),' $< > $@
 
-gpscorrelate.1: doc/gpscorrelate-manpage.xml
+doc/gpscorrelate.1: doc/gpscorrelate-manpage.xml
 	xsltproc $(XSLTFLAGS) http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
 
-gpscorrelate.html: doc/gpscorrelate-manpage.xml
+doc/gpscorrelate.html: doc/gpscorrelate-manpage.xml
 	xsltproc $(XSLTFLAGS) http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl $< > $@
 
 build-po:
