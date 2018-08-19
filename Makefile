@@ -9,7 +9,7 @@ BUILDDIR=../gpscorrelate
 all: update check
 
 update:
-	cp -fv "$(BUILDDIR)"/doc/*{html,png} .
+	cp -fv "$(BUILDDIR)"/doc/*{html,png} "$(BUILDDIR)"/README.md .
 
 check: *.html
 	tidy -q -e $^
