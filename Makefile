@@ -60,7 +60,7 @@ install: all
 	install -d $(DESTDIR)$(mandir)/man1
 	install -m 0644 doc/gpscorrelate.1 $(DESTDIR)$(mandir)/man1
 	install -d $(DESTDIR)$(docdir)
-	install -m 0644 doc/*.html doc/*.png $(DESTDIR)$(docdir)
+	install -m 0644 doc/*.html doc/*.png README.md $(DESTDIR)$(docdir)
 
 install-desktop-file:
 	desktop-file-install --vendor="" --dir="$(DESTDIR)$(applicationsdir)" gpscorrelate.desktop
@@ -72,10 +72,10 @@ doc/gpscorrelate-manpage.xml: doc/gpscorrelate-manpage.xml.in
 	sed -e 's,@DOCDIR@,$(docdir),' -e 's,@PACKAGE_VERSION@,$(PACKAGE_VERSION),' $< > $@
 
 doc/gpscorrelate.1: doc/gpscorrelate-manpage.xml
-	xsltproc $(XSLTFLAGS) http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
+	xsltproc $(XSLTFLAGS) --encoding UTF-8 -o $@ http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
 
 doc/gpscorrelate.html: doc/gpscorrelate-manpage.xml
-	xsltproc $(XSLTFLAGS) http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl $< > $@
+	xsltproc $(XSLTFLAGS) --encoding UTF-8 -o $@ http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl $<
 
 build-po:
 	(cd po && $(MAKE) VERSION="$(PACKAGE_VERSION)" prefix="$(prefix)" top_srcdir="$(PWD)")
