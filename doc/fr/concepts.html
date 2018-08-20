@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>Documentation de GPS Correlate&nbsp;: les concepts</title>
+<link rel="alternate" hreflang="en" href="../concepts.html">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+
+<body LANG="fr-FR" DIR="LTR">
+
+<h1 align="center">Documentation de GPS Correlate&nbsp;: les concepts</h1>
+
+<hr />
+
+<h2>Étape 1&nbsp;: Prendre des photos et enregistrer les données GPS.</h2>
+
+<p>Avant de pouvoir corréler les photos avec des données GPS, vous devez d’abord avoir quelques photos et quelques données GPS. Ceci implique généralement d’aller quelque part (à pied, à cheval ou en voiture), de prendre des photos, et de prendre un GPS (ou quelque chose faisant office de GPS) avec vous.</p>
+
+<p>La plupart des appareils GPS bon marché ont une fonction «&nbsp;trace&nbsp;» qui enregistre où vous êtes allés. La résolution de ces pistes est très variable – mon Garmin eTrex GPS enregistre jusqu’à 1600 points de données, à environ 20 mètres entre chaque point. Ce qui correspond à environ 500 kilomètres de voyage (en voiture) ou 50 km (à pied) avant d’être à court de mémoire. (Ces chiffres peuvent varier beaucoup, en fonction de nombreux facteurs.)</p>
+
+<p>Les appareils GPS varient également dans leur capacité. Si vous utilisez un GPS qui ne fonctionne que sur un ordinateur, ou avez connecté votre appareil GPS à un ordinateur, vous pouvez enregistrer les données sur celui-ci. Dans ce cas, vous finirez probablement par régler la journalisation à un point par seconde, ce qui représente pas mal de données (rien d’excessif), mais des résultats très précis.</p>
+
+<p>À propos de la prise des photos, quelques rares appareils photo numériques peuvent ajouter des données GPS aux photos elles-mêmes. Si vous en avez un, alors vous n’avez pas besoin de ce programme !</p>
+
+<p>Pour le reste prenez des photos comme vous le feriez normalement. Le programme de corrélation fait correspondre les photos et les données GPS par leur horodatage, de sorte que ce serait une bonne idée de synchroniser l’heure des caméras au GPS avant de commencer à prendre des photos. (Pas l’inverse&nbsp;: le GPS reçoit sa mise à l'heure par les satellites, ce qui signifie qu’il est probablement correct… et de toute façon la plupart des GPS ne vous permettra pas régler l’heure).</p>
+
+<p>Les photos devront être étiquetés avec le système «&nbsp;EXIF&nbsp;» de métadonnées sur photo, y compris la date et l’heure. Ces balises sont intégrées dans les photos elles-mêmes. C’est à peu près standard pour les appareils photo numériques de nos jours, cependant certains appareils numériques très très très vieux (comme l’ancien Mavica Sony disquette dont un membre de ma famille est propriétaire) ne stockent pas les balises EXIF. Ils ne sont pas compatibles avec ce programme. Il y a probablement des façons de contourner cela, mais ceci est un autre sujet. (Donnez-moi une demi-seconde, et je commence à parler de l’écriture d’un script pour récupérer… non, mieux vaut s’arrêter là…)</p>
+
+<p>Lorsque vous avez terminé la séance de photos, téléchargez les photos comme d’habitude et préparez-vous. Rappelez-vous que les manipulations ou éditions ne risquent pas de supprimer les balises EXIF.</p>
+
+<h3>Ce que vous devez retenir&nbsp;:</h3>
+
+<ul>
+<li><b>Synchronisez l’heure de votre appareil photo à partir de l’heure du GPS.</b> Ne vous posez pas de question, faites-le systématiquement, et ce juste avant votre séance photo.</li>
+<li><b>Utilisez un GPS qui peut enregistrer une trace.</b> La plupart le font, même si la qualité et la résolution varie d’un modèle à l’autre.</li>
+<li><b>Prenez votre GPS avec vous, et gardez-le près de vous.</b> La précision d’un GPS est de l'ordre du mètre, aussi utilisez-le selon votre convenance.</li>
+</ul>
+
+<hr />
+
+<h2>Étape 2&nbsp;: Préparer les données GPS</h2>
+
+<p>Le programme de correlation GPS accepte les données GPS au format GPX&nbsp;: un format XML ouvert. Le choix format est tout à fait arbitraire et naturellement chaque GPS a son propre format de fichier. Et dans ce sens, ce programme ne fait pas exception.</p>
+
+<p>La manière dont vous obtiendrez les données GPS provenant d’un appareil dépend beaucoup de celui-ci, quoique nombre d’entre eux comportent une connexion USB. Dans quel format ces données seront livrées, là est la grande question. Personnellement, je recommande le logiciel GPSBabel pour convertir en GPX un fichier d’un format propriétaire. GPSBabel peut également télécharger directement depuis les GPS Garmin et Magellan (de telle sorte que vous aurez immédiatement un format GPX et les lots de métadonnées utiles, comme les segments de piste).</p>
+
+<p>Si vous enregistrez les données GPS avec un ordinateur… Et bien, il pourrait être dans n’importe quel format, en fonction de la façon dont il est connecté. Une astuce serait d’identifier les phrases <a href="https://fr.wikipedia.org/wiki/NMEA">NMEA</a> comme ils sont venus du GPS directement dans un fichier. Une fois l'enregistrement terminé, GPSBabel pourra convertir ces phrases NMEA au format GPX. Habituellement il s’agit d’un point à la seconde, ce qui constituerait de très bons résultats. Mais trimbaler un ordinateur portable pour enregistrer les données risque de ne pas être pratique. Un PDA serait peut-être pratique, mais…</p>
+
+<p>L’autre chose à savoir sur GPX est qu’il stocke les données assez intelligemment, séparant les pistes en «&nbsp;segments de piste&nbsp;». Cela peut s’expliquer tout simplement par un exemple. Si je conduis à travers un tunnel avec mon GPS, il n’a pas de réception. Mon GPS traduit cette absence de signal en n’enregistrant rien. GPSBabel interprète ceci correctement dans le fichier GPX en séparant les données dans des «&nbsp;segments de piste&nbsp;». Avant la version 1.1 de GPSBabel, le programme ignorait les segments et extrayait des points dans une seule piste. Donc si une photo avait été prise pendant le moment où il n’y avait pas de données GPS, vous auriez obtenu sans doute un positionnement incorrect. Maintenant, GPS Correlate ne fait plus correspondre une photo entre les segments de piste (vous pouvez toutefois désactiver cette fonctionnalité et revenir à l’ancien comportement).</p>
+
+<h3>Ce que vous devez retenir&nbsp;:</h3>
+
+<ul>
+<li><b>Quand vous aurez téléchargé les données GPS depuis votre appareil celles-ci pourront être dans n’importe quel format.</b> Convertissez-les avec GPSBabel au format GPX, ou mieux encore utilisez directement GPSBabel pour télécharger les données depuis votre GPS.</li>
+<li><b>Dans l’absolu les meilleurs résultats seraient obtenus en enregistrant les données NMEA vers un fichier, puis en convertissant celui-ci en GPX avec GPSBabel.</b> Cela vous donnerait un point à la seconde, ce qui est très précis.</li>
+<li><b>GPX est un bon format d’archivage des pistes.</b> En raison de sa nature XML, il sera toujours lisible.</li>
+<li><b>Le fichier GPX est subdivisée en «&nbsp;segments de piste&nbsp;».</b> Ceux-ci définissent les périodes pendant lesquelles le GPS a enregistré des données ou non. Par défaut le programme n’interpole pas entre les segments de piste.</li>
+</ul>
+
+<hr />
+
+<h2>Étape 3&nbsp;: Préparer la corrélation.</h2>
+
+<p>Pour démarrer la corrélation, vous avez besoin de photos et de données GPS. Je suppose que les deux étapes précédentes vous auront permis de constituer une série de fichiers JPEG avec EXIF ainsi qu’un fichier GPX avec la «&nbsp;trace&nbsp;» du chemin que vous avez suivi lorsque vous avez pris les photos.</p>
+
+<p>La dernière chose que vous devez savoir est le fuseau horaire sur lequel l’appareil photo est réglé. Les données GPS sont toujours en temps <a href="https://fr.wikipedia.org/wiki/UTC">UTC</a>, aussi pour corréler les photos nous avons besoin de savoir combien de temps ajouter ou retrancher à chaque photo pour aligner le temps des photos sur le temps UTC. Vous devez simplement «&nbsp;connaître&nbsp;» cette valeur et l’indiquer comme paramètre au programme qui se chargera lui-même du calcul.</p>
+
+<p>(Cela suppose évidement que l’appareil est réglé à l’heure locale quand vous prenez les photos. Il peut en être autrement, tant que vous savez la différence entre votre appareil et l’heure UTC. Si vous le voulez vraiment, vous pouvez régler votre appareil photo à l’heure UTC et laisser les choses telles quelles… mais ceci ne serait pas très convivial si vous essayez d’utiliser les données EXIF pour autres choses. Libre à vous.)</p>
+
+<p>Par exemple en France, en Belgique et en Suisse, l’heure est réglée sur <a href="https://fr.wikipedia.org/wiki/Heure_normale_d%27Europe_centrale">l'heure normale d’Europe centrale</a> en hiver (HNEC, +1:00, en anglais Central European Time&nbsp;: CET)  et sur <a href="https://fr.wikipedia.org/wiki/Heure_d%27%C3%A9t%C3%A9_d%27Europe_centrale">l’heure d’été d’Europe centrale</a> en été (HAEC, +2:00, en anglais Central European Summer Time&nbsp;: CEST)</p>
+
+<p>Depuis la version 1.5.4, il y a une option pour ajouter un décalage supplémentaire à chaque photo pour la faire correspondre avec les données GPS (dans le cas où les deux appareils ne seraient pas parfaitement synchronisés).</p>
+
+<p>Exemples de calcul&nbsp;:</p>
+<pre>Temps GPS de la photo&nbsp;:  10:10:10
+Horodatage de la Photo&nbsp;: 10:09:30
+GPS - Photo&nbsp;:                 +40
+
+Temps GPS de la photo&nbsp;:  10:10:10
+Horodatage de la Photo&nbsp;: 10:11:30
+GPS - Photo&nbsp;:                 -80</pre>
+
+<p>La valeur ainsi déterminée est à inscrire dans le paramètre «&nbsp;Photo Offset (Compensation photo)&nbsp;». C’est le temps, en secondes, qui doit être ajouté à l’horodatage des photos avant que la corrélation soit effectuée.</p>
+
+<h3>Ce que vous devez retenir&nbsp;:</h3>
+
+<ul>
+<li><b>Utilisez l’option «&nbsp;Timezone (fuseau horaire)&nbsp;» pour exprimer l’écart en l’heure locale des photos et l’heure UTC.</b> En heures et minutes, par exemple&nbsp;: +2:00.</li>
+<li><b>Depuis la version 1.5.4, vous pouvez affiner le décalage entre l’heure GPS et celle des photos (synchronisation).</b> Utilisez pour cela le paramètre «&nbsp;Photo Offset (compensation photo)&nbsp;».</li>
+</ul>
+
+<hr />
+
+<h2>Étape 4&nbsp;: Correlation.</h2>
+
+<p>Maintenant il est temps de corréler ! Vous pouvez au choix utiliser la <a href="gui.html">version graphique</a> (facile) ou la <a href="command.html">version en ligne de commande</a> (utilisable dans un script).</p>
+
+<p>Cependant il y a quelques options à considérer lorsqu’il s’agit de décider comment permettre au programme de déterminer exactement l’endroit où la photo a été prise. Le programme fonctionne à la seconde. Si vous avez un enregistrement par seconde dans la trace GPS, les photos correspondront exactement avec un point ayant le même horodatage. Comme c’est la précision de l’appareil photo et la précision du GPS, vous ne pouvez pas obtenir plus précis avec ce genre d’équipement.</p>
+
+<p>Quand la précision de la trace est moindre (plus d’une seconde entre deux points), il y a quelques options disponibles pour rendre les résultats plus précis. Par défaut, si le programme trouve une photo entre deux points, il fera une interpolation linéaire entre les points pour déterminer en l’emplacement.</p>
+
+<p>Mais peut-être n’aurez-vous pas envie, pour une raison quelconque, de permettre l’interpolation. Si vous désactivez l’interpolation, le programme choisira comme localisation le point horaire le plus proche (le premier des deux si elle est exactement à mi-distance entre deux points.)</p>
+
+<p>Le dernier réglage important est la distance maximale, exprimée en secondes, entre un point GPS et une photo. Par exemple, si deux points de données GPS sont à 15 minutes d’intervalle, et si vous avez pris une photo entre les deux, vous n’accepterez pas nécessairement l’idée que la photo soit positionnée à mi-distance, car vous auriez pu être tout à fait ailleurs. Dans ce cas, réglez la «&nbsp;distance maximale&nbsp;» à la durée maximale que vous souhaitez entre un point enregistré et une photo. Dans l’exemple ci-dessus, vous pouvez la régler à 60 secondes, si vous savez combien de fois votre GPS est susceptible de prendre d’autres points dans la période.</p>
+
+<h3>Ce que vous devez retenir&nbsp;:</h3>
+
+<ul>
+<li><b>Vous pouvez utiliser la <a href="gui.html">version graphique</a> si c’est cela qui vous convient mieux.</b></li>
+<li><b>Ou bien il y a toujours <a href="command.html">version en ligne de commande</a>.</b></li>
+<li><b>Par défaut, le programme interpole linéairement.</b> Si cette propriété est désactivée, la photo sera positionnée au point le plus proche.</li>
+<li><b>La «&nbsp;distance maximale&nbsp;», en secondes</b> est le temps maximum entre un point GPS et l'horodatage d’une photo pour que celle-ci soit corrélée.</li>
+</ul>
+
+<hr />
+
+<a href="index.html">Retour au sommaire</a>
+
+</body></html>
