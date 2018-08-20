@@ -4,9 +4,9 @@ To build, you will need these prerequisites:
 
 * The Exiv2 library (C++ EXIF tag handling): http://www.exiv2.org/
 * libxml2 (XML parsing): http://www.xmlsoft.org/
-* pkgconfig: http://pkg-config.freedesktop.org/
-* make, such as GNU make: http://www.gnu.org/software/make/make.html
-* GTK+ (only if compiling the GUI): http://www.gtk.org
+* pkgconfig: https://pkg-config.freedesktop.org/
+* make, such as GNU makes: http://www.gnu.org/software/make/make.html
+* GTK+ (only if compiling the GUI)s: http://www.gtk.org
 * xsltproc (only for building the man page): http://xmlsoft.org/XSLT/
   with manpages/docbook.xsl properly installed from
   http://docbook.sourceforge.net/projects/xsl/ or Internet access (xsltproc
@@ -40,4 +40,3 @@ To enable foreign language support, compile with
 "make CFLAGS=-DENABLE_NLS" (and LIBS=-lintl if required) and use the
 additional command "sudo make install-po" to install the message catalogs.
 Note that GNU make is required for this step.
-

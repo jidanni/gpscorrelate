@@ -1,10 +1,14 @@
-<html><head><title>GPS Correlate Documentation: Concepts</title></head>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+<title>GPS Correlate Documentation: Concepts</title>
+<link rel="alternate" hreflang="fr" href="fr/concepts.html">
+</head>
 
 <body>
 
 <h1 align="center">GPS Correlate Documentation: Concepts</h1>
 
-<hr />
+<hr>
 
 <h2>Step 1: Taking photos and recording GPS data.</h2>
 
@@ -30,7 +34,7 @@
 <li><b>Take your GPS with you, and keep it close to the camera.</b> GPS is accurate down to several meters, so use your discretion.</li>
 </ul>
 
-<hr />
+<hr>
 
 <h2>Step 2: Getting the GPS data ready.</h2>
 
@@ -51,7 +55,7 @@
 <li><b>The GPX file is split up into "track segments".</b> Generally these define when you were or were not logging GPS data. This program does not interpolate between track segments, by default.</li>
 </ul>
 
-<hr />
+<hr>
 
 <h2>Step 3: Getting ready to correlate.</h2>
 
@@ -65,14 +69,14 @@
 
 <p>Since 1.5.4, there is an option to add an offset to the photo time to make it match up with GPS data. An example case is where you take a photo of your GPS showing the current time. You can use this to calculate the difference between the GPSs time and the photos time.</p>
 
-<p>Example calculations:
+<p>Example calculations:</p>
 <pre>GPS Time in Photo:  10:10:10
 Timestamp on Photo: 10:09:30
 GPS - Photo:             +40
 
 GPS Time in Photo:  10:10:10
 Timestamp on Photo: 10:11:30
-GPS - Photo:             -80</pre></p>
+GPS - Photo:             -80</pre>
 
 <p>The value determined in the above examples becomes the "Photo offset" time, in seconds, which is added to the photos timestamp before the correlation is performed.</p>
 
@@ -83,7 +87,7 @@ GPS - Photo:             -80</pre></p>
 <li><b>As of 1.5.4, you can fine tune the offset between the GPS time and the Photos time.</b> Use the photo offset function to set this.</li>
 </ul>
 
-<hr />
+<hr>
 
 <h2>Step 4: Correlation.</h2>
 
@@ -106,7 +110,7 @@ GPS - Photo:             -80</pre></p>
 <li><b>"Feather time" or "max distance", in seconds</b> is the maximum time from a data point that a photo will be matched.</li>
 </ul>
 
-<hr />
+<hr>
 
 <a href="index.html">Return to the contents</a>
 

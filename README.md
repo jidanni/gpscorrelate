@@ -1,7 +1,5 @@
 # GPSCorrelate
 
-January 2013
-
 ## Status
 
 GPSCorrelate was originally written by Daniel Foote. The maintainer is now
@@ -33,7 +31,7 @@ version of the program.
   using GPSBabel - it can convert from lots of formats to GPX, as well as
   download from several brands of popular GPS receivers.
 * The program can "interpolate" between points (linearly) to get better
-  results. (That is, for  GPS logs that are not one sample per second, like
+  results. (That is, for GPS logs that are not one sample per second, like
   those I get off my Garmin eTrex GPS)
 * The resolution is down to one second. But that should be good enough for most
   things. (This is a limit of the EXIF tags format, as well as GPX)
