@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>Documentation de GPS Correlate : version ligne de commande</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+
+<body LANG="fr-FR" DIR="LTR">
+
+<h1 align="center">Documentation de GPS Correlate&nbsp;: version ligne de commande</h1>
+
+<hr />
+
+<h2>Options des lignes de commande</h2>
+
+<p>Usage basique:</p>
+
+<pre>
+gpscorrelate [OPTIONS] -g données_gps.gpx photo1.jpg photo2.jpg ...
+</pre>
+
+<p>Les options sont&nbsp;:</p>
+
+<table border="0" width="100%" summary="liste d'options">
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--gps or -g données_gps.gpx</b>
+</td><td>
+Indique le fichier contenant les données GPS
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--timeadd or -z +/-XX:[XX]</b>
+</td><td>
+Indique le fuseau horaire des photos. Par exemple +1:00 pour l’heure normale d’Europe centrale (CET&nbsp;: Paris, Bruxelles, Genève…) et +2:00 pour l’heure d’été d’Europe centrale (CEST). Il est possible de le spécifier sous la forme &quot;1&quot;, &quot;+1&quot;, &quot;1:00&quot; ou &quot;+1:00&quot;.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--no-interpolation or -i</b>
+</td><td>
+Désactiver l’interpolation entre les points. Au lieu d’interpoler, le programme «&nbsp;arrondira&nbsp;» au point le plus proche. Si la photo est exactement à mi-distance entre deux points, il choisira le premier.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--verbose or -v</b>
+</td><td>
+Mode verbeux&nbsp;: affiche plus d’informations à l’écran.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--no-write or -n</b>
+</td><td>
+Ne pas écrire les balises EXIF GPS dans le fichier. Utile avec-v pour faire un essai.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--datum or -d "datum"</b>
+</td><td>
+Spécifie le «&nbsp;datum&nbsp;» à inscrire dans les tags GPS EXIF. Par défaut c’est le WGS-84. En fait le format GPX n’est pas sensé contenir autre-chose que du WGS-84, donc n’utilisez cette option qu’en toute connaissance de cause.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--max-dist or -m time</b>
+</td><td>
+Indique l’écart de temps maximum entre un point GPS et une photo pour établir une corrélation. Exprimé en secondes.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--show or -s</b>
+</td><td>
+Montre les données GPS contenues dans les tags EXIF des photos indiquées puis quitte.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--machine or -o</b>
+</td><td>
+Montre les données GPS contenues dans les tags EXIF des photos indiquées puis quitte. Cette option diffère de --show en ceci que la sortie se fera dans un format machine&nbsp;: le CSV. Les champs sont&nbsp;: <BR />&quot;monfichier.jpg&quot;,&quot;2005:04:23 19:31:00&quot;,Latitude,Longitude,Élévation<BR />La première valeur est le nom du fichier tel que passé en paramètre, le second est l’horodatage, et les trois derniers des valeurs signées en virgule flottante.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--remove or -r</b>
+</td><td>
+Retire les tags GPS EXIF des fichiers spécifiés et quitte. Notez que ceci supprime uniquement les tags GPS que le programme peut écrire et non tous les tags GPS EXIF possibles. Tous les autres tags sont laissés inchangés.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--ignore-tracksegs or -t</b>
+</td><td>
+Ignore les balises tracksegment dans le fichier GPX originel et interpole entre deux points de deux segments différents. En général les segments de pistes correspondent à des sessions de journalisation GPS&nbsp;: l’intervalle entre deux segments correspond à une période pendant laquelle le GPS n’est pas allumé ou ne reçoit pas de signal.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--fix-datestamps or -f</b>
+</td><td>
+Avant la version 1.5.2 deux bugs entraînaient l’écriture de fausses valeur pour les tags GPSDateStamp (date) et GPSTimeStamp tag (horaire). Cette option vérifiera chaque fichier et le corrigera éventuellement. Utilisez --no-write pour empêcher l’écriture (simple vérification). Cette option implique également --no-mtime. Vous aurez aussi besoin d’utiliser --timeadd pour préciser la différence entre l’heure UTC et l’heure locale des photos indiquées.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--degmins</b>
+</td><td>
+Avant la version 1.5.3, Longitude et Latitude étaient écrits en DD MM.MM. Depuis la 1.5.3, le format par défaut est DD MM SS.SS, ce qui est plus précis. Utilisez cette option pour forcer l’ancien format.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--photooffset or -O seconds</b>
+</td><td>
+Ce paramètre indique le décalage photo, c’est-à-dire un nombre de secondes à ajouter à l’horodatage de la photo. C’est la différence entre le temps GPS et celui de la photo. Voir <A HREF="concepts.html">Concepts de corrélation GPS</A> pour plus de détail sur son utilisation.
+</td></tr>
+
+</table>
+
+<p>Exemples d’utilisation&nbsp;:</p>
+
+<p>Dans un répertoire remplis de photos&nbsp;:</p>
+
+<pre>gpscorrelate -g Test.gpx -z +8 *.jpg</pre>
+
+<p>Montrer ou supprimer les tags GPS&nbsp;:</p>
+
+<pre>gpscorrelate --show *.jpg
+gpscorrelate --remove *.jpg</pre>
+
+<p>Et c’est tout… Il n’y a rien à dire de plus sur ce programme qui n’ait été dit dans le document <A HREF="concepts.html">Concepts de corrélation GPS</A>.</p>
+
+<hr />
+
+<a href="index.html">Retour au sommaire</a>
+
+</body>
+</html>

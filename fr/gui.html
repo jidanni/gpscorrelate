@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>Documentation de GPS Correlate : version graphique</title>
+<link rel="alternate" hreflang="en" href="../gui.html">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+
+<body LANG="fr-FR" DIR="LTR">
+
+<h1 align="center">Documentation de GPS Correlate : version graphique</h1>
+
+<hr />
+
+<h2>La fenêtre de correlation</h2>
+
+<img src="https://raw.github.com/freefoote/gpscorrelate/master/doc/corr.png" alt="La fenêtre de correlation" width="880" height="530">
+
+<h2>Mode d'emploi de la fenêtre de correlation</h2>
+
+<h3>Étape 1 : ajouter des photos</h3>
+
+<p>Le bouton <b>«&nbsp;Add photos…&nbsp;»</b> permet de sélectionner des photos à ajouter à la liste. Vous pouvez sélectionner plusieurs photos en une seule fois à partir de la boîte de dialogue qui s’affiche. Une fois que vous avez choisi les photos que vous voulez, cliquez sur «&nbsp;Ouvrir&nbsp;» pour les sélectionner. Leurs balises EXIF seront examinées puis elles seront ajoutées à la liste. Si elles ont déjà des données GPS EXIF, celles-ci seront affichées dans la fenêtre. Sinon, vous verrez simplement l’horodatage des photos et leur statut.</p>
+
+<p>Sélectionner une photo ou plusieurs photos dans la liste sur la droite et cliquer sur <b>«&nbsp;Remove&nbsp;»</b> supprime celle(s)-ci de la liste.</p>
+
+<h3>Étape 2: Les données GPS</h3>
+
+<p>Cliquer sur le bouton <b>«&nbsp;Choose…&nbsp;»</b> fait apparaître une boîte de dialogue demandant de sélectionner le fichier GPX à partir duquel le programme peut lire des données GPS. Une fois sélectionné il est chargé en mémoire. Pendant le chargement s'affiche une boîte de dialogue vous demandant de patienter puis, le chargement terminé, le nom du fichier apparaît au-dessus du bouton.</p>
+
+<h3>Étape 3: Établir les options</h3>
+
+<p>La case <b>«&nbsp;Interpolate&nbsp;»</b> définit si oui ou non le programme peut interpoler entre les points GPS. Par défaut, cette case est cochée. Sa désactivation implique au contraire le choix du point GPS le plus proche.</p>
+
+<p>La case <b>«&nbsp;Don't write&nbsp;»</b> si elle est cochée, empêche l’enregistrement des tags EXIF GPS dans les photos. Cependant, la localisation est affichée dans la liste, ce qui permet de vérifier préalablement les résultats de la corrélation.</p>
+
+<p>La case <b>«&nbsp;Don't change mtime&nbsp;»</b> si cochée, inhibe la mise à jour de la date de modification des fichiers quand les données EXIF GPS sont enregistrées.</p>
+
+<p>La case <b>«&nbsp;Between Segments&nbsp;»</b> si elle est cochée, ignore les segments de piste, et permet la correspondance des photos entre des points de segments de piste différents. Normalement les segments de piste correspondent à différentes sessions d’enregistrement du GPS, et l’interpolation entre des segments de piste pourrait bien donner une position ne correspondant à aucune données.</p>
+
+<p>La case <b>«&nbsp;Write DD&nbsp;MM&nbsp;SS.SS&nbsp;»</b> si décochée, va forcer l’écriture de la Longitude et de la Latitude selon l'ancien format DD&nbsp;MM.MM. La valeur par défaut est maintenant d’écrire en DD&nbsp;MM&nbsp;SS.SS</p>
+
+<p>La zone <b>«&nbsp;Max gap time&nbsp;»</b> indique l’écart de temps maximum entre un point GPS et une photo pour établir une corrélation. Exprimé en secondes.</p>
+
+<p>La zone <b>«&nbsp;Time Zone&nbsp;»</b> spécifie le fuseau horaire utilisé lors de la prise des photos, de sorte que les données de temps de celles-ci puissent être ajustées pour correspondre aux données GPS.</p>
+
+<p>La zone <b>«&nbsp;Photo Offset&nbsp;»</b> spécifie un décalage en nombre de secondes à ajouter aux photos pour les faire correspondre aux données GPS (synchronisation). Voir la page <a href="concepts.html">Documentation de GPS Correlate&nbsp;: les concepts</a> pour comprendre l’intérêt de ce paramètre.</p>
+
+<p>La zone <b>«&nbsp;GPS Datum&nbsp;»</b> spécifie le système de référence de la source de données GPS et fait l’objet d’un tag EXIF. Par défaut il s'agit du «&nbsp;WGS-84&nbsp;», et ne devrait pas être changé, dans la mesure où le format GPX n’est pas censé contenir autre chose. N’utilisez cette option qu’en toute connaissance de cause.</p>
+
+<h3>Étape 4: Corréler&nbsp;!</h3>
+
+<p>Le bouton <b>«&nbsp;Correlate Photos&nbsp;»</b> permet de démarrer la procédure de corrélation sur les photos sélectionnées avec les données GPS chargées. Si aucune photo n’est sélectionnée, ou s’il n’y a pas de données GPS chargées, une erreur est générée. Dans le cas contraire les photos sont corrélées et vous pouvez voir leur changement de statut dans la liste pendant que le processus se poursuit. Si des photos sont localisées, leurs emplacements sont également indiqués dans la liste des photos.</p>
+
+<h3>Autre outil</h3>
+
+<p>Le bouton <b>«&nbsp;Strip GPS tags&nbsp;»</b> permet de supprimer des balises GPS sur les photos sélectionnées.</p>
+
+<h3>Enregistrement des préférences</h3>
+
+<p>Depuis la version 1.5.4, quand vous quitter le programme, vos paramètres sont sauvegardés dans le fichier ~/.gpscorrelaterc. Ils seront rechargés au prochain appel de gpscorrelate. La version en ligne de commande ne fait pas usage de ce fichier.</p>
+
+<hr />
+
+<a href="index.html">Retour au sommaire</a>
+
+</body></html>
+
