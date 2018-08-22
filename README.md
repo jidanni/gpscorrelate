@@ -5,7 +5,7 @@
 GPSCorrelate was originally written by Daniel Foote. The maintainer is now
 Dan Fandrich <dan@coneharvesters.com>.
 
-The GPSCorrelate home page is at https://dfandrich.github.com/gpscorrelate/
+The GPSCorrelate home page is at https://dfandrich.github.io/gpscorrelate/
 
 ## What is it?
 
@@ -38,7 +38,3 @@ version of the program.
 * For best results, you should synchronise your camera to the GPS time before
   you start taking photos. Note: digital cameras clocks drift quickly - even
   over a short period of time (say, a week).
-
-
-Daniel Foote, 2005.
-Daniel Fandrich, 2013.
