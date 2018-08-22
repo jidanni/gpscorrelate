@@ -4,6 +4,9 @@ sudo: false
 
 language: cpp
 
+git:
+  depth: 1
+
 # Install needed packages on Ubuntu (OS X is done with brew below)
 addons:
   apt:
@@ -15,16 +18,37 @@ install:
 # Install exiv2 on OS X
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install exiv2; fi
 
+env:
+  matrix:
+    - CONFIG=normal
+    - CONFIG=no_nls
+    - CONFIG=sanitize
+  global:
+    - MAKEFLAGS='-j 2'
+
+matrix:
+  exclude:
+  # Gives spurious errors with clang and gcc doesn't support -fsanitize=undefined
+  - os: linux
+    env: CONFIG=sanitize  # Gives spurious errors in this config
+
 # Only build the command-line tool for now
 script:
-    - if [ "$TRAVIS_OS_NAME" != "osx" ]; then make CFLAGS="-Wall -O2 -DENABLE_NLS=1" CC="$CC" CXX="$CXX" gpscorrelate; fi
+  - if [ "$CONFIG" = "normal" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; fi
+  - if [ "$CONFIG" = "no_nls" ] ; then CFLAGS='-Wall -Wextra -O3'; fi
+  - if [ "$CONFIG" = "sanitize" ] ; then CFLAGS='-g -O0 -fsanitize=address -fsanitize=undefined -DENABLE_NLS=1';  LDFLAGS='$(CFLAGS)'; fi
+
     # Explicitly point to brew's gettext installation on OS X
-    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then make CFLAGS="-Wall -O2 -DENABLE_NLS=1 -I/usr/local/opt/gettext/include" LDFLAGS="-Wall -O2 -L/usr/local/opt/gettext/lib -lintl" CC="$CC" CXX="$CXX" gpscorrelate; fi
-    - make check
+  - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then CFLAGS="$CFLAGS -I/usr/local/opt/gettext/include"; LDFLAGS="$LDFLAGS -L/usr/local/opt/gettext/lib -lintl"; fi
+
+  - make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" gpscorrelate
+  - ./gpscorrelate -V
+
+  - make check
 # This can only be installed if the GTK target is also built
 #     - make install DESTDIR="${HOME}"
 # Ensure brew gettext is in the PATH so xgettext is found on OS X
-    - PATH="$PATH:/usr/local/opt/gettext/bin" make install-po prefix= DESTDIR="${HOME}"
+  - PATH="$PATH:/usr/local/opt/gettext/bin" make install-po prefix= DESTDIR="${HOME}"
 
 compiler:
   - clang
