@@ -95,7 +95,7 @@ struct GPSPoint* CorrelatePhoto(const char* Filename,
 		Options->TimeZoneMins = ((PhotoTime - RealTime) % 3600) / 60;
 		Options->AutoTimeZone = 0;
 	}
-	/*printf("Using offset %02d:%02d\n", Options->TimeZoneHours, Options->TimeZoneMins);*/
+	//printf("Using offset %02d:%02d\n", Options->TimeZoneHours, Options->TimeZoneMins);
 
 	/* Now convert the time into Unixtime. */
 	time_t PhotoTime =

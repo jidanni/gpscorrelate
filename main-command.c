@@ -104,7 +104,7 @@ static void PrintUsage(const char* ProgramName)
  */
 static char *CsvEscape(const char *str)
 {
-	char *newstr = (char*)malloc(strlen(str)*2+1); /* worst-case size */
+	char *newstr = (char*)malloc(strlen(str)*2+1); // worst-case size
 	char *cpy = newstr;
 	if (!newstr)
 		return newstr;

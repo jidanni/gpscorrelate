@@ -78,7 +78,7 @@ time_t ConvertToUnixTime(const char* StringTime, const char* Format,
 	struct tm Time;
 	Time.tm_wday = 0;
 	Time.tm_yday = 0;
-	Time.tm_isdst = 0; /* there is no DST in UTC */
+	Time.tm_isdst = 0; // there is no DST in UTC
 
 	/* Read out the time from the string using our format. */
 	sscanf(StringTime, Format, &Time.tm_year, &Time.tm_mon,
