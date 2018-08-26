@@ -6,6 +6,8 @@ GPSCorrelate was originally written by Daniel Foote. The maintainer is now
 Dan Fandrich <dan@coneharvesters.com>.
 
 The GPSCorrelate home page is at https://dfandrich.github.io/gpscorrelate/
+[![Build Status](https://travis-ci.org/dfandrich/gpscorrelate.svg?branch=master)](https://travis-ci.org/dfandrich/gpscorrelate)
+[![Coverage Status](https://coveralls.io/repos/github/dfandrich/gpscorrelate/badge.svg?branch=travis)](https://coveralls.io/github/dfandrich/gpscorrelate?branch=travis)
 
 ## What is it?
 

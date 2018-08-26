@@ -15,14 +15,16 @@ addons:
         - libexiv2-dev
 
 install:
-# Install exiv2 on OS X
+  # Install exiv2 on OS X
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install exiv2; fi
+  - if [ "$CONFIG" = "coverage" ] ; then pip install --user cpp-coveralls; fi
 
 env:
   matrix:
     - CONFIG=normal
     - CONFIG=no_nls
     - CONFIG=sanitize
+    - CONFIG=coverage
   global:
     - MAKEFLAGS='-j 2'
 
@@ -31,12 +33,19 @@ matrix:
   # Gives spurious errors with clang and gcc doesn't support -fsanitize=undefined
   - os: linux
     env: CONFIG=sanitize  # Gives spurious errors in this config
+  # Only run the coverage build in one configuration
+  - os: osx
+    env: CONFIG=coverage
+  - os: linux
+    compiler: clang
+    env: CONFIG=coverage
 
 # Only build the command-line tool for now
 script:
   - if [ "$CONFIG" = "normal" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; fi
   - if [ "$CONFIG" = "no_nls" ] ; then CFLAGS='-Wall -Wextra -O3'; fi
-  - if [ "$CONFIG" = "sanitize" ] ; then CFLAGS='-g -O0 -fsanitize=address -fsanitize=undefined -DENABLE_NLS=1';  LDFLAGS='$(CFLAGS)'; fi
+  - if [ "$CONFIG" = "sanitize" ] ; then CFLAGS='-g -O0 -fsanitize=address -fsanitize=undefined -DENABLE_NLS=1'; LDFLAGS='$(CFLAGS)'; fi
+  - if [ "$CONFIG" = "coverage" ] ; then CFLAGS='-g -O0 --coverage'; LDFLAGS='$(CFLAGS)'; fi
 
     # Explicitly point to brew's gettext installation on OS X
   - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then CFLAGS="$CFLAGS -I/usr/local/opt/gettext/include"; LDFLAGS="$LDFLAGS -L/usr/local/opt/gettext/lib -lintl"; fi
@@ -49,6 +58,9 @@ script:
 #     - make install DESTDIR="${HOME}"
 # Ensure brew gettext is in the PATH so xgettext is found on OS X
   - PATH="$PATH:/usr/local/opt/gettext/bin" make install-po prefix= DESTDIR="${HOME}"
+
+after_success:
+  - if [ "$CONFIG" = "coverage" ] ; then coveralls --gcov-options '\-lp'; fi
 
 compiler:
   - clang
