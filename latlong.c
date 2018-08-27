@@ -47,7 +47,6 @@ int NumDecimals(const char *Decimal)
 	return 0;
 }
 
-
 /* Parses a human-readable latitude, longitude and optionally elevation in
    decimal form
    e.g. 12.3456 -123.45678 1234.56
@@ -123,7 +122,10 @@ static double ParseDMS(char *latlongstr, char **endstr, int *dec)
 
 	/* Degrees
 	   The degrees symbol (\xc2\xb0 in UTF-8) only makes sense in UTF-8
-       locales, but should be pretty harmless in other locales */
+	   locales, but should be pretty harmless in other locales.
+	   Conveniently, \xb0 is also the degrees symbol in all ISO 8859/X
+	   locales that have the character, so it will work almost everywhere
+	   without additional work. */
 	num = strtok(latlongstr, "d\xc2\xb0");
 	if (!num || strlen(num) != strspn(num, D_DIGITS))
 		return NAN;
@@ -137,7 +139,7 @@ static double ParseDMS(char *latlongstr, char **endstr, int *dec)
 	   representing that code point that will appear as the first character
 	   here. Unfortunately, it appears that strtok doesn't handle UTF-8 properly,
 	   even in a UTF-8 locale. */
-	num = strtok(NULL, "m'\xb0");
+	num = strtok(NULL, "m'\xb0 ");
 	if (!num || strlen(num) != strspn(num, M_DIGITS))
 		return NAN;
 	ms = strtod(num, NULL);
@@ -146,7 +148,7 @@ static double ParseDMS(char *latlongstr, char **endstr, int *dec)
 	dms = dms + ms/60.0 * (2*(dms>0)-1);
 
 	/* Seconds */
-	num = strtok(NULL, "s\"");
+	num = strtok(NULL, "s\" \t,");
 	if (!num || strlen(num) != strspn(num, S_DIGITS))
 		return NAN;
 	ms = strtod(num, NULL);
