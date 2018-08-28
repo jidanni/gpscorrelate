@@ -20,11 +20,11 @@ install:
   - if [ "$CONFIG" = "coverage" ] ; then pip install --user cpp-coveralls; fi
 
 env:
+  # More configurations are configured in the matrix section
   matrix:
     - CONFIG=normal
     - CONFIG=no_nls
     - CONFIG=sanitize
-    - CONFIG=coverage
   global:
     - MAKEFLAGS='-j 2'
 
@@ -33,12 +33,36 @@ matrix:
   # Gives spurious errors with clang and gcc doesn't support -fsanitize=undefined
   - os: linux
     env: CONFIG=sanitize  # Gives spurious errors in this config
+  include:
   # Only run the coverage build in one configuration
-  - os: osx
-    env: CONFIG=coverage
   - os: linux
+    compiler: gcc
+    env:
+      - CONFIG=coverage
+  - os: linux
+    addons:
+      apt:
+        sources:
+          - llvm-toolchain-trusty-5.0
+        packages:
+          - exiv2
+          - libexiv2-dev
+          - clang-5.0
     compiler: clang
-    env: CONFIG=coverage
+    env:
+      - CONFIG=clang5
+  - os: linux
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - exiv2
+          - libexiv2-dev
+          - g++-7
+    compiler: gcc
+    env:
+      - CONFIG=gcc7
 
 # Only build the command-line tool for now
 script:
@@ -46,6 +70,8 @@ script:
   - if [ "$CONFIG" = "no_nls" ] ; then CFLAGS='-Wall -Wextra -O3'; fi
   - if [ "$CONFIG" = "sanitize" ] ; then CFLAGS='-g -O0 -fsanitize=address -fsanitize=undefined -DENABLE_NLS=1'; LDFLAGS='$(CFLAGS)'; fi
   - if [ "$CONFIG" = "coverage" ] ; then CFLAGS='-g -O0 --coverage'; LDFLAGS='$(CFLAGS)'; fi
+  - if [ "$CONFIG" = "clang5" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; CC=clang-5.0; CXX=clang++-5.0; fi
+  - if [ "$CONFIG" = "gcc7" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; CC=gcc-7; CXX=g++-7; fi
 
     # Explicitly point to brew's gettext installation on OS X
   - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then CFLAGS="$CFLAGS -I/usr/local/opt/gettext/include"; LDFLAGS="$LDFLAGS -L/usr/local/opt/gettext/lib -lintl"; fi
