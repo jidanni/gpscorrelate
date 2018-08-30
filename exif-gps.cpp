@@ -100,7 +100,7 @@ char* ReadExifDate(const char* File, int* IncludesGPS)
 
 	try {
 		Image = Exiv2::ImageFactory::open(File);
-	} catch (Exiv2::Error e) {
+	} catch (Exiv2::Error& e) {
 		DEBUGLOG("Failed to open file %s.\n", File);
 		return NULL;
 	}
@@ -157,7 +157,7 @@ char* ReadExifData(const char* File, double* Lat, double* Long, double* Elev, in
 
 	try {
 		Image = Exiv2::ImageFactory::open(File);
-	} catch (Exiv2::Error e) {
+	} catch (Exiv2::Error& e) {
 		DEBUGLOG("Failed to open file %s.\n", File);
 		return NULL;
 	}
@@ -295,7 +295,7 @@ char* ReadGPSTimestamp(const char* File, char* DateStamp, char* TimeStamp, int* 
 
 	try {
 		Image = Exiv2::ImageFactory::open(File);
-	} catch (Exiv2::Error e) {
+	} catch (Exiv2::Error& e) {
 		DEBUGLOG("Failed to open file %s.\n", File);
 		return NULL;
 	}
@@ -457,7 +457,7 @@ int WriteGPSData(const char* File, const struct GPSPoint* Point,
 
 	try {
 		Image = Exiv2::ImageFactory::open(File);
-	} catch (Exiv2::Error e) {
+	} catch (Exiv2::Error& e) {
 		DEBUGLOG("Failed to open file %s.\n", File);
 		return 0;
 	}
@@ -607,7 +607,7 @@ int WriteGPSData(const char* File, const struct GPSPoint* Point,
 	// Write the data to file.
 	try {
 		Image->writeMetadata();
-	} catch (Exiv2::Error e) {
+	} catch (Exiv2::Error& e) {
 		DEBUGLOG("Failed to write to file %s.\n", File);
 		return 0;
 	}
@@ -637,7 +637,7 @@ int WriteFixedDatestamp(const char* File, time_t Time)
 
 	try {
 		Image = Exiv2::ImageFactory::open(File);
-	} catch (Exiv2::Error e) {
+	} catch (Exiv2::Error& e) {
 		DEBUGLOG("Failed to open file %s.\n", File);
 		return 0;
 	}
@@ -672,7 +672,7 @@ int WriteFixedDatestamp(const char* File, time_t Time)
 	
 	try {
 		Image->writeMetadata();
-	} catch (Exiv2::Error e) {
+	} catch (Exiv2::Error& e) {
 		DEBUGLOG("Failed to write to file %s.\n", File);
 		return 0;
 	}
@@ -699,7 +699,7 @@ int RemoveGPSExif(const char* File, int NoChangeMtime, int NoWriteExif)
 	
 	try {
 		Image = Exiv2::ImageFactory::open(File);
-	} catch (Exiv2::Error e) {
+	} catch (Exiv2::Error& e) {
 		DEBUGLOG("Failed to open file %s.\n", File);
 		return 0;
 	}
@@ -725,7 +725,7 @@ int RemoveGPSExif(const char* File, int NoChangeMtime, int NoWriteExif)
 	if (!NoWriteExif) {
 		try {
 			Image->writeMetadata();
-		} catch (Exiv2::Error e) {
+		} catch (Exiv2::Error& e) {
 			DEBUGLOG("Failed to write to file %s.\n", File);
 			return 0;
 		}
