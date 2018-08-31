@@ -37,7 +37,7 @@ fi
 STAGINGDIR="$srcdir/staging"
 # Make all files in the staging area read only to prevent
 # accidental modification
-chmod -w "$STAGINGDIR"/*
+chmod a-w "$STAGINGDIR"/*
 
 LOGDIR="`pwd`/log"
 if [ -e "$LOGDIR" ] ; then

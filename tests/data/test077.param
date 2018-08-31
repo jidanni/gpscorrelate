@@ -1,9 +1,13 @@
 TITLE='Test unrecognized option'
 COMMAND='$PROGRAM --not-a-supported-option > "$OUTFILE" 2>&1'
 RESULTCODE=1
+# glibc: /path/gpscorrelate: unrecognized option '--invalid-option'
 # Some getopts (e.g. FreeBSD) don't include the file path when displaying bad
 # options.
 # Older versions of glibc surrounded bad options with a backtick
 # instead of apostrophe.
-# MUSL doesn't include any quotes or the leading -- in the option name
-SEDCOMMAND="s@^(.*/)?(.*)(: | [\`'])(--)?([^\`']*)[\`']?@\2 '--\5'@"
+# MUSL: /path/gpscorrelate: unrecognized option: invalid-option
+# Cygwin: gpscorrelate: unknown option -- invalid-option
+# Work around all these differences by extracting only the important parts
+# of the output.
+SEDCOMMAND="s@^(.*/)?(.*):.*( option )(\`|'|(-- ))(--)?([^\`']*)[\`']?@\2:\3'\7'@"

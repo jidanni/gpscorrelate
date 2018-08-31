@@ -1,5 +1,5 @@
 TITLE='Remove GPS tags from a read-only file'
-PRECOMMAND='cp "$STAGINGDIR/withgps.jpg" "$LOGDIR/test.jpg" && chmod -w "$LOGDIR/test.jpg"'
+PRECOMMAND='cp "$STAGINGDIR/withgps.jpg" "$LOGDIR/test.jpg" && chmod a-w "$LOGDIR/test.jpg"'
 COMMAND='$PROGRAM -r "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1'
 POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
 RESULTCODE=1
