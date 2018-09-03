@@ -4,20 +4,36 @@ environment:
   matrix:
   - CONFIG: cygwin
   - CONFIG: cygwin64
+  - CONFIG: msys2
 
 install:
 - cmd: if [%CONFIG%]==[cygwin] (
-    C:\cygwin\setup-x86.exe -qgnNdO -l C:\cygwin\var\cache\setup -R c:\cygwin -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel )
+    C:\cygwin\setup-x86.exe -qgnNdO -l C:\cygwin\var\cache\setup -R c:\cygwin -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel
+    SET PATH=c:/%CONFIG%/bin )
 - cmd: if [%CONFIG%]==[cygwin64] (
-    C:\cygwin64\setup-x86_64.exe -qgnNdO -l C:\cygwin64\var\cache\setup -R c:\cygwin64 -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel )
+    C:\cygwin64\setup-x86_64.exe -qgnNdO -l C:\cygwin64\var\cache\setup -R c:\cygwin64 -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel
+    SET PATH=c:/%CONFIG%/bin )
+- cmd: if [%CONFIG%]==[msys2] (
+    set "PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%PATH%" )
+- cmd: if [%CONFIG%]==[msys2] (
+    bash -lc "pacman --noconfirm --noprogressbar -S --needed mingw-w64-x86_64-{libxml2,libiconv,exiv2,pkg-config}" )
 
 build_script:
-- cmd: SET PATH=c:/%CONFIG%/bin
-- cmd: C:\%CONFIG%\bin\bash -e -l -c "cd $APPVEYOR_BUILD_FOLDER && make gpscorrelate CFLAGS='-Wall -Wextra -O3 -DENABLE_NLS' LDFLAGS='-lintl'"
+- cmd: if [%CONFIG%]==[cygwin] (
+    C:\%CONFIG%\bin\bash -e -l -c "cd $APPVEYOR_BUILD_FOLDER && make gpscorrelate CFLAGS='-Wall -Wextra -O3 -DENABLE_NLS' LDFLAGS='-lintl'" )
+- cmd: if [%CONFIG%]==[cygwin64] (
+    C:\%CONFIG%\bin\bash -e -l -c "cd $APPVEYOR_BUILD_FOLDER && make gpscorrelate CFLAGS='-Wall -Wextra -O3 -DENABLE_NLS' LDFLAGS='-lintl'" )
+- cmd: if [%CONFIG%]==[msys2] (
+    make EXEEXT=.exe gpscorrelate.exe CC=gcc CXX=g++ CFLAGS="-Wall -Wextra -O3 -DENABLE_NLS" LDFLAGS="-lintl" )
 
 test_script:
 # Cygwin allows overwriting read-only files for some strange reason, which
 # causes 4 tests to fail. Until that's sorted, consider 4 tests failing as
 # success.
-- cmd: C:\%CONFIG%\bin\bash -e -l -c "cd $APPVEYOR_BUILD_FOLDER && make check | tee /dev/stderr | grep -q '4 test(s) have FAILED'"
-
+- cmd: if [%CONFIG%]==[cygwin] (
+    C:\%CONFIG%\bin\bash -e -l -c "cd $APPVEYOR_BUILD_FOLDER && make check | tee /dev/stderr | grep -q '4 test(s) have FAILED'" )
+- cmd: if [%CONFIG%]==[cygwin64] (
+    C:\%CONFIG%\bin\bash -e -l -c "cd $APPVEYOR_BUILD_FOLDER && make check | tee /dev/stderr | grep -q '4 test(s) have FAILED'" )
+# Enable these tests once they're compatible with Windows
+#- cmd: if [%CONFIG%]==[msys2] (
+#    make check )
