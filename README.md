@@ -7,8 +7,9 @@ Dan Fandrich <dan@coneharvesters.com>.
 
 The GPSCorrelate home page is at https://dfandrich.github.io/gpscorrelate/
 [![Travis Build Status](https://travis-ci.org/dfandrich/gpscorrelate.svg?branch=master)](https://travis-ci.org/dfandrich/gpscorrelate)
-[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/4wi4bxc47c29ce0r?svg=true)](https://ci.appveyor.com/project/dfandrich/gpscorrelate)
-[![Coverage Status](https://coveralls.io/repos/github/dfandrich/gpscorrelate/badge.svg?branch=travis)](https://coveralls.io/github/dfandrich/gpscorrelate?branch=travis)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/q9ooesujljat3ra7/branch/master?svg=true
+)](https://ci.appveyor.com/project/dfandrich/gpscorrelate)
+[![Coverage Status](https://coveralls.io/repos/github/dfandrich/gpscorrelate/badge.svg?branch=master)](https://coveralls.io/github/dfandrich/gpscorrelate?branch=master)
 
 ## What is it?
 
