@@ -1,13 +1,13 @@
 TITLE='Test unrecognized option'
 COMMAND='$PROGRAM --not-a-supported-option > "$OUTFILE" 2>&1'
 RESULTCODE=1
-# glibc: /path/gpscorrelate: unrecognized option '--invalid-option'
-# Some getopts (e.g. FreeBSD) don't include the file path when displaying bad
-# options.
-# Older versions of glibc surrounded bad options with a backtick
-# instead of apostrophe.
-# MUSL: /path/gpscorrelate: unrecognized option: invalid-option
-# Cygwin: gpscorrelate: unknown option -- invalid-option
-# Work around all these differences by extracting only the important parts
-# of the output.
-SEDCOMMAND="s@^(.*/)?(.*):.*( option )(\`|'|(-- ))(--)?([^\`']*)[\`']?@\2:\3'\7'@"
+# glibc: /path/gpscorrelate: unrecognized option '--not-a-supported-option'
+# Older glibc: /path/gpscorrelate: unrecognized option `--not-a-supported-option`
+# FreeBSD: gpscorrelate: unrecognized option `--not-a-supported-option'
+# OS X: /path/gpscorrelate: unrecognized option '--not-a-supported-option'
+# MUSL: /path/gpscorrelate: unrecognized option: not-a-supported-option
+# Cygwin: gpscorrelate: unknown option -- not-a-supported-option
+# MSYS2: C:\projects\gpscorrelate\gpscorrelate.exe: unknown option -- not-a-supported-option
+# Work around all these differences by extracting only the important and common
+# parts of the output.
+SEDCOMMAND='s@^([a-zA-Z]:)?(\\.*\\|.*/)?(gpscorrelate)(\.exe)?(:).*( option ).*(not-a-supported-option).*$@\3\5\6\7@'

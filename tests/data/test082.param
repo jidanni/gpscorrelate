@@ -4,4 +4,4 @@ PRECOMMAND='cat "$STAGINGDIR/baddate2.jpg" >"$LOGDIR/test.jpg"'
 COMMAND='env LC_ALL=C $PROGRAM --fix-datestamps -z -7 "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
 POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
 RESULTCODE=0
-SEDCOMMAND='s@^/.*/@@' # strip path
+SEDCOMMAND='s@^([a-zA-Z]:)?/.*/@@' # strip path

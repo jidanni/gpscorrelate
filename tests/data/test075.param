@@ -1,4 +1,8 @@
 TITLE='Test -V option'
 COMMAND='$PROGRAM -V > "$OUTFILE" 2>&1'
 RESULTCODE=0
-SEDCOMMAND='s@^(.*/)?(gpscorrelate, ver. ).*(\. Dan).*(2005-20).*(GPL).*$@\2X\3 \4XX \5@' # ignore nonconstant parts of version string
+# Strip path and copyright lines, but do so in a way that checks the basic
+# format of the line. All other tests that could see this line strip it
+# completely, so this one also acts as a basic check that the line is being
+# output at all.
+SEDCOMMAND='s@^([a-zA-Z]:)?(.*[/\\])?(gpscorrelate)(\.exe)?.*( Daniel).*( 200.-).*( GPL)|([a-zA-Z]:)?.*/@\3\5\6\7@'

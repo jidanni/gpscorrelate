@@ -3,4 +3,4 @@ PRECOMMAND='cat "$STAGINGDIR/point4-1.jpg" >"$LOGDIR/test.jpg"'
 COMMAND='$PROGRAM --timeadd 1 -g "$STAGINGDIR/track2.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1 && $PROGRAM --fix-datestamps --timeadd 1 "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
 POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
 RESULTCODE=0
-SEDCOMMAND='s@^/.*/@@' # strip path
+SEDCOMMAND='s@^([a-zA-Z]:)?/.*/@@' # strip path

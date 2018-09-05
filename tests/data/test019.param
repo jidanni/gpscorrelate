@@ -1,4 +1,4 @@
 TITLE='Show machine-readable GPS data on file'
 COMMAND='$PROGRAM --machine "$STAGINGDIR/withgps.jpg" > "$OUTFILE" 2>&1'
 RESULTCODE=0
-SEDCOMMAND='s@/.*/@@' # strip path
+SEDCOMMAND='s@([a-zA-Z]:)?/.*/@@' # strip path
