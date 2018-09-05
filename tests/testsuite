@@ -138,6 +138,11 @@ for TEST in $TESTLIST ; do
 	continue
   fi
 
+  # In case this is running on Windows, delete any CR characters in the output
+  # to eliminate any difference from the expected file.
+  mv -f "$OUTFILE" "$OUTFILE".orig
+  tr -d '\r' < "$OUTFILE.orig" > "$OUTFILE"
+
   if [ -n "$SEDCOMMAND" ] ; then
 	mv -f "$OUTFILE" "$OUTFILE".orig
 	# Need sed to parse extended regular expressions
