@@ -245,9 +245,9 @@ static int FixDatestamp(const char* File, int AdjustmentHours, int AdjustmentMin
 			char GPSTimeFormat[100];
 
 			strftime(PhotoTimeFormat, sizeof(PhotoTimeFormat),
-				 "%a %b %e %T %Y UTC", gmtime(&PhotoTime));
+				 "%a %b %d %H:%M:%S %Y UTC", gmtime(&PhotoTime));
 			strftime(GPSTimeFormat, sizeof(GPSTimeFormat),
-				 "%a %b %e %T %Y UTC", gmtime(&GPSTime));
+				 "%a %b %d %H:%M:%S %Y UTC", gmtime(&GPSTime));
 			printf(_("%s: Wrong timestamp:\n   Photo:     %s\n"
 				 "   GPS:       %s\n   Corrected: %s\n"),
 					File, PhotoTimeFormat, GPSTimeFormat, PhotoTimeFormat);
