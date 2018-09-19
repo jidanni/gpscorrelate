@@ -27,7 +27,7 @@
       &dhsurname;, Till Maas
     </author>
     <copyright>
-      <year>2006-2016</year>
+      <year>2006-2018</year>
       <holder>&dhusername; &dhemail;, Till Maas, Dan Fandrich</holder>
     </copyright>
     <version>
@@ -171,16 +171,12 @@
         <arg choice="plain">--help</arg>
       </group>
     </cmdsynopsis>
-
-    <cmdsynopsis>
-      <command>&dhpackage;-gui</command>
-    </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1>
     <title>DESCRIPTION</title>
 
     <para>This manual page documents the <command>&dhpackage;</command>
-      and <command>&dhpackage;-gui</command> commands.
+    command.
     There is extended documentation available in HTML format; see below.</para>
 
     <para><command>&dhpackage;</command> is a program that acts on digital images
@@ -194,12 +190,6 @@
       (with a 1-second granularity) the GPS data are stored unmodified in EXIF
       fields. If they are not, linear interpolation of GPS data available at
       moments before and after the image was taken can be used. </para>
-
-    <para><command>&dhpackage;</command> is a command line tool implementing
-      correlation whereas <command>&dhpackage;-gui</command> is the
-      corresponding GTK+ graphical user interface. The following options apply
-      to <command>&dhpackage;</command> only; <command>&dhpackage;-gui</command>
-      accepts only the standard GTK+ command-line options. </para>
 
   </refsect1>
   <refsect1>
@@ -485,23 +475,17 @@
 
     <para>
     To correlate all photos in a directory taken in western Europe in the
-    summer:</para>
+    summer (i.e., UTC-2):</para>
     <para>
     <userinput>gpscorrelate -g Test.gpx -z 2 *.jpg</userinput>
     </para>
 
     <para>
-    Show GPS tags in a photo:
-    </para>
+    To correlate all photos in a directory taken in Italy, switching to UTC-2
+    or UTC-1 depending on the daylight savings time in effect when the first
+    picture in the list was taken:</para>
     <para>
-    <userinput>gpscorrelate --show photo.jpg</userinput>
-    </para>
-
-    <para>
-    Remove GPS tags from photos:
-    </para>
-    <para>
-    <userinput>gpscorrelate --remove *.jpg</userinput>
+    <userinput>env TZ=Europe/Rome gpscorrelate -g Test.gpx *.jpg</userinput>
     </para>
 
     <para>
@@ -512,6 +496,35 @@
     stamp of the files, while showing details of the process:</para>
     <para>
     <userinput>gpscorrelate -g track1.gpx -g track2.gpx -m 120 -t -M -v *.jpg</userinput>
+    </para>
+
+    <para>
+    To correlate a photo taken from a camera with a fast clock (i.e., the clock
+    was 77 seconds ahead of GPS time):
+    </para>
+    <para>
+    <userinput>gpscorrelate -g Test.gpx -O -77 photo.jpg</userinput>
+    </para>
+
+    <para>
+    Show existing GPS tags in a photo:
+    </para>
+    <para>
+    <userinput>gpscorrelate --show photo.jpg</userinput>
+    </para>
+
+    <para>
+    Show existing GPS tags in a photo and output in CSV format:
+    </para>
+    <para>
+    <userinput>gpscorrelate --show --machine photo.jpg</userinput>
+    </para>
+
+    <para>
+    Remove GPS tags from photos:
+    </para>
+    <para>
+    <userinput>gpscorrelate --remove *.jpg</userinput>
     </para>
 
     <para>
@@ -541,9 +554,8 @@
 	  <citerefentry><refentrytitle>cgpxlogger</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
     </para>
 
-    <para>The documentation of &dhpackage; and &dhpackage;-gui in HTML format
-      are available on the filesystem at <filename
-        class="directory">@DOCDIR@</filename>.
+    <para>The documentation of &dhpackage; in HTML format is available on the
+    filesystem at <filename class="directory">@DOCDIR@</filename>.
     </para>
 
   </refsect1>
