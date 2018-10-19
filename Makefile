@@ -5,13 +5,14 @@ PACKAGE_VERSION = 1.6.2git
 
 CC = gcc
 CXX = g++
+EXEEXT =
 
 COBJS    = main-command.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
 GOBJS    = main-gui.o gui.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
 CFLAGS   = -Wall -O2
 CFLAGSINC := $(shell pkg-config --cflags libxml-2.0 exiv2)
 # Add the gtk+ flags only when building the GUI
-gpscorrelate-gui: CFLAGSINC += $(shell pkg-config --cflags gtk+-2.0)
+gpscorrelate-gui$(EXEEXT): CFLAGSINC += $(shell pkg-config --cflags gtk+-2.0)
 LIBS :=
 LDFLAGS   = -Wall -O2
 LDFLAGSALL := $(shell pkg-config --libs libxml-2.0 exiv2) -lm
@@ -29,14 +30,14 @@ applicationsdir = $(datadir)/applications
 
 DEFS = -DPACKAGE_VERSION=\"$(PACKAGE_VERSION)\"
 
-TARGETS = gpscorrelate-gui gpscorrelate doc/gpscorrelate.1 doc/gpscorrelate.html
+TARGETS = gpscorrelate-gui$(EXEEXT) gpscorrelate$(EXEEXT) doc/gpscorrelate.1 doc/gpscorrelate.html
 
 all:	$(TARGETS)
 
-gpscorrelate: $(COBJS)
+gpscorrelate$(EXEEXT): $(COBJS)
 	$(CXX) -o $@ $(COBJS) $(LDFLAGS) $(LDFLAGSALL) $(LIBS)
 
-gpscorrelate-gui: $(GOBJS)
+gpscorrelate-gui$(EXEEXT): $(GOBJS)
 	$(CXX) -o $@ $(GOBJS) $(LDFLAGS) $(LDFLAGSGUI) $(LDFLAGSALL) $(LIBS)
 
 .c.o:
@@ -48,15 +49,15 @@ gpscorrelate-gui: $(GOBJS)
 # Hack to recompile everything if a header changes
 *.o: *.h
 
-check: gpscorrelate
+check: gpscorrelate$(EXEEXT)
 	(cd tests && ./testsuite)
 
 clean:
-	rm -f *.o gpscorrelate{,.exe} gpscorrelate-gui{,.exe} doc/gpscorrelate-manpage.xml tests/log/* $(TARGETS)
+	rm -f *.o gpscorrelate$(EXEEXT) gpscorrelate-gui$(EXEEXT) doc/gpscorrelate-manpage.xml tests/log/* $(TARGETS)
 
 install: all
 	install -d $(DESTDIR)$(bindir)
-	install gpscorrelate gpscorrelate-gui $(DESTDIR)$(bindir)
+	install gpscorrelate$(EXEEXT) gpscorrelate-gui$(EXEEXT) $(DESTDIR)$(bindir)
 	install -d $(DESTDIR)$(mandir)/man1
 	install -m 0644 doc/gpscorrelate.1 $(DESTDIR)$(mandir)/man1
 	install -d $(DESTDIR)$(docdir)

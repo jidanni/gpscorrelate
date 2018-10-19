@@ -24,9 +24,9 @@ To compile gpscorrelate for win32 you need cross-compiled versions of:
 
 Once you have all the dependencies cross-compiled, export
 PKG_CONFIG_PATH to the database of your toolchain environment
-(somehting like /usr/i486-mingw32/lib/pkgconfig/)
+(something like /usr/i486-mingw32/lib/pkgconfig/)
 
-Finally run 
- # make -f Makefile.mingw32
+Finally run:
+ make EXEEXT=.exe
 
-(Makefile.mingw32 and README.mingw32 written and contributed by Julio Castilo. Thanks!)
+(README.mingw32 was written and contributed by Julio Castilo. Thanks!)
