@@ -32,6 +32,12 @@
 
 #include "unixtime.h"
 
+#ifdef _WIN32
+/* Unfortunately, portable_timegm below isn't portable to Windows */
+#define portable_timegm _mkgmtime
+
+#else
+
 /* Some systems have a version of this called timegm(), but it's not portable */
 static time_t portable_timegm(struct tm *tm)
 {
@@ -58,6 +64,7 @@ static time_t portable_timegm(struct tm *tm)
 	tzset();
 	return ret;
 }
+#endif
 
 time_t ConvertToUnixTime(const char* StringTime, const char* Format,
 		int TZOffsetHours, int TZOffsetMinutes)
