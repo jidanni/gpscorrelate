@@ -1,2 +1,2 @@
-/dev/null:1: parser error : Document is empty
-Failed to parse GPX data from /dev/null.
+nul:1: parser error : Document is empty
+Failed to parse GPX data from nul.
