@@ -97,6 +97,9 @@ for TEST in $TESTLIST ; do
   fi
   echo '***' Running \"$TITLE\" test
 
+  # Clean up from previous tests
+  rm -f "$OUTFILE" "$ERRFILE"
+
   # Run a pre-test command
   if ! eval $PRECOMMAND ; then
 	echo Test $TESTNAME FAILED: pre test command failure
@@ -115,7 +118,10 @@ for TEST in $TESTLIST ; do
 	echo "Test $TESTNAME FAILED: got exit $EXITCODE, expected $RESULTCODE"
 	# Don't abort now--run the post-test command to clean up first
 	FAILEDTESTS=$(($FAILEDTESTS + 1))
-	test -n "$VERBOSECOMMAND" && test -e "$ERRFILE" && cat "$ERRFILE"
+	if [ -n "$VERBOSECOMMAND" ] ; then
+	        test -e "$ERRFILE" && cat "$ERRFILE"
+	        test -e "$OUTFILE" && echo "Command output was:" && cat "$OUTFILE"
+	fi
   fi
 
   # Run a post-test command
