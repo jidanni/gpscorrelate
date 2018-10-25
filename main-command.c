@@ -172,7 +172,7 @@ static int ShowFileDetails(const char* File, int MachineReadable)
 			}
 		}
 	} else {
-		/* Say that there was no data, except if we want
+		/* Say that there was no data & return error, except if we want
 		 * machine readable output */
 		if (!MachineReadable)
 		{

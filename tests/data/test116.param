@@ -1,0 +1,3 @@
+TITLE='Show machine-readable GPS tags with missing file'
+COMMAND='$PROGRAM -o > "$OUTFILE" 2>&1'
+RESULTCODE=1

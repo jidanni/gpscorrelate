@@ -1,0 +1,4 @@
+TITLE='Show machine-readable GPS data with existing and nonexistent files'
+COMMAND='$PROGRAM -o "$STAGINGDIR/withgps.jpg" does-not-exist "$STAGINGDIR/withgps.jpg" > "$OUTFILE" 2>&1'
+RESULTCODE=0
+SEDCOMMAND='s@([a-zA-Z]:)?/.*/@@' # strip path

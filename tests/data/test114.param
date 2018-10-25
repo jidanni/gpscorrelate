@@ -1,0 +1,3 @@
+TITLE='Show GPS data with nonexistent file'
+COMMAND='$PROGRAM --show does-not-exist > "$OUTFILE" 2>&1'
+RESULTCODE=1
