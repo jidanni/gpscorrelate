@@ -398,7 +398,10 @@ int main(int argc, char** argv)
 				}
 				break;
 			case 'O':
-				PhotoOffset = atoi(optarg);
+				if (optarg)
+				{
+					PhotoOffset = atoi(optarg);
+				}
 				break;
 			case 'i':
 				/* This option disables interpolation. */
@@ -422,7 +425,10 @@ int main(int argc, char** argv)
 				break;
 			case 'm':
 				/* This option gives us the allowable "feather" time. */
-				FeatherTime = atoi(optarg);
+				if (optarg)
+				{
+					FeatherTime = atoi(optarg);
+				}
 				break;
 			case 'h':
 				/* Display the help/usage information. And then quit. */

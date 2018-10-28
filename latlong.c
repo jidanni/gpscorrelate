@@ -229,6 +229,8 @@ int MakeTrackFromLatLong(const struct GPSPoint* latlong, struct GPSTrack* track)
 	struct GPSPoint* p1 = (struct GPSPoint*)malloc(sizeof(struct GPSPoint));
 	struct GPSPoint* p2 = (struct GPSPoint*)malloc(sizeof(struct GPSPoint));
 	if (!p1 || !p2) {
+		free(p1);
+		free(p2);
 		return 0;
 	}
 	memcpy(p1, latlong, sizeof(*p1));
