@@ -8,11 +8,9 @@ environment:
 
 install:
 - cmd: if [%CONFIG%]==[cygwin] (
-    C:\cygwin\setup-x86.exe -qgnNdO -l C:\cygwin\var\cache\setup -R c:\cygwin -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel
-    SET PATH=c:/%CONFIG%/bin )
+    C:\cygwin\setup-x86.exe -qgnNdO -l C:\cygwin\var\cache\setup -R c:\cygwin -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel )
 - cmd: if [%CONFIG%]==[cygwin64] (
-    C:\cygwin64\setup-x86_64.exe -qgnNdO -l C:\cygwin64\var\cache\setup -R c:\cygwin64 -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel
-    SET PATH=c:/%CONFIG%/bin )
+    C:\cygwin64\setup-x86_64.exe -qgnNdO -l C:\cygwin64\var\cache\setup -R c:\cygwin64 -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel )
 - cmd: if [%CONFIG%]==[msys2] (
     set "PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%PATH%" )
 - cmd: if [%CONFIG%]==[msys2] (

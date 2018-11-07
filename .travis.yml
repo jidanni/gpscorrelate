@@ -28,6 +28,14 @@ env:
   global:
     - MAKEFLAGS='-j 2'
 
+compiler:
+  - clang
+  - gcc
+
+os:
+  - linux
+  - osx
+
 matrix:
   exclude:
   # Gives spurious errors with clang and gcc doesn't support -fsanitize=undefined
@@ -88,11 +96,3 @@ script:
 
 after_success:
   - if [ "$CONFIG" = "coverage" ] ; then coveralls --gcov-options '\-lp'; fi
-
-compiler:
-  - clang
-  - gcc
-
-os:
-  - linux
-  - osx
