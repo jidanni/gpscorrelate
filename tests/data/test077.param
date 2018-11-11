@@ -10,4 +10,4 @@ RESULTCODE=1
 # MSYS2: C:\projects\gpscorrelate\gpscorrelate.exe: unknown option -- not-a-supported-option
 # Work around all these differences by extracting only the important and common
 # parts of the output.
-SEDCOMMAND='s@^([a-zA-Z]:)?(\\.*\\|.*/)?(gpscorrelate)(\.exe)?(:).*( option ).*(not-a-supported-option).*$@\3\5\6\7@'
+SEDCOMMAND='s@^([a-zA-Z]:)?(\\.*\\|.*/)?(gpscorrelate)(\.exe)?(:).*( option):?( ).*(not-a-supported-option).*$@\3\5\6\7\8@'
