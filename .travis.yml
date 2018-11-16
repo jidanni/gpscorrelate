@@ -18,6 +18,13 @@ install:
   # Install exiv2 on OS X
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install exiv2; fi
   - if [ "$CONFIG" = "coverage" ] ; then pip install --user cpp-coveralls; fi
+  - |
+    if [ "$CONFIG" = "musl" ] ; then
+      echo "FROM alpine" > Dockerfile
+      echo "RUN apk add --no-cache build-base exiv2-dev libxml2-dev gettext-dev" >> Dockerfile
+      echo "RUN adduser -D -u $(id -u) build" >> Dockerfile
+      docker build -t alpine-build .
+    fi
 
 env:
   # More configurations are configured in the matrix section
@@ -39,15 +46,15 @@ os:
 matrix:
   exclude:
   # Gives spurious errors with clang and gcc doesn't support -fsanitize=undefined
-  - os: linux
-    env: CONFIG=sanitize  # Gives spurious errors in this config
+  - env: CONFIG=sanitize  # Gives spurious errors in this config
+    os: linux
   include:
   # Only run the coverage build in one configuration
-  - os: linux
+  - env: CONFIG=coverage
+    os: linux
     compiler: gcc
-    env:
-      - CONFIG=coverage
-  - os: linux
+  - env: CONFIG=clang6
+    os: linux
     addons:
       apt:
         sources:
@@ -58,9 +65,8 @@ matrix:
           - libexiv2-dev
           - clang-6.0
     compiler: clang
-    env:
-      - CONFIG=clang6
-  - os: linux
+  - env: CONFIG=gcc8
+    os: linux
     addons:
       apt:
         sources:
@@ -70,8 +76,10 @@ matrix:
           - libexiv2-dev
           - g++-8
     compiler: gcc
-    env:
-      - CONFIG=gcc8
+  - env: CONFIG=musl
+    os: linux
+    sudo: required
+    services: docker
 
 # Only build the command-line tool for now
 script:
@@ -85,14 +93,29 @@ script:
     # Explicitly point to brew's gettext installation on OS X
   - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then CFLAGS="$CFLAGS -I/usr/local/opt/gettext/include"; LDFLAGS="$LDFLAGS -L/usr/local/opt/gettext/lib -lintl"; fi
 
-  - make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" gpscorrelate
-  - ./gpscorrelate -V
-
-  - make check
-# This can only be installed if the GTK target is also built
-#     - make install DESTDIR="${HOME}"
-# Ensure brew gettext is in the PATH so xgettext is found on OS X
-  - PATH="$PATH:/usr/local/opt/gettext/bin" make install-po prefix= DESTDIR="${HOME}"
+  - |
+    if [ "$CONFIG" = "musl" ] ; then
+      docker run --rm -v "$PWD":/tmp/src alpine-build sh -c '
+        cat /etc/os-release
+        # Some tests fail if run as root (the ones to do with read only files)
+        su -l build -c "
+          set -ex
+          cd /tmp/src
+          make CFLAGS=-DENABLE_NLS LDFLAGS=-lintl gpscorrelate
+          ./gpscorrelate -V
+          make check
+          make install-po prefix= DESTDIR="${HOME}"
+          "
+        '
+    else
+      make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" gpscorrelate
+     ./gpscorrelate -V
+      make check
+    # This can only be installed if the GTK target is also built
+    #   make install DESTDIR="${HOME}"
+    # Ensure brew gettext is in the PATH so xgettext is found on OS X
+      PATH="$PATH:/usr/local/opt/gettext/bin" make install-po prefix= DESTDIR="${HOME}"
+    fi
 
 after_success:
   - if [ "$CONFIG" = "coverage" ] ; then coveralls --gcov-options '\-lp'; fi
