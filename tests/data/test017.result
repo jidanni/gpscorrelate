@@ -1,6 +1,6 @@
 test.jpg: Removed GPS tags.
-1
-1
+0x011a Image        XResolution                 Rational    1  72/1
+0x011b Image        YResolution                 Rational    1  72/1
 0x0128 Image        ResolutionUnit              Short       1  2
 0x0132 Image        DateTime                    Ascii      20  2012:11:22 12:34:56
 0x0213 Image        YCbCrPositioning            Short       1  1

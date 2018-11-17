@@ -14,4 +14,4 @@ PRECOMMAND='cat "$STAGINGDIR/withgps.jpg" >"$LOGDIR/test.jpg" && touch -t 201001
 COMMAND='$PROGRAM --no-mtime --remove "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && ls -t "$LOGDIR/ztest.jpg" "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
 POSTCOMMAND='rm -f "$LOGDIR/test.jpg" "$LOGDIR/ztest.jpg"'
 RESULTCODE=0
-SEDCOMMAND='s@^.*/@@' # strip path
+SEDCOMMAND='s@^.*/@@' # strip paths

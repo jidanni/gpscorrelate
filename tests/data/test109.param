@@ -3,4 +3,4 @@ PRECOMMAND='cat "$STAGINGDIR/withgps.jpg" >"$LOGDIR/test.jpg"'
 COMMAND='$PROGRAM --remove --no-write "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
 POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
 RESULTCODE=0
-SEDCOMMAND='s@^.*/@@' # strip path
+SEDCOMMAND='1s@^.*/@@' # strip path
