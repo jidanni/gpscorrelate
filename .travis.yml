@@ -13,15 +13,16 @@ addons:
     packages:
         - exiv2
         - libexiv2-dev
+        - libgtk2.0-dev
 
 install:
   # Install exiv2 on OS X
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install exiv2; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install exiv2 gtk+; fi
   - if [ "$CONFIG" = "coverage" ] ; then pip install --user cpp-coveralls; fi
   - |
     if [ "$CONFIG" = "musl" ] ; then
       echo "FROM alpine" > Dockerfile
-      echo "RUN apk add --no-cache build-base exiv2-dev libxml2-dev gettext-dev" >> Dockerfile
+      echo "RUN apk add --no-cache build-base exiv2-dev libxml2-dev gettext-dev gtk+2.0-dev" >> Dockerfile
       echo "RUN adduser -D -u $(id -u) build" >> Dockerfile
       docker build -t alpine-build .
     fi
@@ -63,6 +64,7 @@ matrix:
         packages:
           - exiv2
           - libexiv2-dev
+          - libgtk2.0-dev
           - clang-6.0
     compiler: clang
   - env: CONFIG=gcc8
@@ -74,6 +76,7 @@ matrix:
         packages:
           - exiv2
           - libexiv2-dev
+          - libgtk2.0-dev
           - g++-8
     compiler: gcc
   - env: CONFIG=musl
@@ -83,10 +86,12 @@ matrix:
 
 # Only build the command-line tool for now
 script:
+  - TARGET='gpscorrelate gpscorrelate-gui'
   - if [ "$CONFIG" = "normal" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; fi
   - if [ "$CONFIG" = "no_nls" ] ; then CFLAGS='-Wall -Wextra -O3'; fi
   - if [ "$CONFIG" = "sanitize" ] ; then CFLAGS='-g -O0 -fsanitize=address -fsanitize=undefined -DENABLE_NLS=1'; LDFLAGS='$(CFLAGS)'; fi
-  - if [ "$CONFIG" = "coverage" ] ; then CFLAGS='-g -O0 --coverage'; LDFLAGS='$(CFLAGS)'; fi
+    # FIXME: There are no tests for the GUI, so don't bother building it.
+  - if [ "$CONFIG" = "coverage" ] ; then CFLAGS='-g -O0 --coverage'; LDFLAGS='$(CFLAGS)'; TARGET='gpscorrelate'; fi
   - if [ "$CONFIG" = "clang6" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-6.0; CXX=clang++-6.0; fi
   - if [ "$CONFIG" = "gcc8" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; CC=gcc-8; CXX=g++-8; fi
 
@@ -101,14 +106,14 @@ script:
         su -l build -c "
           set -ex
           cd /tmp/src
-          make CFLAGS=-DENABLE_NLS LDFLAGS=-lintl gpscorrelate
+          make CFLAGS=-DENABLE_NLS LDFLAGS=-lintl gpscorrelate gpscorrelate-gui
           ./gpscorrelate -V
           make check
           make install-po prefix= DESTDIR="${HOME}"
           "
         '
     else
-      make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" gpscorrelate
+      make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" $TARGET
      ./gpscorrelate -V
       make check
     # This can only be installed if the GTK target is also built
