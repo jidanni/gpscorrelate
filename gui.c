@@ -1179,44 +1179,19 @@ void CorrelateButtonPress( GtkWidget *Widget, gpointer Data )
 	/* This is confusing. I should have thought more about the Interpolate
 	 * flags in the CorrelateOptions structure. But, if you think about
 	 * it for a bit, it can make sense. Enough sense to use.  */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(InterpolateCheck)))
-	{
-		Options.NoInterpolate = 0;
-	} else {
-		Options.NoInterpolate = 1;
-	}
+	Options.NoInterpolate = !gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(InterpolateCheck));
 
 	/* Write or no write. */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoWriteCheck)))
-	{
-		Options.NoWriteExif = 1;
-	} else {
-		Options.NoWriteExif = 0;
-	}
+	Options.NoWriteExif = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoWriteCheck));
 
 	/* No change MTime. */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoMtimeCheck)))
-	{
-		Options.NoChangeMtime = 1;
-	} else {
-		Options.NoChangeMtime = 0;
-	}
+	Options.NoChangeMtime = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoMtimeCheck));
 
 	/* Between segments? */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(BetweenSegmentsCheck)))
-	{
-		Options.DoBetweenTrkSeg = 1;
-	} else {
-		Options.DoBetweenTrkSeg = 0;
-	}
+	Options.DoBetweenTrkSeg = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(BetweenSegmentsCheck));
 
 	/* DD MM.MM or DD MM SS.SS? */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(DegMinSecsCheck)))
-	{
-		Options.DegMinSecs = 1;
-	} else {
-		Options.DegMinSecs = 0;
-	}
+	Options.DegMinSecs = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(DegMinSecsCheck));
 	
 	/* Feather time. */
 	Options.FeatherTime = atof(gtk_entry_get_text(GTK_ENTRY(GapTimeEntry)));
@@ -1352,16 +1327,8 @@ void StripGPSButtonPress( GtkWidget *Widget, gpointer Data )
 		return;
 	}
 
-	/* No change MTime. */
-	int NoChangeMtime;
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoMtimeCheck)))
-	{
-		NoChangeMtime = 1;
-	} else {
-		NoChangeMtime = 0;
-	}
+	int NoChangeMtime = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoMtimeCheck));
 	int NoWriteExif = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoWriteCheck));
-
 
 	/* Walk through and remove the items from our internal list. */
 	GList* Walk;
