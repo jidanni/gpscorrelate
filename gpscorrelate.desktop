@@ -9,3 +9,4 @@ Exec=gpscorrelate-gui
 Terminal=false
 Categories=Graphics;ImageProcessing;Geography;GTK;
 Icon=gpscorrelate-gui
+Keywords=gps;gpx;tracks;correlate;picture;photo;geolocation
