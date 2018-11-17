@@ -1360,6 +1360,8 @@ void StripGPSButtonPress( GtkWidget *Widget, gpointer Data )
 	} else {
 		NoChangeMtime = 0;
 	}
+	int NoWriteExif = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoWriteCheck));
+
 
 	/* Walk through and remove the items from our internal list. */
 	GList* Walk;
@@ -1390,7 +1392,7 @@ void StripGPSButtonPress( GtkWidget *Widget, gpointer Data )
 		GtkGUIUpdate();
 		
 		/* Strip the tags. */
-		if (RemoveGPSExif(PhotoData->Filename, NoChangeMtime))
+		if (RemoveGPSExif(PhotoData->Filename, NoChangeMtime, NoWriteExif))
 		{
 			SetListItem(&PhotoData->ListPointer, PhotoData->Filename,
 				PhotoData->Time, 200, 200, -7000000, "", 1);
