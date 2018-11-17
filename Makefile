@@ -6,17 +6,18 @@ PACKAGE_VERSION = 1.6.2git
 CC = gcc
 CXX = g++
 EXEEXT =
+PKG_CONFIG=pkg-config
 
 COBJS    = main-command.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
 GOBJS    = main-gui.o gui.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
 CFLAGS   = -Wall -O2
-CFLAGSINC := $(shell pkg-config --cflags libxml-2.0 exiv2)
+CFLAGSINC := $(shell $(PKG_CONFIG) --cflags libxml-2.0 exiv2)
 # Add the gtk+ flags only when building the GUI
-gpscorrelate-gui$(EXEEXT): CFLAGSINC += $(shell pkg-config --cflags gtk+-2.0)
+gpscorrelate-gui$(EXEEXT): CFLAGSINC += $(shell $(PKG_CONFIG) --cflags gtk+-2.0)
 LIBS :=
 LDFLAGS   = -Wall -O2
-LDFLAGSALL := $(shell pkg-config --libs libxml-2.0 exiv2) -lm
-LDFLAGSGUI := $(shell pkg-config --libs gtk+-2.0)
+LDFLAGSALL := $(shell $(PKG_CONFIG) --libs libxml-2.0 exiv2) -lm
+LDFLAGSGUI := $(shell $(PKG_CONFIG) --libs gtk+-2.0)
 
 # Put --nonet here to avoid downloading DTDs while building documentation
 XSLTFLAGS =
