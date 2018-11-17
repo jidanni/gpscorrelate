@@ -602,6 +602,10 @@ gboolean DestroyWindow(GtkWidget *Widget,
 		GdkEvent *Event,
 		gpointer Data)
 {
+	(void) Widget;  // Unused
+	(void) Event;   // Unused
+	(void) Data;    // Unused
+
 	/* Record the settings, and then save them. */
 	g_key_file_set_boolean(GUISettings, "default", "interpolate", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(InterpolateCheck)));
 	g_key_file_set_boolean(GUISettings, "default", "dontwrite", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoWriteCheck)));
@@ -654,6 +658,9 @@ gboolean DestroyWindow(GtkWidget *Widget,
 
 void AddPhotosButtonPress( GtkWidget *Widget, gpointer Data )
 {
+	(void) Widget;  // Unused
+	(void) Data;    // Unused
+
 	/* Add some photos to this thing. */
 	GtkWidget *AddPhotosDialog;
 
@@ -785,6 +792,9 @@ void AddPhotoToList(const char* Filename)
 
 void RemovePhotosButtonPress( GtkWidget *Widget, gpointer Data )
 {
+	(void) Widget;  // Unused
+	(void) Data;    // Unused
+
 	/* Someone clicked the remove photos button. So make it happen!
 	 * First, query out what was selected. */
 	GtkTreeIter Iter;
@@ -989,6 +999,9 @@ void SetState(GtkTreeIter* Iter, const char* State)
 
 void SelectGPSButtonPress( GtkWidget *Widget, gpointer Data )
 {
+	(void) Widget;  // Unused
+	(void) Data;    // Unused
+
 	/* Select and load some GPS data! */
 	GtkWidget *GPSDataDialog;
 	GtkWidget *ErrorDialog;
@@ -1142,6 +1155,9 @@ void SelectGPSButtonPress( GtkWidget *Widget, gpointer Data )
 
 void CorrelateButtonPress( GtkWidget *Widget, gpointer Data )
 {
+	(void) Widget;  // Unused
+	(void) Data;    // Unused
+
 	/* We were asked to correlate some photos... make it happen... */
 	GtkWidget *ErrorDialog;
 
@@ -1311,6 +1327,9 @@ void CorrelateButtonPress( GtkWidget *Widget, gpointer Data )
 
 void StripGPSButtonPress( GtkWidget *Widget, gpointer Data )
 {
+	(void) Widget;  // Unused
+	(void) Data;    // Unused
+
 	/* Someone clicked the Strip GPS Data button. So make it happen!
 	 * First, query out what was selected. */
 	GtkTreeIter Iter;
