@@ -133,14 +133,14 @@
 
     <cmdsynopsis>
       <command>&dhpackage;</command>
-      <group> 
-        <arg choice="plain">-M</arg>
-        <arg choice="plain">--no-mtime</arg>
-      </group>
-
       <group choice="req">
         <arg choice="plain">-r</arg>
         <arg choice="plain">--remove</arg>
+      </group>
+
+      <group>
+        <arg choice="plain">-M</arg>
+        <arg choice="plain">--no-mtime</arg>
       </group>
       <arg rep="repeat" choice="plain"><replaceable>image.jpg</replaceable></arg>
     </cmdsynopsis>
@@ -197,7 +197,7 @@
 
     <para>These programs follow the usual &gnu; command line syntax, with long
       options starting with two dashes (`-').  A summary of options is included
-      below.  For a complete description, see the HTML documentation. </para>
+      below.</para>
 
     <variablelist>
       <varlistentry>
@@ -569,9 +569,6 @@
     copy, distribute and/or modify this document under the terms of
     the &gnu; General Public License, Version 2 or any later version
     published by the Free Software Foundation. </para>
-
-    <para> On Debian systems, the complete text of the GNU General Public
-      License can be found in /usr/share/common-licenses/GPL.  </para>
 
   </refsect1>
 </refentry>
