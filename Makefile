@@ -62,11 +62,14 @@ install: all
 	install -d $(DESTDIR)$(mandir)/man1
 	install -m 0644 doc/gpscorrelate.1 $(DESTDIR)$(mandir)/man1
 	install -d $(DESTDIR)$(docdir)
-	install -m 0644 doc/*.html doc/*.png README.md $(DESTDIR)$(docdir)
+	install -p -m 0644 doc/*.html doc/*.png README.md $(DESTDIR)$(docdir)
+	install -d $(DESTDIR)$(docdir)/fr
+	install -p -m 0644 doc/fr/*.html $(DESTDIR)$(docdir)/fr
 
 install-desktop-file:
 	desktop-file-install --vendor="" --dir="$(DESTDIR)$(applicationsdir)" gpscorrelate.desktop
-	install -p -m0644 -D gpscorrelate-gui.svg $(DESTDIR)$(datadir)/icons/hicolor/scalable/apps/gpscorrelate-gui.svg
+	install -d $(DESTDIR)$(datadir)/icons/hicolor/scalable/apps
+	install -p -m 0644 gpscorrelate-gui.svg $(DESTDIR)$(datadir)/icons/hicolor/scalable/apps/gpscorrelate-gui.svg
 
 docs: doc/gpscorrelate.1  doc/gpscorrelate.html
 
