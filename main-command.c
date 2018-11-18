@@ -79,7 +79,7 @@ static void PrintUsage(const char* ProgramName)
 {
 	printf(_("Usage: %s [options] file.jpg ...\n"), ProgramName);
 	puts(  _("-g, --gps file.gpx       Specifies GPX file with GPS data"));
-	puts(  _("-l, --latlong            Specifies latitude/longitude/elevation directly"));
+	puts(  _("-l, --latlong LAT,LONG[,E] Specifies latitude/longitude/elevation directly"));
 	puts(  _("-z, --timeadd +/-HH[:MM] Time to add to GPS data to make it match photos"));
 	puts(  _("-i, --no-interpolation   Disable interpolation between points; interpolation\n"
 	         "                         is linear, points rounded if disabled"));

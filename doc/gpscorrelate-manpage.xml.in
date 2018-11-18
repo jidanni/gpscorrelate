@@ -110,9 +110,13 @@
           -g <replaceable>file.gpx</replaceable>
         </arg>
 
-          <arg choice="plain">-l</arg>
-          <arg choice="plain">--latlong</arg>
-          <replaceable>lat/long/elev</replaceable>
+        <arg choice="plain">
+          <group>
+            <arg choice="plain">-l</arg>
+            <arg choice="plain">--latlong</arg>
+          </group>
+          <replaceable>latitude,longitude<group><arg choice="plain">,elevation</arg></group></replaceable>
+        </arg>
       </group>
 
       <arg rep="repeat" choice="plain">
@@ -221,7 +225,7 @@
         <term>
           <option>-l</option>,
           <option>--latlong</option>
-          <replaceable>latitude,longitude,elevation</replaceable>
+          <replaceable>latitude,longitude[,elevation]</replaceable>
         </term>
         <listitem>
           <para>Provide a specific geographic coordinate to use for all images
