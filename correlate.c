@@ -63,7 +63,7 @@ struct GPSPoint* CorrelatePhoto(const char* Filename,
 		Options->Result = CORR_NOEXIFINPUT;
 		return NULL;
 	}
-	if (IncludesGPS)
+	if (IncludesGPS && !Options->OverwriteExisting)
 	{
 		/* Already have GPS data in the file!
 		 * So we can't do this again... */

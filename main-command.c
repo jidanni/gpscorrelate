@@ -54,6 +54,7 @@ static const struct option program_options[] = {
 	{ "verbose", no_argument, 0, 'v'},
 	{ "datum", required_argument, 0, 'd'},
 	{ "no-write", no_argument, 0, 'n'},
+	{ "replace", no_argument, 0, 'R'},
 	{ "max-dist", required_argument, 0, 'm'},
 	{ "show", no_argument, 0, 's'},
 	{ "machine", no_argument, 0, 'o'},
@@ -85,6 +86,7 @@ static void PrintUsage(const char* ProgramName)
 	         "                         is linear, points rounded if disabled"));
 	puts(  _("-d, --datum DATUM        Specify measurement datum (defaults to WGS-84)"));
 	puts(  _("-n, --no-write           Do not write the EXIF data. Useful with --verbose"));
+	puts(  _("-R, --replace            Overwrite any GPS tags already in the image file"));
 	puts(  _("-m, --max-dist SECS      Max time outside points that photo will be matched"));
 	puts(  _("-s, --show               Just show the GPS data from the given files"));
 	puts(  _("-o, --machine            Similar to --show but with machine-readable output"));
@@ -290,6 +292,7 @@ int main(int argc, char** argv)
 	char* Datum = NULL;          /* Datum of input GPS data. */
 	int Interpolate = 1;         /* Do we interpolate? By default, yes. */
 	int NoWriteExif = 0;         /* Do we not write to file? By default, no. */
+	int OverwriteExisting = 0;   /* Do we overwrite existing tags? By default, no */
 	int ShowDetails = 0;         /* Do we show lots of details? By default, no. */
 	int FeatherTime = 0;         /* The "feather" time, in seconds. 0 = disabled. */
 	int ShowOnlyDetails = 0;
@@ -314,7 +317,7 @@ int main(int argc, char** argv)
 	{
 		/* Call getopt to do all the hard work
 		 * for us... */
-		c = getopt_long(argc, argv, "g:z:il:hvd:m:nsortMVfO:",
+		c = getopt_long(argc, argv, "g:z:il:hvd:m:nsortRMVfO:",
 				program_options, 0);
 
 		if (c == -1) break;
@@ -422,6 +425,10 @@ int main(int argc, char** argv)
 			case 'n':
 				/* This option specifies not to write to file. */
 				NoWriteExif = 1;
+				break;
+			case 'R':
+				/* This option specifies to overwrite existing GPS tags. */
+				OverwriteExisting = 1;
 				break;
 			case 'm':
 				/* This option gives us the allowable "feather" time. */
@@ -561,6 +568,7 @@ int main(int argc, char** argv)
 	/* Set up our options structure for the correlation function. */
 	struct CorrelateOptions Options;
 	Options.NoWriteExif   = NoWriteExif;
+	Options.OverwriteExisting = OverwriteExisting;
 	Options.NoInterpolate = (Interpolate ? 0 : 1);
 	Options.AutoTimeZone  = !HaveTimeAdjustment;
 	Options.TimeZoneHours = TimeZoneHours;

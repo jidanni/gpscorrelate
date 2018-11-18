@@ -85,6 +85,11 @@
       </group>
 
       <group>
+        <arg choice="plain">-R</arg>
+        <arg choice="plain">--replace</arg>
+      </group>
+
+      <group>
         <arg choice="plain">-m</arg>
         <arg choice="plain">--max-dist <replaceable>time</replaceable>
         </arg>
@@ -368,6 +373,18 @@
           <para>Do not write the correlated EXIF data back into the
           image. Useful with <userinput>--verbose</userinput> to see
           what would happen during image correlation.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>
+          <option>-R</option>,
+          <option>--replace</option>
+        </term>
+        <listitem>
+          <para>Overwrite any existing GPS tags in the file.
+          Without this option, any file that already contains GPS tags will
+          be skipped.</para>
         </listitem>
       </varlistentry>
 

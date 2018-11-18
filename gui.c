@@ -72,6 +72,7 @@ GtkWidget *OptionsAlignment;
 GtkWidget *OptionsVBox;
 GtkWidget *InterpolateCheck;
 GtkWidget *NoWriteCheck;
+GtkWidget *OverwriteCheck;
 GtkWidget *NoMtimeCheck;
 GtkWidget *BetweenSegmentsCheck;
 GtkWidget *DegMinSecsCheck;
@@ -356,6 +357,12 @@ GtkWidget* CreateMatchWindow (void)
 	  "testing the settings without modifying the photos."), NULL);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (NoWriteCheck), g_key_file_get_boolean(GUISettings, "default", "dontwrite", NULL));
 
+  OverwriteCheck = gtk_check_button_new_with_mnemonic (_("Replace existing tags"));
+  gtk_widget_show (OverwriteCheck);
+  gtk_box_pack_start (GTK_BOX (OptionsVBox), OverwriteCheck, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, OverwriteCheck, _("Replace any existing GPS tags in the photos."), NULL);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (OverwriteCheck), g_key_file_get_boolean(GUISettings, "default", "replace", NULL));
+
   NoMtimeCheck = gtk_check_button_new_with_mnemonic (_("Don't change mtime"));
   gtk_widget_show (NoMtimeCheck);
   gtk_box_pack_start (GTK_BOX (OptionsVBox), NoMtimeCheck, FALSE, FALSE, 0);
@@ -609,6 +616,7 @@ gboolean DestroyWindow(GtkWidget *Widget,
 	/* Record the settings, and then save them. */
 	g_key_file_set_boolean(GUISettings, "default", "interpolate", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(InterpolateCheck)));
 	g_key_file_set_boolean(GUISettings, "default", "dontwrite", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoWriteCheck)));
+	g_key_file_set_boolean(GUISettings, "default", "replace", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(OverwriteCheck)));
 	g_key_file_set_boolean(GUISettings, "default", "nochangemtime", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoMtimeCheck)));
 	g_key_file_set_boolean(GUISettings, "default", "betweensegments", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(BetweenSegmentsCheck)));
 	g_key_file_set_boolean(GUISettings, "default", "writeddmmss", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(DegMinSecsCheck)));
@@ -616,8 +624,10 @@ gboolean DestroyWindow(GtkWidget *Widget,
 	g_key_file_set_string(GUISettings, "default", "timezone", gtk_entry_get_text(GTK_ENTRY(TimeZoneEntry)));
 	g_key_file_set_string(GUISettings, "default", "photooffset", gtk_entry_get_text(GTK_ENTRY(PhotoOffsetEntry)));
 	g_key_file_set_string(GUISettings, "default", "gpsdatum", gtk_entry_get_text(GTK_ENTRY(GPSDatumEntry)));
-	g_key_file_set_string(GUISettings, "default", "gpxopendir", GPXOpenDir);
-	g_key_file_set_string(GUISettings, "default", "photoopendir", PhotoOpenDir);
+	if (GPXOpenDir)
+	    g_key_file_set_string(GUISettings, "default", "gpxopendir", GPXOpenDir);
+	if (PhotoOpenDir)
+		g_key_file_set_string(GUISettings, "default", "photoopendir", PhotoOpenDir);
 	SaveSettings();
 
 	/* Someone closed the window. */
@@ -1199,6 +1209,9 @@ void CorrelateButtonPress( GtkWidget *Widget, gpointer Data )
 
 	/* Write or no write. */
 	Options.NoWriteExif = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoWriteCheck));
+
+	/* Force overwrite. */
+	Options.OverwriteExisting = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(OverwriteCheck));
 
 	/* No change MTime. */
 	Options.NoChangeMtime = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoMtimeCheck));

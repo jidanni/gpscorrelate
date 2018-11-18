@@ -443,6 +443,15 @@ static void ConvertToOldLatLongRational(double Number, char *Buf, int BufSize)
 	//printf("Old style lat/long: %f -> %s\n", Number, Buf);
 }
 
+static void replace(Exiv2::ExifData &exif, Exiv2::ExifKey key, const Exiv2::Value *value)
+{
+	Exiv2::ExifData::iterator it = exif.findKey(key);
+	if (it != exif.end())
+		it->setValue(value);
+	else
+		exif.add(key, value);
+}
+
 int WriteGPSData(const char* File, const struct GPSPoint* Point,
 		 const char* Datum, int NoChangeMtime, int DegMinSecs)
 {
@@ -485,7 +494,7 @@ int WriteGPSData(const char* File, const struct GPSPoint* Point,
 	//  (and, must be present).
 	Exiv2::Value::AutoPtr Value = Exiv2::Value::create(Exiv2::unsignedByte);
 	Value->read("2 2 0 0");
-	ExifToWrite.add(Exiv2::ExifKey("Exif.GPSInfo.GPSVersionID"), Value.get());
+	replace(ExifToWrite, Exiv2::ExifKey("Exif.GPSInfo.GPSVersionID"), Value.get());
 	// Datum: the datum of the measured data. The default is WGS-84.
 	if (*Datum)
 		ExifToWrite["Exif.GPSInfo.GPSMapDatum"] = Datum;
@@ -503,7 +512,7 @@ int WriteGPSData(const char* File, const struct GPSPoint* Point,
 		} else {
 			Value->read("1");
 		}
-		ExifToWrite.add(Exiv2::ExifKey("Exif.GPSInfo.GPSAltitudeRef"), Value.get());
+		replace(ExifToWrite, Exiv2::ExifKey("Exif.GPSInfo.GPSAltitudeRef"), Value.get());
 		// And the actual altitude.
 		Value = Exiv2::Value::create(Exiv2::unsignedRational);
 		// 3 decimal points is beyond the limit of current GPS technology
@@ -512,7 +521,7 @@ int WriteGPSData(const char* File, const struct GPSPoint* Point,
 
 		/* printf("Altitude: %f -> %s\n", Point->Elev, ScratchBuf); */
 		Value->read(ScratchBuf);
-		ExifToWrite.add(Exiv2::ExifKey("Exif.GPSInfo.GPSAltitude"), Value.get());
+		replace(ExifToWrite, Exiv2::ExifKey("Exif.GPSInfo.GPSAltitude"), Value.get());
 	}
 	
 	// LATITUDE
@@ -558,7 +567,7 @@ int WriteGPSData(const char* File, const struct GPSPoint* Point,
 		ConvertToOldLatLongRational(Point->Lat, ScratchBuf, sizeof(ScratchBuf));
 	}
 	Value->read(ScratchBuf);
-	ExifToWrite.add(Exiv2::ExifKey("Exif.GPSInfo.GPSLatitude"), Value.get());
+	replace(ExifToWrite, Exiv2::ExifKey("Exif.GPSInfo.GPSLatitude"), Value.get());
 	
 	// LONGITUDE
 	// Longitude reference: "E" or "W".
@@ -582,7 +591,7 @@ int WriteGPSData(const char* File, const struct GPSPoint* Point,
 		ConvertToOldLatLongRational(Point->Long, ScratchBuf, sizeof(ScratchBuf));
 	}
 	Value->read(ScratchBuf);
-	ExifToWrite.add(Exiv2::ExifKey("Exif.GPSInfo.GPSLongitude"), Value.get());
+	replace(ExifToWrite, Exiv2::ExifKey("Exif.GPSInfo.GPSLongitude"), Value.get());
 
 	// The timestamp.
 	// Make up the timestamp...
@@ -595,7 +604,7 @@ int WriteGPSData(const char* File, const struct GPSPoint* Point,
 			TimeStamp.tm_hour, TimeStamp.tm_min,
 			TimeStamp.tm_sec);
 	Value->read(ScratchBuf);
-	ExifToWrite.add(Exiv2::ExifKey("Exif.GPSInfo.GPSTimeStamp"), Value.get());
+	replace(ExifToWrite, Exiv2::ExifKey("Exif.GPSInfo.GPSTimeStamp"), Value.get());
 
 	// And we should also do a datestamp.
 	snprintf(ScratchBuf, sizeof(ScratchBuf), "%04d:%02d:%02d",

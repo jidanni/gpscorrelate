@@ -29,6 +29,7 @@
  * Not really sure if this is needed, but... */
 struct CorrelateOptions {
 	int NoWriteExif;
+	int OverwriteExisting;
 	int NoInterpolate;
 	int NoChangeMtime;
 	int TimeZoneHours;  /* To add to photos to make them UTC. */
