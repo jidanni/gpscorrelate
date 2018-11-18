@@ -11,18 +11,19 @@ git:
 addons:
   apt:
     packages:
+        - desktop-file-utils
         - exiv2
         - libexiv2-dev
         - libgtk2.0-dev
 
 install:
   # Install exiv2 on OS X
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install exiv2 gtk+; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install desktop-file-utils exiv2 gtk+; fi
   - if [ "$CONFIG" = "coverage" ] ; then pip install --user cpp-coveralls; fi
   - |
     if [ "$CONFIG" = "musl" ] ; then
       echo "FROM alpine" > Dockerfile
-      echo "RUN apk add --no-cache build-base exiv2-dev libxml2-dev gettext-dev gtk+2.0-dev" >> Dockerfile
+      echo "RUN apk add --no-cache build-base exiv2-dev libxml2-dev gettext-dev gtk+2.0-dev desktop-file-utils" >> Dockerfile
       echo "RUN adduser -D -u $(id -u) build" >> Dockerfile
       docker build -t alpine-build .
     fi
@@ -62,6 +63,7 @@ matrix:
           - llvm-toolchain-trusty-6.0
           - ubuntu-toolchain-r-test
         packages:
+          - desktop-file-utils
           - exiv2
           - libexiv2-dev
           - libgtk2.0-dev
@@ -74,6 +76,7 @@ matrix:
         sources:
           - ubuntu-toolchain-r-test
         packages:
+          - desktop-file-utils
           - exiv2
           - libexiv2-dev
           - libgtk2.0-dev
@@ -109,7 +112,7 @@ script:
           make CFLAGS=-DENABLE_NLS LDFLAGS=-lintl gpscorrelate gpscorrelate-gui
           ./gpscorrelate -V
           make check
-          make install-po prefix= DESTDIR="${HOME}"
+          make install-po install-desktop-file prefix= DESTDIR="\${HOME}"
           "
         '
     else
@@ -119,7 +122,7 @@ script:
     # This can only be installed if the GTK target is also built
     #   make install DESTDIR="${HOME}"
     # Ensure brew gettext is in the PATH so xgettext is found on OS X
-      PATH="$PATH:/usr/local/opt/gettext/bin" make install-po prefix= DESTDIR="${HOME}"
+      PATH="$PATH:/usr/local/opt/gettext/bin" make install-po install-desktop-file prefix= DESTDIR="${HOME}"
     fi
 
 after_success:
