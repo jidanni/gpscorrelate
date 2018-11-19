@@ -1,0 +1,5 @@
+TITLE='Correlate a file already containing GPS tags with --replace'
+PRECOMMAND='cat "$STAGINGDIR/withgps.jpg" >"$LOGDIR/test.jpg"'
+COMMAND='$PROGRAM --replace -z 0 -g "$STAGINGDIR/track2.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
+RESULTCODE=0
