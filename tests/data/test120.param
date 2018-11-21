@@ -1,0 +1,4 @@
+TITLE='Remove GPS tags from an invalid GPX file'
+COMMAND='$PROGRAM --remove "$STAGINGDIR/dummy.xhtml" > "$OUTFILE" 2>&1'
+RESULTCODE=1
+SEDCOMMAND='1s@^.*/@@' # strip path
