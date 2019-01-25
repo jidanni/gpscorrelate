@@ -1,4 +1,5 @@
 # Travis CI configuration file
+# https://travis-ci.org/dfandrich/gpscorrelate
 
 sudo: false
 
@@ -24,9 +25,12 @@ install:
   - if [ "$CONFIG" = "coverage" ] ; then pip install --user cpp-coveralls; fi
   - |
     if [ "$CONFIG" = "musl" ] ; then
-      echo "FROM alpine" > Dockerfile
-      echo "RUN apk add --no-cache build-base exiv2-dev libxml2-dev gettext-dev gtk+2.0-dev desktop-file-utils" >> Dockerfile
-      echo "RUN adduser -D -u $(id -u) build" >> Dockerfile
+      echo > Dockerfile "
+        FROM alpine
+        RUN apk add --no-cache build-base exiv2-dev libxml2-dev gettext-dev gtk+2.0-dev desktop-file-utils
+        # Use the same user id as the one building this container
+        RUN adduser -D -u $(id -u) build
+      "
       docker build -t alpine-build .
     fi
 
@@ -93,8 +97,8 @@ matrix:
     sudo: required
     services: docker
 
-# Only build the command-line tool for now
 script:
+  # Build both the command-line tool and GUI by default
   - TARGET='gpscorrelate gpscorrelate-gui'
   - INSTALLTARGET='install install-po install-desktop-file'
   - if [ "$CONFIG" = "normal" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; fi
@@ -126,7 +130,7 @@ script:
       make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" $TARGET
      ./gpscorrelate -V
       make check
-    # Ensure brew gettext is in the PATH so xgettext is found on OS X
+      # Ensure brew gettext is in the PATH so xgettext is found on OS X
       PATH="$PATH:/usr/local/opt/gettext/bin" make prefix= DESTDIR="${HOME}" $INSTALLTARGET
     fi
 
