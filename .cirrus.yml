@@ -1,11 +1,14 @@
 # Cirrus CI configuration
 # https://cirrus-ci.com/github/dfandrich/gpscorrelate
 
-freebsd_instance:
-  image: freebsd-11-2-release-amd64
-
 task:
-  name: FreeBSD 11.2
+  name: FreeBSD
+  freebsd_instance:
+    matrix:
+      image: freebsd-12-0-release-amd64
+      image: freebsd-11-2-release-amd64
+      image: freebsd-10-4-release-amd64
+
   env:
     CIRRUS_CLONE_DEPTH: 1
     CFLAGS: -Wall -Wextra -Werror -O3 -DENABLE_NLS=1
