@@ -8,20 +8,24 @@ language: cpp
 git:
   depth: 1
 
-# Install needed packages on Ubuntu (OS X is done with brew below)
+# Install needed packages on Ubuntu and OS X
 addons:
   apt:
     packages:
-        - desktop-file-utils
-        - docbook-xsl
-        - exiv2
-        - libexiv2-dev
-        - libgtk2.0-dev
-        - xsltproc
+      - desktop-file-utils
+      - docbook-xsl
+      - exiv2
+      - libexiv2-dev
+      - libgtk2.0-dev
+      - xsltproc
+  homebrew:
+    packages:
+      - desktop-file-utils
+      - docbook-xsl
+      - exiv2
+      - gtk+
 
 install:
-  # Install exiv2 on OS X
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install desktop-file-utils docbook-xsl exiv2 gtk+; fi
   - if [ "$CONFIG" = "coverage" ] ; then pip install --user cpp-coveralls; fi
   - |
     if [ "$CONFIG" = "musl" ] ; then
