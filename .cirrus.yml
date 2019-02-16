@@ -24,9 +24,11 @@ task:
     - gmake CC="$CC" CXX="$CXX" CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS"
   test_script:
     - ./gpscorrelate -V
-    # The tests involving writing to read-only files fail because the OS allows
-    # the files to be overwritten for some reason, Until that's sorted,
-    # consider 4 tests failing as success.
-    - gmake check | tee /dev/stderr | grep -q '4 test(s) have FAILED'
+    # The tests involving writing to read-only files fail when run as root
+    # (because the OS allows the files to be overwritten then). Run the
+    # tests as a normal user to get around that problem. The log directory
+    # must be world-writable since files will be written there.
+    - install -d -m 0777 tests/log
+    - sudo -u nobody gmake check
   install_script:
     - gmake prefix= DESTDIR="${HOME}" install install-po install-desktop-file
