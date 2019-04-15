@@ -40,8 +40,8 @@
 int main(int argc, char* argv[])
 {
 	/* Initialize gettext (gtk_init initializes the locale) */
-	textdomain(TEXTDOMAIN);
-	bind_textdomain_codeset(TEXTDOMAIN, "UTF-8");
+	(void) textdomain(TEXTDOMAIN);
+	(void) bind_textdomain_codeset(TEXTDOMAIN, "UTF-8");
 
 	/* Get GTK ready, as appropriate.
 	 * (We ignore passed parameters) */

@@ -268,7 +268,7 @@ int main(int argc, char** argv)
 {
 	/* Initialize locale & gettext */
 	setlocale (LC_ALL, "");
-	textdomain(TEXTDOMAIN);
+	(void) textdomain(TEXTDOMAIN);
 
 	/* If you didn't pass any arguments... */
 	if (argc == 1)
