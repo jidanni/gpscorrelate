@@ -55,7 +55,7 @@ fi
 
 POSTCOMMAND=
 # Clean up on test abort
-trap 'eval $POSTCOMMAND; exit 1' SIGINT SIGHUP SIGTERM
+trap 'eval $POSTCOMMAND; exit 1' INT HUP TERM
 
 FAILEDTESTS=0
 
