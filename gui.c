@@ -800,6 +800,12 @@ void AddPhotoToList(const char* Filename)
 	free(Time);
 }
 
+static void gtk_tree_path_free_(gpointer path, gpointer data)
+{
+	(void) data;  // Unused
+	gtk_tree_path_free((GtkTreePath *)path);
+}
+
 void RemovePhotosButtonPress( GtkWidget *Widget, gpointer Data )
 {
 	(void) Widget;  // Unused
@@ -919,7 +925,7 @@ void RemovePhotosButtonPress( GtkWidget *Widget, gpointer Data )
 	free(RemoveIters);
 
 	/* Free the memory used by GList. */
-	g_list_foreach(Selected, (GFunc)gtk_tree_path_free, NULL);
+	g_list_foreach(Selected, gtk_tree_path_free_, NULL);
 	g_list_free(Selected);
 
 	/* Debug: walk the photo list tree. */
