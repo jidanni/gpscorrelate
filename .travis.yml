@@ -42,8 +42,7 @@ env:
   # More configurations are configured in the matrix section
   matrix:
     - CONFIG=normal
-    - CONFIG=no_nls
-    - CONFIG=sanitize
+    - CONFIG=no-nls
   global:
     - MAKEFLAGS='-j 2'
 
@@ -57,16 +56,30 @@ os:
 
 matrix:
   exclude:
-  # Gives spurious errors with clang and gcc doesn't support -fsanitize=undefined
-  - env: CONFIG=sanitize  # Gives spurious errors in this config
-    os: linux
   include:
   # Only run the coverage build in one configuration
   - env: CONFIG=coverage
     os: linux
     compiler: gcc
+  - env: CONFIG=normal DIST=bionic
+    os: linux
+    dist: bionic
+    compiler: gcc
+  - env: CONFIG=no-werror DIST=bionic
+    os: linux
+    dist: bionic
+    compiler: clang
+  - env: CONFIG=normal DIST=xenial
+    os: linux
+    dist: xenial
+    compiler: gcc
+  - env: CONFIG=no-werror  DIST=xenial
+    os: linux
+    dist: xenial
+    compiler: clang
   - env: CONFIG=clang6
     os: linux
+    compiler: clang
     addons:
       apt:
         sources:
@@ -80,9 +93,9 @@ matrix:
           - libgtk2.0-dev
           - clang-6.0
           - xsltproc
-    compiler: clang
   - env: CONFIG=clang7
     os: linux
+    compiler: clang
     addons:
       apt:
         sources:
@@ -96,9 +109,25 @@ matrix:
           - libgtk2.0-dev
           - clang-7
           - xsltproc
+  - env: CONFIG=clang8
+    os: linux
     compiler: clang
+    addons:
+      apt:
+        sources:
+          - llvm-toolchain-trusty-8
+          - ubuntu-toolchain-r-test
+        packages:
+          - desktop-file-utils
+          - docbook-xsl
+          - exiv2
+          - libexiv2-dev
+          - libgtk2.0-dev
+          - clang-8
+          - xsltproc
   - env: CONFIG=gcc8
     os: linux
+    compiler: gcc
     addons:
       apt:
         sources:
@@ -111,29 +140,51 @@ matrix:
           - libgtk2.0-dev
           - g++-8
           - xsltproc
-    compiler: gcc
+  - env: CONFIG=sanitize
+    os: linux
+    compiler: clang
+    addons:
+      apt:
+        sources:
+          - llvm-toolchain-trusty-8
+          - ubuntu-toolchain-r-test
+        packages:
+          - desktop-file-utils
+          - docbook-xsl
+          - exiv2
+          - libexiv2-dev
+          - libgtk2.0-dev
+          - clang-8
+          - xsltproc
   - env: CONFIG=musl
     os: linux
     sudo: required
     services: docker
+
+before_install:
+  # The apt addons section is ignored on bionic for some reason
+  - if [ "${DIST}" = "bionic" ] ; then sudo apt-get install -y desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc; fi
 
 script:
   # Build both the command-line tool and GUI by default
   - TARGET='gpscorrelate gpscorrelate-gui'
   - INSTALLTARGET='install install-po install-desktop-file'
   - if [ "$CONFIG" = "normal" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; fi
-  - if [ "$CONFIG" = "no_nls" ] ; then CFLAGS='-Wall -Wextra -O3'; fi
-  - if [ "$CONFIG" = "sanitize" ] ; then CFLAGS='-g -O0 -fsanitize=address -fsanitize=undefined -DENABLE_NLS=1'; LDFLAGS='$(CFLAGS)'; fi
+  - if [ "$CONFIG" = "no-werror" ] ; then CFLAGS='-Wall -Wextra -O3 -DENABLE_NLS=1'; fi
+  - if [ "$CONFIG" = "no-nls" ] ; then CFLAGS='-Wall -Wextra -Werror -O3'; fi
+  - if [ "$CONFIG" = "sanitize" ] ; then CFLAGS='-g -O0 -fsanitize=address -fsanitize=undefined -DENABLE_NLS=1'; LDFLAGS='$(CFLAGS)'; export CC=clang-8; export ASAN_OPTIONS=strict_string_checks=0:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1; fi
     # FIXME: There are no tests for the GUI, so don't bother building it.
   - if [ "$CONFIG" = "coverage" ] ; then CFLAGS='-g -O0 --coverage'; LDFLAGS='$(CFLAGS)'; TARGET='gpscorrelate'; INSTALLTARGET='install-po install-desktop-file'; fi
   - if [ "$CONFIG" = "clang6" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-6.0; CXX=clang++-6.0; fi
   - if [ "$CONFIG" = "clang7" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-7; CXX=clang++-7; fi
+  - if [ "$CONFIG" = "clang8" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-8; CXX=clang++-8; fi
   - if [ "$CONFIG" = "gcc8" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; CC=gcc-8; CXX=g++-8; fi
 
     # Explicitly point to brew's gettext installation on OS X
   - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then CFLAGS="$CFLAGS -I/usr/local/opt/gettext/include"; LDFLAGS="$LDFLAGS -L/usr/local/opt/gettext/lib -lintl"; fi
 
   - |
+    set -e
     if [ "$CONFIG" = "musl" ] ; then
       docker run --rm -v "$PWD":/tmp/src alpine-build sh -c '
         cat /etc/os-release
@@ -154,6 +205,7 @@ script:
       # Ensure brew gettext is in the PATH so xgettext is found on OS X
       PATH="$PATH:/usr/local/opt/gettext/bin" make prefix= DESTDIR="${HOME}" $INSTALLTARGET
     fi
+    set +e
 
 after_success:
   - if [ "$CONFIG" = "coverage" ] ; then coveralls --gcov-options '\-lp'; fi
