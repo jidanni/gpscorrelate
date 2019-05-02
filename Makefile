@@ -7,18 +7,22 @@ CC = gcc
 CXX = g++
 EXEEXT =
 PKG_CONFIG=pkg-config
+CFLAGS   = -Wall -O2
+LDFLAGS  = -Wall -O2 -lm
+GTK      = 2
 
 COBJS    = main-command.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
 GOBJS    = main-gui.o gui.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
-CFLAGS   = -Wall -O2
-CFLAGSINC := $(shell $(PKG_CONFIG) --cflags libxml-2.0 exiv2)
-# Add the gtk+ flags only when building the GUI
-GTK      = 2
-gpscorrelate-gui$(EXEEXT): CFLAGSINC += $(shell $(PKG_CONFIG) --cflags gtk+-$(GTK).0)
-LIBS :=
-LDFLAGS   = -Wall -O2
-LDFLAGSALL := $(shell $(PKG_CONFIG) --libs libxml-2.0 exiv2) -lm
-LDFLAGSGUI := $(shell $(PKG_CONFIG) --libs gtk+-$(GTK).0)
+
+# Both BSD make and GNU make >= 4.0 support != to define the flags immediately
+# (which calls pkg-config once instead of on every compile), but until that GNU
+# make version is widespread, use this slower but more portable form.
+CFLAGSINC = `$(PKG_CONFIG) --cflags libxml-2.0 exiv2`
+GTKFLAGS  = `$(PKG_CONFIG) --cflags gtk+-$(GTK).0`
+LIBS      = `$(PKG_CONFIG) --libs libxml-2.0 exiv2`
+LIBSGUI   = `$(PKG_CONFIG) --libs gtk+-$(GTK).0`
+
+CFLAGSINC += $(GTKFLAGS)
 
 # Put --nonet here to avoid downloading DTDs while building documentation
 XSLTFLAGS =
@@ -37,10 +41,10 @@ TARGETS = gpscorrelate-gui$(EXEEXT) gpscorrelate$(EXEEXT) doc/gpscorrelate.1 doc
 all:	$(TARGETS)
 
 gpscorrelate$(EXEEXT): $(COBJS)
-	$(CXX) -o $@ $(COBJS) $(LDFLAGS) $(LDFLAGSALL) $(LIBS)
+	$(CXX) -o $@ $(COBJS) $(LDFLAGS) $(LIBS)
 
 gpscorrelate-gui$(EXEEXT): $(GOBJS)
-	$(CXX) -o $@ $(GOBJS) $(LDFLAGS) $(LDFLAGSGUI) $(LDFLAGSALL) $(LIBS)
+	$(CXX) -o $@ $(GOBJS) $(LIBSGUI) $(LDFLAGS) $(LIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) $(CFLAGSINC) $(DEFS) -c -o $@ $<
@@ -74,14 +78,15 @@ install-desktop-file:
 
 docs: doc/gpscorrelate.1  doc/gpscorrelate.html
 
+# BSD make doesn't work with $< as the prerequisite in the following rules but $? is fine
 doc/gpscorrelate-manpage.xml: doc/gpscorrelate-manpage.xml.in
-	sed -e 's,@DOCDIR@,$(docdir),' -e 's,@PACKAGE_VERSION@,$(PACKAGE_VERSION),' $< > $@
+	sed -e 's,@DOCDIR@,$(docdir),' -e 's,@PACKAGE_VERSION@,$(PACKAGE_VERSION),' $? > $@
 
 doc/gpscorrelate.1: doc/gpscorrelate-manpage.xml
-	xsltproc $(XSLTFLAGS) -o $@ http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
+	xsltproc $(XSLTFLAGS) -o $@ http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $?
 
 doc/gpscorrelate.html: doc/gpscorrelate-manpage.xml
-	xsltproc $(XSLTFLAGS) -o $@ http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl $<
+	xsltproc $(XSLTFLAGS) -o $@ http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl $?
 
 build-po:
 	(cd po && $(MAKE) VERSION="$(PACKAGE_VERSION)" prefix="$(prefix)" top_srcdir="$(PWD)" update-po)

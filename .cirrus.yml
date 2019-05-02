@@ -21,13 +21,12 @@ task:
       - GTK: 3
 
   pkginstall_script:
-    - pkg install -y pkgconf docbook exiv2 libxml2 gtk"$GTK" libxslt gettext-tools desktop-file-utils gmake
+    - pkg install -y pkgconf docbook exiv2 libxml2 gtk"$GTK" libxslt gettext-tools desktop-file-utils
 
   compile_script:
     # GTK3 throws up some warnings, so avoid -Werror
     - if [ "$GTK" = 3 ] ; then CFLAGS='-Wall -Wextra -O3 -DENABLE_NLS=1'; fi
-    # TODO: use make instead of gmake
-    - gmake CC="$CC" CXX="$CXX" CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" GTK="$GTK"
+    - make CC="$CC" CXX="$CXX" CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" GTK="$GTK"
 
   test_script:
     - ./gpscorrelate -V
@@ -36,6 +35,7 @@ task:
     # tests as a normal user to get around that problem. The log directory
     # must be world-writable since files will be written there.
     - install -d -m 0777 tests/log
-    - sudo -u nobody gmake check
+    - sudo -u nobody make check
+
   install_script:
-    - gmake prefix= DESTDIR="${HOME}" install install-po install-desktop-file
+    - make prefix= DESTDIR="${HOME}" install install-po install-desktop-file
