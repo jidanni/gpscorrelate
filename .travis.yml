@@ -61,6 +61,31 @@ matrix:
   - env: CONFIG=coverage
     os: linux
     compiler: gcc
+  - env: CONFIG=no-werror GTK=3
+    os: linux
+    compiler: gcc
+    addons:
+      apt:
+        packages:
+          - desktop-file-utils
+          - docbook-xsl
+          - exiv2
+          - libexiv2-dev
+          - libgtk-3-dev
+          - xsltproc
+  - env: CONFIG=no-werror DIST=bionic GTK=3
+    os: linux
+    dist: bionic
+    compiler: gcc
+    addons:
+      apt:
+        packages:
+          - desktop-file-utils
+          - docbook-xsl
+          - exiv2
+          - libexiv2-dev
+          - libgtk-3-dev
+          - xsltproc
   - env: CONFIG=normal DIST=bionic
     os: linux
     dist: bionic
@@ -156,14 +181,25 @@ matrix:
           - libgtk2.0-dev
           - clang-8
           - xsltproc
-  - env: CONFIG=musl
+  - env: CONFIG=musl DIST=alpine
     os: linux
     sudo: required
     services: docker
+  - env: CONFIG=no-werror GTK=3
+    os: osx
+    compiler: gcc
+    addons:
+      homebrew:
+        packages:
+          - desktop-file-utils
+          - docbook-xsl
+          - exiv2
+          - gtk+3
 
 before_install:
+  - GTK=${GTK:-2}
   # The apt addons section is ignored on bionic for some reason
-  - if [ "${DIST}" = "bionic" ] ; then sudo apt-get install -y desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc; fi
+  - if [ "${DIST}" = "bionic" ] ; then sudo apt-get install -y desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk${GTK/3/-}${GTK/2/.0}-dev xsltproc; fi
 
 script:
   # Build both the command-line tool and GUI by default
@@ -199,7 +235,7 @@ script:
           "
         '
     else
-      make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" $TARGET
+      make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" GTK="$GTK" $TARGET
      ./gpscorrelate -V
       make check
       # Ensure brew gettext is in the PATH so xgettext is found on OS X
