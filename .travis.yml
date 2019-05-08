@@ -61,6 +61,10 @@ matrix:
   - env: CONFIG=coverage
     os: linux
     compiler: gcc
+  - env: CONFIG=debuglog DIST=bionic
+    os: linux
+    dist: bionic
+    compiler: gcc
   - env: CONFIG=no-werror GTK=3
     os: linux
     compiler: gcc
@@ -206,6 +210,7 @@ script:
   - TARGET='gpscorrelate gpscorrelate-gui'
   - INSTALLTARGET='install install-po install-desktop-file'
   - if [ "$CONFIG" = "normal" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; fi
+  - if [ "$CONFIG" = "debuglog" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1 -DDEBUG'; fi
   - if [ "$CONFIG" = "no-werror" ] ; then CFLAGS='-Wall -Wextra -O3 -DENABLE_NLS=1'; fi
   - if [ "$CONFIG" = "no-nls" ] ; then CFLAGS='-Wall -Wextra -Werror -O3'; fi
   - if [ "$CONFIG" = "sanitize" ] ; then CFLAGS='-g -O0 -fsanitize=address -fsanitize=undefined -DENABLE_NLS=1'; LDFLAGS='$(CFLAGS)'; export CC=clang-8; export ASAN_OPTIONS=strict_string_checks=0:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1; fi
@@ -237,7 +242,12 @@ script:
     else
       make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" GTK="$GTK" $TARGET
      ./gpscorrelate -V
-      make check
+      if [ "$CONFIG" = "debuglog" ] ; then
+        # Debug logging enabled makes some tests fail due to differing output
+        make check | tee /dev/stderr | grep -q '15 test(s) have FAILED'
+      else
+        make check
+      fi
       # Ensure brew gettext is in the PATH so xgettext is found on OS X
       PATH="$PATH:/usr/local/opt/gettext/bin" make prefix= DESTDIR="${HOME}" $INSTALLTARGET
     fi
