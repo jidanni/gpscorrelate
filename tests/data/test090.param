@@ -2,6 +2,6 @@ TITLE='Use --fix-datestamps on a file with only GPS version tags'
 PRECOMMAND='cat "$STAGINGDIR/noloc.jpg" >"$LOGDIR/test.jpg"'
 COMMAND='$PROGRAM --fix-datestamps -z 0 "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1'
 POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
-# This test results in a segfault with libexiv2 ver. 0.19 due to a libexiv2 bug.
+# This test results in a segfault with libexiv2 ver. 0.18 & 0.19 due to a libexiv2 bug.
 RESULTCODE=1
 SEDCOMMAND='s@^.*/@@' # strip path

@@ -149,9 +149,10 @@ for TEST in $TESTLIST ; do
 	sed -E "$SEDCOMMAND" < "$OUTFILE.orig" > "$OUTFILE"
   fi
 
-  # Older versions of exiv2 (e.g. 0.15) have slightly different whitespace and
-  # handle the GPS IFD tag differently. This alternate comparison program can
-  # be used in place of "cmp" to relax the comparison and use such a version:
+  # Older versions of exiv2 (e.g. 0.15-0.18) have slightly different whitespace
+  # and handle the GPS IFD tag differently. This alternate comparison program
+  # can be used in place of "cmp" to relax the comparison and use such a
+  # version:
   #  ! diff -I GPSTag -qw
   if ! cmp "$RESULTFILE" "$OUTFILE" >/dev/null ; then
 	echo Test $TESTNAME FAILED: unexpected output
