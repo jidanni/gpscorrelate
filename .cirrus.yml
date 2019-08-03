@@ -21,7 +21,7 @@ task:
       - GTK: 3
 
   pkginstall_script:
-    - pkg install -y pkgconf docbook exiv2 libxml2 gtk"$GTK" libxslt gettext-tools desktop-file-utils
+    - pkg install -y pkgconf docbook-xsl exiv2 libxml2 gtk"$GTK" libxslt gettext-tools desktop-file-utils
 
   compile_script:
     # GTK3 throws up some warnings, so avoid -Werror

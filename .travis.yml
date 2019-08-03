@@ -6,7 +6,8 @@ sudo: false
 language: cpp
 
 git:
-  depth: 1
+  # Set to 10 instead of 1 to avoid problems when the most recent commits have [skip ci]
+  depth: 10
 
 # Install needed packages on Ubuntu and OS X
 addons:
@@ -24,6 +25,9 @@ addons:
       - docbook-xsl
       - exiv2
       - gtk+
+      - libxml2
+    # The default OS X image is now (August 2019) too old to work without this
+    update: true
 
 install:
   - if [ "$CONFIG" = "coverage" ] ; then pip install --user cpp-coveralls; fi
@@ -55,11 +59,11 @@ os:
   - osx
 
 matrix:
-  exclude:
   include:
   # Only run the coverage build in one configuration
-  - env: CONFIG=coverage
+  - env: CONFIG=coverage DIST=bionic
     os: linux
+    dist: bionic
     compiler: gcc
   - env: CONFIG=debuglog DIST=bionic
     os: linux
@@ -106,14 +110,12 @@ matrix:
     os: linux
     dist: xenial
     compiler: clang
-  - env: CONFIG=clang6
+  - env: CONFIG=clang6 DIST=xenial
     os: linux
+    dist: xenial
     compiler: clang
     addons:
       apt:
-        sources:
-          - llvm-toolchain-trusty-6.0
-          - ubuntu-toolchain-r-test
         packages:
           - desktop-file-utils
           - docbook-xsl
@@ -199,6 +201,21 @@ matrix:
           - docbook-xsl
           - exiv2
           - gtk+3
+          - libxml2
+        # The default OS X image is now (August 2019) too old to work without this
+        update: true
+  - env: CONFIG=normal
+    os: osx
+    osx_image: xcode11
+    compiler: clang
+    addons:
+      homebrew:
+        packages:
+          - desktop-file-utils
+          - docbook-xsl
+          - exiv2
+          - gtk+
+          - libxml2
 
 before_install:
   - GTK=${GTK:-2}
@@ -209,10 +226,10 @@ script:
   # Build both the command-line tool and GUI by default
   - TARGET='gpscorrelate gpscorrelate-gui'
   - INSTALLTARGET='install install-po install-desktop-file'
-  - if [ "$CONFIG" = "normal" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; fi
+  - if [ "$CONFIG" = "normal" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; fi
   - if [ "$CONFIG" = "debuglog" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1 -DDEBUG'; fi
   - if [ "$CONFIG" = "no-werror" ] ; then CFLAGS='-Wall -Wextra -O3 -DENABLE_NLS=1'; fi
-  - if [ "$CONFIG" = "no-nls" ] ; then CFLAGS='-Wall -Wextra -Werror -O3'; fi
+  - if [ "$CONFIG" = "no-nls" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3'; fi
   - if [ "$CONFIG" = "sanitize" ] ; then CFLAGS='-g -O0 -fsanitize=address -fsanitize=undefined -DENABLE_NLS=1'; LDFLAGS='$(CFLAGS)'; export CC=clang-8; export ASAN_OPTIONS=strict_string_checks=0:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1; fi
     # FIXME: There are no tests for the GUI, so don't bother building it.
   - if [ "$CONFIG" = "coverage" ] ; then CFLAGS='-g -O0 --coverage'; LDFLAGS='$(CFLAGS)'; TARGET='gpscorrelate'; INSTALLTARGET='install-po install-desktop-file'; fi
@@ -221,8 +238,8 @@ script:
   - if [ "$CONFIG" = "clang8" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-8; CXX=clang++-8; fi
   - if [ "$CONFIG" = "gcc8" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; CC=gcc-8; CXX=g++-8; fi
 
-    # Explicitly point to brew's gettext installation on OS X
-  - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then CFLAGS="$CFLAGS -I/usr/local/opt/gettext/include"; LDFLAGS="$LDFLAGS -L/usr/local/opt/gettext/lib -lintl"; fi
+    # Explicitly point to Homebrew's gettext and pkg-config files on OS X
+  - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then CFLAGS="$CFLAGS -I/usr/local/opt/gettext/include"; LDFLAGS="$LDFLAGS -L/usr/local/opt/gettext/lib -lintl"; export PKG_CONFIG_PATH="$(brew --prefix libffi)/lib/pkgconfig/":"$(brew --prefix libxml2)/lib/pkgconfig/"; fi
 
   - |
     set -e
