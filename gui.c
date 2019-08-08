@@ -76,6 +76,7 @@ GtkWidget *OverwriteCheck;
 GtkWidget *NoMtimeCheck;
 GtkWidget *BetweenSegmentsCheck;
 GtkWidget *DegMinSecsCheck;
+GtkWidget *AutoTimeZoneCheck;
 GtkWidget *OptionsTable;
 GtkWidget *MaxGapTimeLabel;
 GtkWidget *TimeZoneLabel;
@@ -234,8 +235,18 @@ void SaveSettings(void)
 	free(SettingsFilename);
 }
 
+static void timezone_toggle_visibility(GtkWidget *widget,
+                                       GtkWidget *entry )
+{
+  gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+  gtk_widget_set_sensitive(entry, !active);
+}
+
 GtkWidget* CreateMatchWindow (void)
 {
+  GError *error;
+  gboolean b;
+
   /* Load the settings. */
   LoadSettings();
 
@@ -441,6 +452,21 @@ GtkWidget* CreateMatchWindow (void)
 #endif
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (DegMinSecsCheck), g_key_file_get_boolean(GUISettings, "default", "writeddmmss", NULL));
 
+  AutoTimeZoneCheck = gtk_check_button_new_with_mnemonic (_("Auto time zone"));
+  gtk_widget_show (AutoTimeZoneCheck);
+  gtk_box_pack_start (GTK_BOX (OptionsVBox), AutoTimeZoneCheck, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(2, 12, 0)
+  gtk_widget_set_tooltip_text (AutoTimeZoneCheck,
+    _("Assume the camera time zone is the same as the local time zone."));
+#else
+  gtk_tooltips_set_tip (tooltips, AutoTimeZoneCheck,
+    _("Assume the camera time zone is the same as the local time zone."), NULL);
+#endif
+  b = g_key_file_get_boolean(GUISettings, "default", "autotimezone", &error);
+  if (error && error->code)
+      b = TRUE;  /* Default this to true */
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (AutoTimeZoneCheck), b);
+
   OptionsTable = gtk_table_new (4, 2, FALSE);
   gtk_widget_show (OptionsTable);
   gtk_box_pack_start (GTK_BOX (OptionsVBox), OptionsTable, TRUE, TRUE, 0);
@@ -514,7 +540,12 @@ GtkWidget* CreateMatchWindow (void)
 #endif
   gtk_entry_set_text (GTK_ENTRY (TimeZoneEntry), g_key_file_get_value(GUISettings, "default", "timezone", NULL));
   gtk_entry_set_width_chars (GTK_ENTRY (TimeZoneEntry), 7);
-  
+
+  /* Toggle visibility of time zone entry when auto time zone is toggled */
+  timezone_toggle_visibility(AutoTimeZoneCheck, TimeZoneEntry);
+  g_signal_connect(AutoTimeZoneCheck, "toggled",
+                   G_CALLBACK (timezone_toggle_visibility), GTK_ENTRY (TimeZoneEntry));
+
   PhotoOffsetEntry = gtk_entry_new ();
   gtk_widget_show (PhotoOffsetEntry);
   gtk_table_attach (GTK_TABLE (OptionsTable), PhotoOffsetEntry, 1, 2, 2, 3,
@@ -713,6 +744,7 @@ gboolean DestroyWindow(GtkWidget *Widget,
 	g_key_file_set_boolean(GUISettings, "default", "nochangemtime", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NoMtimeCheck)));
 	g_key_file_set_boolean(GUISettings, "default", "betweensegments", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(BetweenSegmentsCheck)));
 	g_key_file_set_boolean(GUISettings, "default", "writeddmmss", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(DegMinSecsCheck)));
+	g_key_file_set_boolean(GUISettings, "default", "autotimezone", gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(AutoTimeZoneCheck)));
 	g_key_file_set_string(GUISettings, "default", "maxgap", gtk_entry_get_text(GTK_ENTRY(GapTimeEntry)));
 	g_key_file_set_string(GUISettings, "default", "timezone", gtk_entry_get_text(GTK_ENTRY(TimeZoneEntry)));
 	g_key_file_set_string(GUISettings, "default", "photooffset", gtk_entry_get_text(GTK_ENTRY(PhotoOffsetEntry)));
@@ -1332,7 +1364,7 @@ void CorrelateButtonPress( GtkWidget *Widget, gpointer Data )
 	Options.Datum = strdup(gtk_entry_get_text(GTK_ENTRY(GPSDatumEntry)));
 		
 	/* TimeZone. We may need to extract the timezone from a string. */
-	Options.AutoTimeZone = 0; /* TODO: make this selectable in the GUI somehow */
+	Options.AutoTimeZone = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(AutoTimeZoneCheck));
 	Options.TimeZoneHours = 0;
 	Options.TimeZoneMins = 0;
 	char* TZString = (char*) gtk_entry_get_text(GTK_ENTRY(TimeZoneEntry));
