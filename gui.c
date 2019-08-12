@@ -94,9 +94,11 @@ GtkWidget *CorrelateButton;
 GtkWidget *CorrelateLabel;
 
 GtkWidget *OtherOptionsFrame;
+GtkWidget *OtherOptionsVBox;
 GtkWidget *OtherOptionsAlignment;
 GtkWidget *OtherOptionsLabel;
 GtkWidget *StripGPSButton;
+GtkWidget *AboutButton;
 
 GtkWidget *PhotoListVBox;
 GtkWidget *PhotoListScroll;
@@ -176,6 +178,7 @@ static void SetListItem(GtkTreeIter* Iter, const char* Filename,
 static void SelectGPSButtonPress( GtkWidget *Widget, gpointer Data );
 static void CorrelateButtonPress( GtkWidget *Widget, gpointer Data );
 static void StripGPSButtonPress( GtkWidget *Widget, gpointer Data );
+static void AboutButtonPress( GtkWidget *Widget, gpointer Data );
 
 static void GtkGUIUpdate(void);
 
@@ -627,9 +630,13 @@ GtkWidget* CreateMatchWindow (void)
   gtk_container_add (GTK_CONTAINER (OtherOptionsFrame), OtherOptionsAlignment);
   gtk_alignment_set_padding (GTK_ALIGNMENT (OtherOptionsAlignment), 0, 4, 12, 4);
 
+  OtherOptionsVBox = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (OtherOptionsVBox);
+  gtk_container_add (GTK_CONTAINER (OtherOptionsAlignment), OtherOptionsVBox);
+
   StripGPSButton = gtk_button_new_with_mnemonic (_("Strip GPS tags"));
   gtk_widget_show (StripGPSButton);
-  gtk_container_add (GTK_CONTAINER (OtherOptionsAlignment), StripGPSButton);
+  gtk_box_pack_start (GTK_BOX (OtherOptionsVBox), StripGPSButton, FALSE, FALSE, 0);
 #if GTK_CHECK_VERSION(2, 12, 0)
   gtk_widget_set_tooltip_text (StripGPSButton,
 	_("Strip GPS tags from the selected photos."));
@@ -639,6 +646,19 @@ GtkWidget* CreateMatchWindow (void)
 #endif
   g_signal_connect (G_OBJECT (StripGPSButton), "clicked",
   		G_CALLBACK (StripGPSButtonPress), NULL);
+
+  AboutButton = gtk_button_new_with_mnemonic (_("About"));
+  gtk_widget_show (AboutButton);
+  gtk_box_pack_start (GTK_BOX (OtherOptionsVBox), AboutButton, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(2, 12, 0)
+  gtk_widget_set_tooltip_text (AboutButton,
+	_("Show information about the program."));
+#else
+  gtk_tooltips_set_tip (tooltips, AboutButton,
+	_("Show information about the program."), NULL);
+#endif
+  g_signal_connect (G_OBJECT (AboutButton), "clicked",
+  		G_CALLBACK (AboutButtonPress), NULL);
 
   OtherOptionsLabel = gtk_label_new (_("<b>Other Tools</b>"));
   gtk_widget_show (OtherOptionsLabel);
@@ -1547,6 +1567,26 @@ void StripGPSButtonPress( GtkWidget *Widget, gpointer Data )
 
 }
 
+void AboutButtonPress( GtkWidget *Widget, gpointer Data )
+{
+	static const gchar * const authors[] = {
+		"Daniel Foote",
+		"Dan Fandrich",
+		NULL,
+	};
+	(void) Data;    // Unused
+	GtkWidget *Toplevel = gtk_widget_get_toplevel (Widget);
+	gtk_show_about_dialog(GTK_WINDOW(Toplevel),
+						"authors", authors,
+						"comments", _("GPS Correlate attaches EXIF GPS location tags to images."),
+						// The following hex bytes are the copyright symbol in UTF-8
+						"copyright", _("Copyright \xC2\xA9 2005-2019 Daniel Foote, Dan Fandrich"),
+						"license", "GPL 2+",
+						"logo-icon-name", "gpscorrelate-gui",
+						"version", PACKAGE_VERSION,
+						"website", "https://dfandrich.github.io/gpscorrelate/",
+NULL);
+}
 
 void GtkGUIUpdate(void)
 {
