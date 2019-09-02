@@ -29,9 +29,9 @@ test_script:
 # causes 4 tests to fail. Until that's sorted, consider 4 tests failing as
 # success.
 - cmd: if [%CONFIG%]==[cygwin] (
-    C:\%CONFIG%\bin\bash -e -l -c "cd $APPVEYOR_BUILD_FOLDER && make check | tee /dev/stderr | grep -q '4 test(s) have FAILED'" )
+    C:\%CONFIG%\bin\bash -l -c "cd $APPVEYOR_BUILD_FOLDER && make check > test.log; cat test.log; grep -q '4 test(s) have FAILED' test.log" )
 - cmd: if [%CONFIG%]==[cygwin64] (
-    C:\%CONFIG%\bin\bash -e -l -c "cd $APPVEYOR_BUILD_FOLDER && make check | tee /dev/stderr | grep -q '4 test(s) have FAILED'" )
+    C:\%CONFIG%\bin\bash -l -c "cd $APPVEYOR_BUILD_FOLDER && make check > test.log; cat test.log; grep -q '4 test(s) have FAILED' test.log" )
 # msys2 seems to have a number of bugs that cause test failures:
 # 1) The tests setting TZ fail, because it doesn't seem to support time
 # zones set by TZ (tests 38, 39, 40).
@@ -43,4 +43,4 @@ test_script:
 # Until these are addressed (if it's even possible), consider 7 tests failing
 # as success.
 - cmd: if [%CONFIG%]==[msys2] (
-    bash -lc "cd $APPVEYOR_BUILD_FOLDER && make check | tee /dev/stderr | grep -q '7 test(s) have FAILED'" )
+    bash -lc "cd $APPVEYOR_BUILD_FOLDER && make check > test.log; cat test.log; grep -q '7 test(s) have FAILED' test.log" )
