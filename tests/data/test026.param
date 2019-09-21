@@ -1,5 +1,5 @@
 TITLE='Read a GPX file with no points'
 PRECOMMAND='cat "$STAGINGDIR/point1-1.jpg" >"$LOGDIR/test.jpg"'
-COMMAND='$PROGRAM -g "$STAGINGDIR/nopoints.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1'
+COMMAND='$PROGRAM -z 0 -g "$STAGINGDIR/nopoints.gpx" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1'
 POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
 RESULTCODE=2
