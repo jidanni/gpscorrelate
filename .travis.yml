@@ -250,7 +250,7 @@ script:
         su -l build -c "
           set -ex
           cd /tmp/src
-          make CFLAGS=-DENABLE_NLS LDFLAGS=-lintl gpscorrelate gpscorrelate-gui
+          make CFLAGS=-DENABLE_NLS LDFLAGS=-lintl GTK=2 gpscorrelate gpscorrelate-gui
           ./gpscorrelate -V
           make check
           make install-po install-desktop-file prefix= DESTDIR="\${HOME}"
