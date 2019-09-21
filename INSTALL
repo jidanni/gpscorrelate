@@ -19,10 +19,10 @@ and install it with:
 Run the regression test suite with:
   make check
 
-The default build process will try to link against GTK2.
-To force linking against GTK3 run:
+The default build process will try to link against GTK3.
+To force linking against GTK2 run:
 
-  make GTK=3
+  make GTK=2
 
 If the compiler can't find the necessary libraries, then set the
 PKG_CONFIG_PATH environment variable to the location of the .pc files first.

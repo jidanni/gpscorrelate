@@ -9,7 +9,7 @@ EXEEXT =
 PKG_CONFIG=pkg-config
 CFLAGS   = -Wall -O2
 LDFLAGS  = -Wall -O2 -lm
-GTK      = 2
+GTK      = 3
 
 COBJS    = main-command.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
 GOBJS    = main-gui.o gui.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
