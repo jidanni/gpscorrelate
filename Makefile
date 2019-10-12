@@ -69,7 +69,7 @@ install: all
 	install -d $(DESTDIR)$(docdir)
 	install -p -m 0644 doc/*.html doc/*.png README.md $(DESTDIR)$(docdir)
 	install -d $(DESTDIR)$(docdir)/fr
-	install -p -m 0644 doc/fr/*.html $(DESTDIR)$(docdir)/fr
+	install -p -m 0644 doc/fr/*.html doc/fr/*.png $(DESTDIR)$(docdir)/fr
 
 install-desktop-file:
 	desktop-file-install --vendor="" --dir="$(DESTDIR)$(applicationsdir)" gpscorrelate.desktop
