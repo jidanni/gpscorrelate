@@ -98,6 +98,7 @@ GtkWidget *OtherOptionsVBox;
 GtkWidget *OtherOptionsAlignment;
 GtkWidget *OtherOptionsLabel;
 GtkWidget *StripGPSButton;
+GtkWidget *HelpButton;
 GtkWidget *AboutButton;
 
 GtkWidget *PhotoListVBox;
@@ -178,6 +179,7 @@ static void SetListItem(GtkTreeIter* Iter, const char* Filename,
 static void SelectGPSButtonPress( GtkWidget *Widget, gpointer Data );
 static void CorrelateButtonPress( GtkWidget *Widget, gpointer Data );
 static void StripGPSButtonPress( GtkWidget *Widget, gpointer Data );
+static void HelpButtonPress( GtkWidget *Widget, gpointer Data );
 static void AboutButtonPress( GtkWidget *Widget, gpointer Data );
 
 static void GtkGUIUpdate(void);
@@ -646,6 +648,19 @@ GtkWidget* CreateMatchWindow (void)
 #endif
   g_signal_connect (G_OBJECT (StripGPSButton), "clicked",
   		G_CALLBACK (StripGPSButtonPress), NULL);
+
+  HelpButton = gtk_button_new_with_mnemonic (_("Help"));
+  gtk_widget_show (HelpButton);
+  gtk_box_pack_start (GTK_BOX (OtherOptionsVBox), HelpButton, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(2, 12, 0)
+  gtk_widget_set_tooltip_text (HelpButton,
+	_("View help for this application."));
+#else
+  gtk_tooltips_set_tip (tooltips, HelpButton,
+	_("View help for this application."), NULL);
+#endif
+  g_signal_connect (G_OBJECT (HelpButton), "clicked",
+  		G_CALLBACK (HelpButtonPress), NULL);
 
   AboutButton = gtk_button_new_with_mnemonic (_("About"));
   gtk_widget_show (AboutButton);
@@ -1567,6 +1582,39 @@ void StripGPSButtonPress( GtkWidget *Widget, gpointer Data )
 
 }
 
+#define HELP_FILE_NAME "gui.html"
+
+/* Returns the URL for the correct language-specific help document.
+ */
+static const gchar *HelpUrl( void )
+{
+    /* Determine the language used by gettext. This way is more accurate than
+     * using nl_langinfo because gettext uses its own language selection
+     * heuristics which don't always match. */
+    if (strstr(_(""), "Language: fr\n")) {
+        return "file://" PACKAGE_DOC_DIR "/fr/" HELP_FILE_NAME;
+    }
+    return "file://" PACKAGE_DOC_DIR "/" HELP_FILE_NAME;
+}
+
+void HelpButtonPress( GtkWidget *Widget, gpointer Data )
+{
+	(void) Data;    // Unused
+	GtkWidget *Toplevel = gtk_widget_get_toplevel (Widget);
+
+#if GTK_CHECK_VERSION(3, 22, 0)
+	gtk_show_uri_on_window (GTK_WINDOW(Toplevel),
+						HelpUrl(),
+						GDK_CURRENT_TIME,
+						NULL);
+#else
+	gtk_show_uri (gtk_window_get_screen(GTK_WINDOW(Toplevel)),
+					HelpUrl(),
+					GDK_CURRENT_TIME,
+					NULL);
+#endif
+}
+
 void AboutButtonPress( GtkWidget *Widget, gpointer Data )
 {
 	static const gchar * const authors[] = {
@@ -1582,6 +1630,9 @@ void AboutButtonPress( GtkWidget *Widget, gpointer Data )
 						// The following hex bytes are the copyright symbol in UTF-8
 						"copyright", _("Copyright \xC2\xA9 2005-2019 Daniel Foote, Dan Fandrich"),
 						"license", "GPL 2+",
+#if GTK_CHECK_VERSION(3, 0, 0)
+						"license-type", GTK_LICENSE_GPL_2_0,
+#endif
 						"logo-icon-name", "gpscorrelate-gui",
 						"version", PACKAGE_VERSION,
 						"website", "https://dfandrich.github.io/gpscorrelate/",

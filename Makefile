@@ -1,5 +1,4 @@
 # Makefile for gpscorrelate
-# Written by Daniel Foote.
 
 PACKAGE_VERSION = 1.6.2git
 
@@ -35,7 +34,7 @@ docdir   = $(datadir)/doc/gpscorrelate
 applicationsdir = $(datadir)/applications
 localedir = $(datadir)/locale
 
-DEFS = -DPACKAGE_VERSION=\"$(PACKAGE_VERSION)\" -DPACKAGE_LOCALE_DIR=\"$(localedir)\"
+DEFS = -DPACKAGE_VERSION=\"$(PACKAGE_VERSION)\" -DPACKAGE_LOCALE_DIR=\"$(localedir)\" -DPACKAGE_DOC_DIR=\"$(docdir)\"
 
 TARGETS = gpscorrelate-gui$(EXEEXT) gpscorrelate$(EXEEXT) doc/gpscorrelate.1 doc/gpscorrelate.html
 
