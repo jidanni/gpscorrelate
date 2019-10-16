@@ -216,11 +216,16 @@ matrix:
           - exiv2
           - gtk+
           - libxml2
+  - env: CONFIG=normal DIST=bionic
+    arch: arm64
+    os: linux
+    dist: bionic
+    compiler: gcc
 
 before_install:
   - GTK=${GTK:-2}
   # The apt addons section is ignored on bionic for some reason
-  - if [ "${DIST}" = "bionic" ] ; then sudo apt-get install -y desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk${GTK/3/-}${GTK/2/.0}-dev xsltproc; fi
+  - if [ "${DIST}" = "bionic" ] ; then sudo apt-get install -y desktop-file-utils docbook-xsl exiv2 gettext libexiv2-dev libgtk${GTK/3/-}${GTK/2/.0}-dev libxml2-dev xsltproc; fi
 
 script:
   # Build both the command-line tool and GUI by default
