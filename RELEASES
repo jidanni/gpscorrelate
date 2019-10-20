@@ -1,8 +1,8 @@
 Release History:
 
-v1.6.2git: TBD
-	- Dan Fandrich took over maintenance of gpscorrelate. The new home page
-	  is TBD.
+v1.6.2git: TBD 2019
+	- gpscorrelate moved to Github and Dan Fandrich took over maintenance.
+	  The new home page is https://dfandrich.github.io/gpscorrelate
 	- Now writing GPSTimeStamp tag as unsigned rational, as per spec
 	- Now writing GPSDateStamp tag as ASCII, as per spec
 	- Added automatic time zone offset detection by default (the previous
@@ -23,18 +23,32 @@ v1.6.2git: TBD
 	- GUI now allows multiple GPX files to be selected
 	- Exit status in command-line client now reflects if any image
 	  encountered a fatal or nonfatal error
-        - Fixed NULL pointer dereference with GPX files containing a
-          single point
+	- Fixed NULL pointer dereference with GPX files containing a
+	  single point
 	- Stop ignoring the last point in a track with --no-interpolation
 	- The progress graph that shows while processing many images on a slow
 	  machine is now displayed as the files are processed.
 	- --machine output is no longer dependent on the current locale
+	- Properly escape quotes in file names in --machine output
 	- Fixed time calculations spanning DST discontinuities
+	- Added a dist target to create a tar ball from git
 	- Only write an altitude tag if it exists in the GPX file
+	- Added a comprehensive test suite of the CLI
 	- Prevent duplicate GPS tags in the final file (which could
 	  happen if some tags already existed before correlation)
 	- Stop overwriting files when --no-write is used with --remove
 	  (Debian bug #576744)
+	- Added French, German and Russion translations of program text using
+	  gettext
+	- Added a French translation of most documentation other than the
+	  man page
+	- Added continuous integration builds on Linux, OS X, FreeBSD and
+	  Windows
+	- Added support for GTK3 and made that the default
+	- Added --latlong option to supply a coordinate manually
+	- Integrated Windows support into the main makefile
+	- Added the ability to overwrite existing tags with --replace
+	- Added Help and About buttons to the GUI
 
 v1.6.1: 13 February 2010
 	- Added desktop icon created by Till Maas.
@@ -129,7 +143,7 @@ v1.5: 24 Feb 2007
 v1.4: 28 May 2006
 	Added option to preserve mtime on input photos. Patch submitted
 	by Russell Steicke. (http://adelie.cx/).
-	Also added patch to make GPX read correctly in non-C locales - 
+	Also added patch to make GPX read correctly in non-C locales -
 	would interpret "." as thousands seperator in some locales.
 
 v1.3: 25 April 2006
