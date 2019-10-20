@@ -1,5 +1,5 @@
 *.o
-
+AUTHORS
 doc/gpscorrelate.1
 doc/gpscorrelate-manpage.xml
 doc/gpscorrelate.html

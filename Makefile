@@ -59,7 +59,7 @@ check: gpscorrelate$(EXEEXT)
 	(cd tests && ./testsuite)
 
 clean:
-	rm -f *.o gpscorrelate$(EXEEXT) gpscorrelate-gui$(EXEEXT) doc/gpscorrelate-manpage.xml tests/log/* $(TARGETS)
+	rm -f *.o gpscorrelate$(EXEEXT) gpscorrelate-gui$(EXEEXT) AUTHORS doc/gpscorrelate-manpage.xml tests/log/* $(TARGETS)
 
 install: all
 	install -d $(DESTDIR)$(bindir)
@@ -98,9 +98,20 @@ install-po: build-po
 clean-po:
 	(cd po && $(MAKE) VERSION="$(PACKAGE_VERSION)" prefix="$(prefix)" top_srcdir="$(PWD)" clean)
 
-dist:
+AUTHORS:
+	# Include authors here who aren't in the git commits
+	(git log HEAD | sed -n -e '/^Author:/s/^[^:]*: //p' ; printf "\
+Julio Castillo (Win32 support)\n\
+Marc Horowitz (remove tag, timezone patches)\n\
+Russell Steicke (mtime patch)\n\
+Till Maas (install, doc patches)\n\
+Vincent Gay (French translation)\n\
+	" ) | sort -u > $@
+
+dist: AUTHORS
 	mkdir gpscorrelate-$(PACKAGE_VERSION)
 	git archive --prefix=gpscorrelate-$(PACKAGE_VERSION)/ HEAD | tar xf -
+	install -m 0644 AUTHORS gpscorrelate-$(PACKAGE_VERSION)
 	-rm gpscorrelate-$(PACKAGE_VERSION)/po/stamp-po
 	cd gpscorrelate-$(PACKAGE_VERSION)/po && $(MAKE) gpscorrelate.pot-update clean
 	-rm gpscorrelate-$(PACKAGE_VERSION)/po/stamp-po
