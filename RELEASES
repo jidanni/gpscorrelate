@@ -38,7 +38,7 @@ v1.6.2git: TBD 2019
 	  happen if some tags already existed before correlation)
 	- Stop overwriting files when --no-write is used with --remove
 	  (Debian bug #576744)
-	- Added French, German and Russion translations of program text using
+	- Added French, German and Russian translations of program text using
 	  gettext
 	- Added a French translation of most documentation other than the
 	  man page
@@ -84,7 +84,7 @@ v1.5.7: 21 September 2008
 	  using the file chooser dialog. This also persists across program invocations.
 	  This was suggested by Till Maas.
 	- Added Makefile.mingw32 contributed by Julio Castillo, which allows cross
-	  compliation on Win32. This also included some cross-platform patches for the
+	  compilation on Win32. This also included some cross-platform patches for the
 	  code, which is greatly appreciated.
 
 v1.5.6: 1 October 2007
@@ -144,7 +144,7 @@ v1.4: 28 May 2006
 	Added option to preserve mtime on input photos. Patch submitted
 	by Russell Steicke. (http://adelie.cx/).
 	Also added patch to make GPX read correctly in non-C locales -
-	would interpret "." as thousands seperator in some locales.
+	would interpret "." as thousands separator in some locales.
 
 v1.3: 25 April 2006
 	It would appear that the Exiv2 API changed somewhat.
