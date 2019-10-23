@@ -168,7 +168,7 @@ $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
 	      --files-from=$(srcdir)/POTFILES.in \
 	      --copyright-holder='$(COPYRIGHT_HOLDER)' \
 	      --package-name="$${package_gnu}gpscorrelate" \
-	      --package-version='1.6.2git' \
+	      --package-version=$(VERSION) \
 	      --msgid-bugs-address="$$msgid_bugs_address" \
 	    ;; \
 	esac

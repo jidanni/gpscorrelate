@@ -83,7 +83,7 @@ docs: doc/gpscorrelate.1 doc/gpscorrelate.html
 
 # BSD make doesn't work with $< as the prerequisite in the following rules but $? is fine
 doc/gpscorrelate-manpage.xml: doc/gpscorrelate-manpage.xml.in
-	sed -e 's,@DOCDIR@,$(docdir),' -e 's,@PACKAGE_VERSION@,$(PACKAGE_VERSION),' $? > $@
+	sed -e 's,@DOCDIR@,$(docdir),g' -e 's,@PACKAGE_VERSION@,$(PACKAGE_VERSION),g' $? > $@
 
 doc/gpscorrelate.1: doc/gpscorrelate-manpage.xml
 	xsltproc $(XSLTFLAGS) -o $@ http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $?
@@ -117,7 +117,7 @@ dist: AUTHORS docs
 	install -m 0644 AUTHORS gpscorrelate-$(PACKAGE_VERSION)
 	install -m 0644 doc/gpscorrelate.1 doc/gpscorrelate-manpage.xml doc/gpscorrelate.html gpscorrelate-$(PACKAGE_VERSION)/doc
 	-rm gpscorrelate-$(PACKAGE_VERSION)/po/stamp-po
-	cd gpscorrelate-$(PACKAGE_VERSION)/po && $(MAKE) gpscorrelate.pot-update clean
+	cd gpscorrelate-$(PACKAGE_VERSION)/po && $(MAKE) VERSION="$(PACKAGE_VERSION)" prefix="$(prefix)" top_srcdir="$(PWD)" gpscorrelate.pot-update clean
 	-rm gpscorrelate-$(PACKAGE_VERSION)/po/stamp-po
 	tar cf gpscorrelate-$(PACKAGE_VERSION).tar gpscorrelate-$(PACKAGE_VERSION)
 	-rm gpscorrelate-$(PACKAGE_VERSION).tar.gz
