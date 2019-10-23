@@ -59,7 +59,10 @@ check: gpscorrelate$(EXEEXT)
 	(cd tests && ./testsuite)
 
 clean:
-	rm -f *.o gpscorrelate$(EXEEXT) gpscorrelate-gui$(EXEEXT) AUTHORS doc/gpscorrelate-manpage.xml tests/log/* $(TARGETS)
+	rm -f *.o gpscorrelate$(EXEEXT) gpscorrelate-gui$(EXEEXT) doc/gpscorrelate-manpage.xml tests/log/* $(TARGETS)
+
+distclean: clean clean-po
+	rm -f AUTHORS
 
 install: all
 	install -d $(DESTDIR)$(bindir)
@@ -76,7 +79,7 @@ install-desktop-file:
 	install -d $(DESTDIR)$(datadir)/icons/hicolor/scalable/apps
 	install -p -m 0644 gpscorrelate-gui.svg $(DESTDIR)$(datadir)/icons/hicolor/scalable/apps/gpscorrelate-gui.svg
 
-docs: doc/gpscorrelate.1  doc/gpscorrelate.html
+docs: doc/gpscorrelate.1 doc/gpscorrelate.html
 
 # BSD make doesn't work with $< as the prerequisite in the following rules but $? is fine
 doc/gpscorrelate-manpage.xml: doc/gpscorrelate-manpage.xml.in
@@ -108,10 +111,11 @@ Till Maas (install, doc patches)\n\
 Vincent Gay (French translation)\n\
 	" ) | sort -u > $@
 
-dist: AUTHORS
+dist: AUTHORS docs
 	mkdir gpscorrelate-$(PACKAGE_VERSION)
 	git archive --prefix=gpscorrelate-$(PACKAGE_VERSION)/ HEAD | tar xf -
 	install -m 0644 AUTHORS gpscorrelate-$(PACKAGE_VERSION)
+	install -m 0644 doc/gpscorrelate.1 doc/gpscorrelate-manpage.xml doc/gpscorrelate.html gpscorrelate-$(PACKAGE_VERSION)/doc
 	-rm gpscorrelate-$(PACKAGE_VERSION)/po/stamp-po
 	cd gpscorrelate-$(PACKAGE_VERSION)/po && $(MAKE) gpscorrelate.pot-update clean
 	-rm gpscorrelate-$(PACKAGE_VERSION)/po/stamp-po
