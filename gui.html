@@ -12,7 +12,7 @@
 
 <h2>The Correlation Window</h2>
 
-<img src="corr.png" alt="The Correlation Window, 89,363 bytes" width="880" height="530">
+<img src="corr.png" alt="The Correlation Window" width="853" height="610">
 
 <h2>How to use the Correlation Window</h2>
 
@@ -40,9 +40,11 @@
 
 <p>The <b>"Write DD MM SS.SS"</b> checkbox, if un-checked, will force the pre 1.5.3 behaviour of writing Longitude and Latitude as DD MM.MM values. The default is now to write values in DD MM SS.SS.</p>
 
+<p>The <b>"Auto time zone"</b> checkbox, if checked, will choose an appropriate value for "Time Zone", based on the local time zone and the time of the first photo in the list to be correlated.</p>
+
 <p>The <b>"Max gap time"</b> box specifies the maximum distance from a point that a photo will be matched. In seconds.</p>
 
-<p>The <b>"Time Zone"</b> box specifies the time zone that the photos were taken in, so that the times of the photos can be adjusted to match the GPS data.</p>
+<p>The <b>"Time Zone"</b> box specifies the time zone that the photos were taken in so that the times of the photos can be adjusted to match the GPS data. The format is hours from UTC or HH:MM and may be negative. This can only be specified if "Auto time zone" is unset.</p>
 
 <p>The <b>"Photo Offset"</b> box specifies the number of seconds to add to the photos time to match the GPS data. See the <a href="concepts.html">GPS Correlate Concepts</a> documentation to understand this value.</p>
 
@@ -56,9 +58,13 @@
 
 <p>The <b>"Strip GPS tags"</b> button will remove GPS tags from the selected photos.</p>
 
+<p>The <b>"Help"</b> button will show this documentation.</p>
+
+<p>The <b>"About"</b> button will show basic information about the program.</p>
+
 <h3>Saving Settings</h3>
 
-<p>As of 1.5.4, when you exit the GUI program, it will save your settings to ~/.gpscorrelaterc. These will be reloaded next time you start gpscorrelate. The command line version does not make use of this file.</p>
+<p>As of 1.5.4, when you exit the GUI program, it will save your settings to ~/.config/.gpscorrelaterc (or ~/.gpscorrelaterc). These will be reloaded next time you start gpscorrelate. The command line version does not make use of this file.</p>
 
 <hr>
 

@@ -10,8 +10,8 @@
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084"
 alink="#0000FF">
-<div class="refentry"><a name="idp1370253468" id=
-"idp1370253468"></a>
+<div class="refentry"><a name="idp1349269428" id=
+"idp1349269428"></a>
 <div class="titlepage"></div>
 <div class="refnamediv">
 <h2>Name</h2>
@@ -57,8 +57,8 @@ filling EXIF fields</p>
 --help</p>
 </div>
 </div>
-<div class="refsect1"><a name="idp1370387780" id=
-"idp1370387780"></a>
+<div class="refsect1"><a name="idp1367581308" id=
+"idp1367581308"></a>
 <h2>DESCRIPTION</h2>
 <p>This manual page documents the <span class=
 "command"><strong>gpscorrelate</strong></span> command. There is
@@ -74,10 +74,11 @@ to as <span class="emphasis"><em>correlation</em></span>.</p>
 taken (with a 1-second granularity) the GPS data are stored
 unmodified in EXIF fields. If they are not, linear interpolation of
 GPS data available at moments before and after the image was taken
-can be used.</p>
+can be used. A measure of the approximate accuracy of the GPS
+location reading is preserved when written into the image.</p>
 </div>
-<div class="refsect1"><a name="idp1370390404" id=
-"idp1370390404"></a>
+<div class="refsect1"><a name="idp1367584052" id=
+"idp1367584052"></a>
 <h2>OPTIONS</h2>
 <p>These programs follow the usual <acronym class=
 "acronym">GNU</acronym> command line syntax, with long options
@@ -282,8 +283,8 @@ copyright information.</p>
 </dl>
 </div>
 </div>
-<div class="refsect1"><a name="idp1373388324" id=
-"idp1373388324"></a>
+<div class="refsect1"><a name="idp1368165396" id=
+"idp1368165396"></a>
 <h2>EXAMPLES</h2>
 <p>To correlate all photos in a directory taken in western Europe
 in the summer (i.e., UTC-2):</p>
@@ -320,8 +321,8 @@ M&uuml;nster:</p>
 <p><strong class="userinput"><code>gpscorrelate -l
 48.398620,9.991417,522 -z 2 ulm.jpg</code></strong></p>
 </div>
-<div class="refsect1"><a name="idp1373395644" id=
-"idp1373395644"></a>
+<div class="refsect1"><a name="idp1368172668" id=
+"idp1368172668"></a>
 <h2>EXIT STATUS</h2>
 <p><span class="command"><strong>gpscorrelate</strong></span>
 returns <span class="errorcode">0</span> in case of success,
@@ -330,8 +331,8 @@ read or write error) and <span class="errorcode">2</span> in case
 of minor error (such as the given GPS track not covering the time
 of an image).</p>
 </div>
-<div class="refsect1"><a name="idp1373397652" id=
-"idp1373397652"></a>
+<div class="refsect1"><a name="idp1368174676" id=
+"idp1368174676"></a>
 <h2>SEE ALSO</h2>
 <p><span class="citerefentry"><span class=
 "refentrytitle">gpsd</span>(1)</span>, <span class=
@@ -345,8 +346,8 @@ of an image).</p>
 the filesystem at <code class=
 "filename">/usr/local/share/doc/gpscorrelate</code>.</p>
 </div>
-<div class="refsect1"><a name="idp1373400420" id=
-"idp1373400420"></a>
+<div class="refsect1"><a name="idp1368177444" id=
+"idp1368177444"></a>
 <h2>LICENSE</h2>
 <p>This manual page was initially written by Stefano Zacchiroli
 <code class="email">&lt;<a class="email" href=
