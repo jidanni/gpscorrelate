@@ -1,6 +1,6 @@
 Release History:
 
-v1.6.2git: TBD 2019
+v2.0: 28 October 2019
 	- gpscorrelate moved to Github and Dan Fandrich took over maintenance.
 	  The new home page is https://dfandrich.github.io/gpscorrelate
 	- Now writing GPSTimeStamp tag as unsigned rational, as per spec

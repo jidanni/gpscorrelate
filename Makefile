@@ -1,6 +1,6 @@
 # Makefile for gpscorrelate
 
-PACKAGE_VERSION = 1.6.2git
+PACKAGE_VERSION = 2.0
 
 CC = gcc
 CXX = g++

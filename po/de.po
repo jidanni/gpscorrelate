@@ -6,9 +6,9 @@
 #: gui.c:1594
 msgid ""
 msgstr ""
-"Project-Id-Version: de\n"
+"Project-Id-Version: gpscorrelate 2.0\n"
 "Report-Msgid-Bugs-To: dan@coneharvesters.com\n"
-"POT-Creation-Date: 2019-10-12 13:28+0200\n"
+"POT-Creation-Date: 2019-10-23 23:01+0200\n"
 "PO-Revision-Date: 2018-07-21 14:20+0200\n"
 "Last-Translator: Dan Fandrich <dan@coneharvesters.com>\n"
 "Language-Team: deutsch\n"
