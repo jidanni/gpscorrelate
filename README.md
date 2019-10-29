@@ -2,14 +2,15 @@
 
 ## Status
 
-GPSCorrelate was originally written by Daniel Foote. The maintainer is now
-Dan Fandrich <dan@coneharvesters.com>.
-
-The GPSCorrelate home page is at https://dfandrich.github.io/gpscorrelate/
 [![Travis Build Status](https://travis-ci.org/dfandrich/gpscorrelate.svg?branch=master)](https://travis-ci.org/dfandrich/gpscorrelate)
 [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/q9ooesujljat3ra7/branch/master?svg=true)](https://ci.appveyor.com/project/dfandrich/gpscorrelate)
 [![Cirrus Build Status](https://api.cirrus-ci.com/github/dfandrich/gpscorrelate.svg?branch=master)](https://cirrus-ci.com/github/dfandrich/gpscorrelate)
 [![Coverage Status](https://coveralls.io/repos/github/dfandrich/gpscorrelate/badge.svg?branch=master)](https://coveralls.io/github/dfandrich/gpscorrelate)
+
+GPSCorrelate was originally written by Daniel Foote. The maintainer is now
+Dan Fandrich <dan@coneharvesters.com>.
+
+The GPSCorrelate home page is at https://dfandrich.github.io/gpscorrelate/
 
 ## What is it?
 
