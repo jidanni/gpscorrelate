@@ -191,6 +191,10 @@ void LoadSettings(void)
 	const char* UserHomeDir = g_get_user_config_dir();
 	const int FilenameLength = strlen(UserHomeDir) + 30;
 	SettingsFilename = (char*) malloc(sizeof(char) * FilenameLength);
+	if (SettingsFilename == NULL) {
+		fprintf(stderr, _("Out of memory.\n"));
+		abort();
+	}
 
 	snprintf(SettingsFilename, FilenameLength, "%s%c.gpscorrelaterc", UserHomeDir, G_DIR_SEPARATOR);
 
@@ -755,6 +759,10 @@ GtkWidget* CreateMatchWindow (void)
   /* Get the track list store ready.
    * Create the empty terminating entry. */
   GPSData = (struct GPSTrack*) calloc(1, sizeof(*GPSData));
+  if (GPSData == NULL) {
+	fprintf(stderr, _("Out of memory.\n"));
+	abort();
+  }
   NumTracks = 0;
 
   /* Final thing: show the window. */
@@ -939,6 +947,10 @@ void AddPhotoToList(const char* Filename)
 		LastPhoto = FirstPhoto;
 		FirstPhoto->Next = NULL;
 	}
+	if (LastPhoto == NULL) {
+		fprintf(stderr, _("Out of memory.\n"));
+		abort();
+	}
 
 	/* Now that we've allocated memory for the structure, allocate
 	 * memory for the strings and then fill them. */
@@ -1004,6 +1016,10 @@ void RemovePhotosButtonPress( GtkWidget *Widget, gpointer Data )
 	/* Now get ready to keep a list of Iters that we can
 	 * delete. */
 	GtkTreeIter* RemoveIters = (GtkTreeIter*) malloc(sizeof(GtkTreeIter) * SelectedCount);
+	if (RemoveIters == NULL) {
+		fprintf(stderr, _("Out of memory.\n"));
+		abort();
+	}
 
 	/* Walk through and remove the items from our internal list. */
 	struct GUIPhotoList* PhotoWalk = NULL;
@@ -1265,6 +1281,10 @@ void SelectGPSButtonPress( GtkWidget *Widget, gpointer Data )
 					/* Make room for a new end-of-array entry */
 					++NumTracks;
 					GPSData = (struct GPSTrack*) realloc(GPSData, sizeof(*GPSData)*(NumTracks+1));
+					if (GPSData == NULL) {
+						fprintf(stderr, _("Out of memory.\n"));
+						abort();
+					}
 					memset(&GPSData[NumTracks], 0, sizeof(*GPSData));
 				} else
 				{
@@ -1287,6 +1307,10 @@ void SelectGPSButtonPress( GtkWidget *Widget, gpointer Data )
 		/* Prepare our "scratch" for rewriting labels. */
 		const size_t ScratchLength = strlen(FirstOrBadFileName) + 100;
 		char* Scratch = (char*) malloc(sizeof(char) * ScratchLength);
+		if (Scratch == NULL) {
+			fprintf(stderr, _("Out of memory.\n"));
+			abort();
+		}
 
 		/* Check if all the data was read ok. */
 		if (ReadOk)

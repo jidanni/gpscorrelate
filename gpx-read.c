@@ -128,6 +128,10 @@ static void ExtractTrackPoints(xmlNodePtr Start)
 				FirstPoint->Next = NULL;
 				LastPoint = FirstPoint;
 			}
+			if (LastPoint == NULL) {
+				fprintf(stderr, _("Out of memory.\n"));
+				abort();
+			}
 
 			/* Clear the structure first... */
 			LastPoint->Lat = 0;

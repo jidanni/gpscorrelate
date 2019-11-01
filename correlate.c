@@ -127,9 +127,9 @@ struct GPSPoint* CorrelatePhoto(const char* Filename,
 		    (PhotoTime <= Options->Track[TrackNum].MaxTime))
 			break;
 	}
+	Options->Result = CORR_NOMATCH; /* For convenience later */
 	if (!Options->Track[TrackNum].Points) {
 		/* All tracks were outside the time range. Abort. */
-		Options->Result = CORR_NOMATCH;
 		return NULL;
 	}
 
@@ -138,8 +138,10 @@ struct GPSPoint* CorrelatePhoto(const char* Filename,
 	 * exactly on a point... even better... */
 	const struct GPSPoint* Search;
 	struct GPSPoint* Actual = (struct GPSPoint*) malloc(sizeof(struct GPSPoint));
-
-	Options->Result = CORR_NOMATCH; /* For convenience later */
+	if (!Actual) {
+		Options->Result = CORR_EXIFWRITEFAIL;
+		return NULL;
+	}
 
 	for (Search = Options->Track[TrackNum].Points; Search; Search = Search->Next)
 	{
