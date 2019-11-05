@@ -107,6 +107,7 @@ AUTHORS:
 Julio Castillo (Win32 support)\n\
 Marc Horowitz (remove tag, timezone patches)\n\
 Russell Steicke (mtime patch)\n\
+Tessa Fandrich (German translation)\n\
 Till Maas (install, doc patches)\n\
 Vincent Gay (French translation)\n\
 	" ) | sort -u > $@
