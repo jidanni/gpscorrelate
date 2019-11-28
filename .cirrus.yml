@@ -5,9 +5,9 @@ task:
   name: FreeBSD
   freebsd_instance:
     matrix:
-      # There isn't a stable 13.0 image yet (2019-10)
+      # There isn't a stable 13.0 image yet (2019-11)
       image_family: freebsd-13-0-snap
-      image_family: freebsd-12-0
+      image_family: freebsd-12-1
       # The stable 11.3 image causes "Agent is not responding" so use a snapshot
       image_family: freebsd-11-3-snap
       image_family: freebsd-10-4
@@ -29,8 +29,10 @@ task:
     - pkg install -y pkgconf docbook-xsl exiv2 libxml2 gtk"$GTK" libxslt gettext-tools desktop-file-utils
 
   compile_script:
-    # GTK3 throws up some warnings, so avoid -Werror
-    - if [ "$GTK" = 3 ] ; then CFLAGS='-Wall -Wextra -O3 -DENABLE_NLS=1'; fi
+    - uname -a
+    - env
+    # GTK3 and GTK2 on 13.0 throws up some deprecation warnings, so disable them for -Werror
+    - if [ "$GTK" = 3 -o "$(uname -r)" = 13.0-CURRENT ] ; then CFLAGS="$CFLAGS -Wno-error=deprecated-declarations"; fi
     - make CC="$CC" CXX="$CXX" CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" GTK="$GTK"
 
   test_script:
