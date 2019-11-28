@@ -29,8 +29,6 @@ task:
     - pkg install -y pkgconf docbook-xsl exiv2 libxml2 gtk"$GTK" libxslt gettext-tools desktop-file-utils
 
   compile_script:
-    - uname -a
-    - env
     # GTK3 and GTK2 on 13.0 throws up some deprecation warnings, so disable them for -Werror
     - if [ "$GTK" = 3 -o "$(uname -r)" = 13.0-CURRENT ] ; then CFLAGS="$CFLAGS -Wno-error=deprecated-declarations"; fi
     - make CC="$CC" CXX="$CXX" CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" GTK="$GTK"
