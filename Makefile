@@ -66,11 +66,12 @@ distclean: clean clean-po
 
 install: all
 	install -d $(DESTDIR)$(bindir)
-	install gpscorrelate$(EXEEXT) gpscorrelate-gui$(EXEEXT) $(DESTDIR)$(bindir)
+	install -m 0755 gpscorrelate$(EXEEXT) gpscorrelate-gui$(EXEEXT) $(DESTDIR)$(bindir)
 	install -d $(DESTDIR)$(mandir)/man1
 	install -m 0644 doc/gpscorrelate.1 $(DESTDIR)$(mandir)/man1
 	install -d $(DESTDIR)$(docdir)
 	install -p -m 0644 doc/*.html doc/*.png README.md $(DESTDIR)$(docdir)
+	install -m 0644 gpscorrelate-gui.svg $(DESTDIR)$(docdir)
 	install -d $(DESTDIR)$(docdir)/fr
 	install -p -m 0644 doc/fr/*.html doc/fr/*.png $(DESTDIR)$(docdir)/fr
 
