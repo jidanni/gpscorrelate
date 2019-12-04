@@ -9,7 +9,7 @@ BUILDDIR=../gpscorrelate
 all: update check
 
 update:
-	cp -fv "$(BUILDDIR)"/doc/*{html,png} "$(BUILDDIR)"/README.md .
+	cp -fv "$(BUILDDIR)"/doc/*{html,png} "$(BUILDDIR)"/README.md "$(BUILDDIR)"/gpscorrelate-gui.svg .
 	cp -rfv "$(BUILDDIR)"/doc/fr/ .
 	# Convert the file from ISO-8859-1 to ASCII. Github only supports UTF-8 for
 	# HTML since it adds a charset=utf-8 header into every response.
