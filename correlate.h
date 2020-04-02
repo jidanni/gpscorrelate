@@ -78,3 +78,7 @@ struct CorrelateOptions {
 
 struct GPSPoint* CorrelatePhoto(const char* Filename, 
 		struct CorrelateOptions* Options);
+void SetAutoTimeZoneOptions(const char *TimeTemp,
+		struct CorrelateOptions* Options);
+time_t ConvertTimeToUnixTime(const char *TimeTemp, const char *TimeFormat,
+		const struct CorrelateOptions* Options);

@@ -43,6 +43,44 @@ static void Round(const struct GPSPoint* First, struct GPSPoint* Result,
 static void Interpolate(const struct GPSPoint* First, struct GPSPoint* Result,
 			time_t PhotoTime);
 
+/* Set the time zone parameters automatically based on this date. */
+void SetAutoTimeZoneOptions(const char *Time,
+		struct CorrelateOptions* Options)
+{
+	time_t RealTime;
+
+	/* PhotoTime isn't a true epoch time, but is rather out
+	 * by the local offset from UTC */
+	time_t PhotoTime =
+		ConvertToUnixTime(Time, EXIF_DATE_FORMAT, 0, 0);
+
+	/* Extract the component time values */
+	struct tm *PhotoTm = gmtime(&PhotoTime);
+
+	/* Then create a true epoch-based local time, including DST */
+	PhotoTm->tm_isdst = -1;
+	RealTime = mktime(PhotoTm);
+
+	/* Finally, RealTime is the proper Epoch time of the photo.
+	 * The difference from PhotoTime is the time zone offset. */
+	Options->TimeZoneHours = (PhotoTime - RealTime) / 3600;
+	Options->TimeZoneMins = ((PhotoTime - RealTime) % 3600) / 60;
+}
+
+/* Convert a time into Unixtime with the configured time zone conversion. */
+time_t ConvertTimeToUnixTime(const char *Time, const char *TimeFormat,
+		const struct CorrelateOptions* Options)
+{
+	time_t PhotoTime =
+		ConvertToUnixTime(Time, TimeFormat,
+			Options->TimeZoneHours, Options->TimeZoneMins);
+
+	/* Add the PhotoOffset time. This is to make the Photo time match
+	 * the GPS time - ie, it is (GPS - Photo). */
+	PhotoTime += Options->PhotoOffset;
+	return PhotoTime;
+}
+
 /* This function returns a GPSPoint with the point selected for the
  * file. This allows us to do funky stuff like not actually write
  * the files - ie, just correlate and keep into memory... */
@@ -75,36 +113,13 @@ struct GPSPoint* CorrelatePhoto(const char* Filename,
 	{
 		/* Use the local time zone as of the date of first picture
 		 * as the time for correlating all the remainder. */
-		time_t RealTime;
-
-		/* PhotoTime isn't a true epoch time, but is rather out
-		 * by the local offset from UTC */
-		time_t PhotoTime =
-			ConvertToUnixTime(TimeTemp, EXIF_DATE_FORMAT, 0, 0);
-
-		/* Extract the component time values */
-		struct tm *PhotoTm = gmtime(&PhotoTime);
-
-		/* Then create a true epoch-based local time, including DST */
-		PhotoTm->tm_isdst = -1;
-		RealTime = mktime(PhotoTm);
-
-		/* Finally, RealTime is the proper Epoch time of the photo.
-		 * The difference from PhotoTime is the time zone offset. */
-		Options->TimeZoneHours = (PhotoTime - RealTime) / 3600;
-		Options->TimeZoneMins = ((PhotoTime - RealTime) % 3600) / 60;
+		SetAutoTimeZoneOptions(TimeTemp, Options);
 		Options->AutoTimeZone = 0;
 	}
 	//printf("Using offset %02d:%02d\n", Options->TimeZoneHours, Options->TimeZoneMins);
 
-	/* Now convert the time into Unixtime. */
-	time_t PhotoTime =
-		ConvertToUnixTime(TimeTemp, EXIF_DATE_FORMAT,
-			Options->TimeZoneHours, Options->TimeZoneMins);
-
-	/* Add the PhotoOffset time. This is to make the Photo time match
-	 * the GPS time - ie, it is (GPS - Photo). */
-	PhotoTime += Options->PhotoOffset;
+	/* Now convert the time into Unixtime with the configured time zone conversion. */
+	time_t PhotoTime = ConvertTimeToUnixTime(TimeTemp, EXIF_DATE_FORMAT, Options);
 
 	/* Free the memory for the time string - it won't otherwise
 	 * be freed for us. */

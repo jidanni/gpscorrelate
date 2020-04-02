@@ -134,6 +134,8 @@
       <group choice="plain">
         <arg choice="plain">-s</arg>
         <arg choice="plain">--show</arg>
+        <arg choice="plain">-x</arg>
+        <arg choice="plain">--show-gpx</arg>
         <arg choice="plain">-o</arg>
         <arg choice="plain">--machine</arg>
       </group>
@@ -260,6 +262,25 @@
         <listitem>
           <para>Only show the GPS data already in the given image's EXIF tags
           instead of correlating them.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>
+          <option>-x</option>,
+          <option>--show-gpx</option>
+        </term>
+        <listitem>
+          <para>Only show the GPS data in the given images in GPX format.
+           Note that the points are written in the order in which the images
+           are found on the command-line, so be sure to give them in the order
+           in which they were photographed. The
+           <option>-z</option>/<option>--timeadd</option> and
+           <option>-O</option>/<option>--photooffset</option> options are
+           honoured just as in correlation to determine the correct time zone
+           of the images. Images that can't be read or aren't GPS tagged are
+           ignored.
+          </para>
         </listitem>
       </varlistentry>
 
@@ -541,6 +562,15 @@
     </para>
     <para>
     <userinput>gpscorrelate --show --machine photo.jpg</userinput>
+    </para>
+
+    <para>
+    Create a GPX track from a set of images taken in the UK in winter that are
+    already GPS tagged (e.g., as might come from a cell phone camera), which
+    can be used to correlate other photos taken on another nearby camera:
+    </para>
+    <para>
+    <userinput>gpscorrelate --show-gpx -z 0 IMG*.JPG</userinput>
     </para>
 
     <para>

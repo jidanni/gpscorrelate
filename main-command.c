@@ -44,6 +44,12 @@
 
 #define GPS_EXIT_WARNING 2
 
+enum OutputFormat {
+	TEXT_FORMAT = 0, // Plain text format
+	CSV_FORMAT = 1,	 // CSV format
+	GPX_FORMAT = 2	 // GPX format
+};
+
 /* Command line options structure. */
 static const struct option program_options[] = {
 	{ "gps", required_argument, 0, 'g' },
@@ -58,6 +64,7 @@ static const struct option program_options[] = {
 	{ "max-dist", required_argument, 0, 'm'},
 	{ "show", no_argument, 0, 's'},
 	{ "machine", no_argument, 0, 'o'},
+	{ "show-gpx", no_argument, 0, 'x'},
 	{ "remove", no_argument, 0, 'r'},
 	{ "ignore-tracksegs", no_argument, 0, 't'},
 	{ "no-mtime", no_argument, 0, 'M'},
@@ -91,6 +98,7 @@ static void PrintUsage(const char* ProgramName)
 	puts(  _("-m, --max-dist SECS      Max time outside points that photo will be matched"));
 	puts(  _("-s, --show               Just show the GPS data from the given files"));
 	puts(  _("-o, --machine            Similar to --show but with machine-readable output"));
+	puts(  _("-x, --show-gpx           Similar to --show but with GPX output"));
 	puts(  _("-r, --remove             Strip GPS tags from the given files"));
 	puts(  _("-t, --ignore-tracksegs   Interpolate between track segments, too"));
 	puts(  _("-M, --no-mtime           Don't change mtime of modified files"));
@@ -119,8 +127,23 @@ static char *CsvEscape(const char *str)
 	return newstr;
 }
 
+/* Make the string safe for inclusion in an XML comment.
+ * Such strings are not allowed to contain the sequence -- so if it's found,
+ * the second dash is replaced with a question mark. */
+void XmlCommentSafe(char *SafeFile)
+{
+	while (1)
+	{
+		SafeFile = strstr(SafeFile, "--");
+		if (SafeFile == NULL)
+			break;
+		SafeFile[1] = '?';
+	}
+}
+
 /* Display the information from an existing file. */
-static int ShowFileDetails(const char* File, int MachineReadable)
+static int ShowFileDetails(const char* File, enum OutputFormat Format,
+	struct CorrelateOptions* Options)
 {
 	double Lat, Long, Elev;
 	int IncludesGPS = 0;
@@ -129,10 +152,32 @@ static int ShowFileDetails(const char* File, int MachineReadable)
 	char* Time = ReadExifData(File, &Lat, &Long, &Elev, &IncludesGPS);
 	int rc = 1;
 	char* OldLocale = NULL;
+	static int Started = 0;
 
-	if (MachineReadable)
+	if (Format != TEXT_FORMAT)
 	{
 		OldLocale = setlocale(LC_NUMERIC, "C");
+	}
+	if (Format == GPX_FORMAT && !Started)
+	{
+		// This header is closed off in ShowFileDone()
+		printf(
+			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+			"<gpx version=\"1.1\" creator=\"gpscorrelate %s\"\n"
+			"  xmlns=\"http://www.topografix.com/GPX/1/1\"\n"
+			"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+			"  xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">\n"
+			" <trk>\n"
+			"  <trkseg>\n",
+			PACKAGE_VERSION);
+		if (Options->AutoTimeZone && Time)
+		{
+			/* Use the local time zone as of the date of first picture
+			 * as the time for correlating all the remainder. */
+			SetAutoTimeZoneOptions(Time, Options);
+			Options->AutoTimeZone = 0;
+		}
+		Started = 1;
 	}
 
 	if (Time)
@@ -141,7 +186,7 @@ static int ShowFileDetails(const char* File, int MachineReadable)
 		{
 			/* Display the data as CSV if we want
 			 * it machine readable. */
-			if (MachineReadable)
+			if (Format == CSV_FORMAT)
 			{
 				char *EscapedFile = CsvEscape(File);
 				if (!EscapedFile) {
@@ -155,12 +200,39 @@ static int ShowFileDetails(const char* File, int MachineReadable)
 					printf("%.3f", Elev);
 				printf("\n");
 				free(EscapedFile);
+
+			} else if (Format == GPX_FORMAT)
+			{
+				/* Now convert the time into Unixtime. */
+				time_t PhotoTime = ConvertTimeToUnixTime(Time, EXIF_DATE_FORMAT, Options);
+				char GpxTime[24];
+				struct tm* Tm = gmtime(&PhotoTime);
+				strftime(GpxTime, sizeof(GpxTime), "%Y-%m-%dT%H:%M:%SZ", Tm);
+
+				char *SafeFile = strdup(File);
+				if (!SafeFile) {
+					fprintf(stderr, _("Out of memory.\n"));
+					exit(EXIT_FAILURE);
+				}
+				XmlCommentSafe(SafeFile);
+
+				char MaybeElev[32] = "";
+				if (!isnan(Elev))
+					snprintf(MaybeElev, sizeof(MaybeElev), "    <ele>%.3f</ele>\n", Elev);
+
+				printf("   <trkpt lat=\"%f\" lon=\"%f\">\n"
+					   "%s"
+					   "    <time>%s</time>\n"
+					   "    <!-- %s -->\n"
+					   "   </trkpt>\n", Lat, Long, MaybeElev, GpxTime, SafeFile);
+				free(SafeFile);
+
 			} else {
 				printf(_("%s: %s, Lat %f, Long %f, Elevation "),
 					File, Time, Lat, Long);
 				if (!isnan(Elev))
 					printf("%.3f", Elev);
-                                else
+				else
 					printf(_("(unknown)"));
 
 				printf(".\n");
@@ -168,7 +240,7 @@ static int ShowFileDetails(const char* File, int MachineReadable)
 		} else {
 			/* Don't display anything if we want machine
 			 * readable data and there is no data. */
-			if (!MachineReadable)
+			if (Format == TEXT_FORMAT)
 			{
 				printf(_("%s: %s, No GPS Data.\n"),
 					File, Time);
@@ -177,7 +249,7 @@ static int ShowFileDetails(const char* File, int MachineReadable)
 	} else {
 		/* Say that there was no data & return error, except if we want
 		 * machine readable output */
-		if (!MachineReadable)
+		if (Format == TEXT_FORMAT)
 		{
 			printf(_("%s: No EXIF data.\n"), File);
 			rc = 0;
@@ -186,11 +258,21 @@ static int ShowFileDetails(const char* File, int MachineReadable)
 
 	free(Time);
 
-	if (MachineReadable) {
+	if (Format != TEXT_FORMAT) {
 		setlocale(LC_NUMERIC, OldLocale);
 	}
 
 	return rc;
+}
+
+/* Complete the information in an output file. */
+static void ShowFileDone(enum OutputFormat Format)
+{
+	if (Format == GPX_FORMAT) {
+		printf("  </trkseg>\n"
+			   " </trk>\n"
+			   "</gpx>\n");
+	}
 }
 			
 /* Remove all GPS exif tags from a file. Not really that useful, but... */
@@ -298,7 +380,7 @@ int main(int argc, char** argv)
 	int ShowDetails = 0;         /* Do we show lots of details? By default, no. */
 	int FeatherTime = 0;         /* The "feather" time, in seconds. 0 = disabled. */
 	int ShowOnlyDetails = 0;
-	int MachineReadable = 0;
+	enum OutputFormat ShowFormat = TEXT_FORMAT;
 	int RemoveTags = 0;
 	int DoBetweenTrackSegs = 0;
 	int NoChangeMtime = 0;
@@ -319,7 +401,7 @@ int main(int argc, char** argv)
 	{
 		/* Call getopt to do all the hard work
 		 * for us... */
-		c = getopt_long(argc, argv, "g:z:il:hvd:m:nsortRMVfO:",
+		c = getopt_long(argc, argv, "g:z:il:hvd:m:nsortxRMVfO:",
 				program_options, 0);
 
 		if (c == -1) break;
@@ -458,11 +540,17 @@ int main(int argc, char** argv)
 			case 's':
 				/* Show the data in the photos. Mark this. */
 				ShowOnlyDetails = 1;
+				ShowFormat = TEXT_FORMAT;
 				break;
 			case 'o':
-				/* Show the data in the photos, machine readable. */
+				/* Show the data in the photos, machine readable (CSV format). */
 				ShowOnlyDetails = 1;
-				MachineReadable = 1;
+				ShowFormat = CSV_FORMAT;
+				break;
+			case 'x':
+				/* Show the data in the photos, GPX format. */
+				ShowOnlyDetails = 1;
+				ShowFormat = GPX_FORMAT;
 				break;
 			case 'r':
 				/* Remove GPS tags from the file. Mark this. */
@@ -502,14 +590,37 @@ int main(int argc, char** argv)
 		exit(EXIT_FAILURE);
 	}
 
+	/* Set up any other command line options... */
+	if (!Datum)
+	{
+		Datum = strdup("WGS-84");
+	}
+
+	/* Set up our options structure for the correlation function. */
+	struct CorrelateOptions Options;
+	Options.NoWriteExif   = NoWriteExif;
+	Options.OverwriteExisting = OverwriteExisting;
+	Options.NoInterpolate = (Interpolate ? 0 : 1);
+	Options.AutoTimeZone  = !HaveTimeAdjustment;
+	Options.TimeZoneHours = TimeZoneHours;
+	Options.TimeZoneMins  = TimeZoneMins;
+	Options.FeatherTime   = FeatherTime;
+	Options.Datum         = Datum;
+	Options.DoBetweenTrkSeg = DoBetweenTrackSegs;
+	Options.NoChangeMtime = NoChangeMtime;
+	Options.DegMinSecs    = DegMinSecs;
+	Options.PhotoOffset   = PhotoOffset;
+	Options.Track         = Track;
+
 	/* If we only wanted to display info on the passed photos, do so now. */
 	if (ShowOnlyDetails)
 	{
 		int result = 1;
 		while (optind < argc)
 		{
-			result = ShowFileDetails(argv[optind++], MachineReadable) && result;
+			result = ShowFileDetails(argv[optind++], ShowFormat, &Options) && result;
 		}
+		ShowFileDone(ShowFormat);
 		exit(result ? EXIT_SUCCESS : EXIT_FAILURE);
 	}
 
@@ -543,12 +654,6 @@ int main(int argc, char** argv)
 		exit(result ? EXIT_SUCCESS : EXIT_FAILURE);
 	}
 
-	/* Set up any other command line options... */
-	if (!Datum)
-	{
-		Datum = strdup("WGS-84");
-	}
-
 	if (!NumTracks)
 	{
 		/* GPS Data was not read correctly... */
@@ -566,23 +671,6 @@ int main(int argc, char** argv)
 		printf(_("Legend: . = Ok, / = Interpolated, < = Rounded, - = No match, ^ = Too far\n"
 			 "        w = Write Fail, ? = No EXIF date, ! = GPS already present\n"));
 	}
-
-	/* Set up our options structure for the correlation function. */
-	struct CorrelateOptions Options;
-	Options.NoWriteExif   = NoWriteExif;
-	Options.OverwriteExisting = OverwriteExisting;
-	Options.NoInterpolate = (Interpolate ? 0 : 1);
-	Options.AutoTimeZone  = !HaveTimeAdjustment;
-	Options.TimeZoneHours = TimeZoneHours;
-	Options.TimeZoneMins  = TimeZoneMins;
-	Options.FeatherTime   = FeatherTime;
-	Options.Datum         = Datum;
-	Options.DoBetweenTrkSeg = DoBetweenTrackSegs;
-	Options.NoChangeMtime = NoChangeMtime;
-	Options.DegMinSecs    = DegMinSecs;
-	Options.PhotoOffset   = PhotoOffset;
-
-	Options.Track         = Track;
 
 	/* Make it all look nice and pretty... so the user knows what's going on. */
 	printf(_("\nCorrelate: "));

@@ -266,7 +266,7 @@ script:
      ./gpscorrelate -V
       if [ "$CONFIG" = "debuglog" ] ; then
         # Debug logging enabled makes some tests fail due to differing output
-        make check | tee /dev/stderr | grep -q '15 test(s) have FAILED'
+        make check | tee /dev/stderr | grep -q '16 test(s) have FAILED'
       else
         make check
       fi

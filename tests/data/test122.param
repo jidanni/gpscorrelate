@@ -1,0 +1,6 @@
+TITLE='Show GPS data in GPX format with automatic time zone detection'
+# This time zone is equivalent to America/Vancouver (at least, in 2012)
+# but should be more portable than using the symbolic name.
+COMMAND='env TZ="PST8PDT,M3.2.0,M11.1.0" $PROGRAM -x "$STAGINGDIR/point1-3.jpg" "$STAGINGDIR/withgps.jpg" > "$OUTFILE" 2>&1'
+RESULTCODE=0
+SEDCOMMAND='s/(creator="gpscorrelate )[^"]*/\1VERSION/;/\!--/s@[^ ]*/@@' # strip paths & version number

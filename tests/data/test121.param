@@ -1,0 +1,4 @@
+TITLE='Show GPS data in GPX format'
+COMMAND='$PROGRAM -x -z 1 "$STAGINGDIR/point1-3.jpg" "$STAGINGDIR/withgps.jpg" "$STAGINGDIR/noelev.jpg" > "$OUTFILE" 2>&1'
+RESULTCODE=0
+SEDCOMMAND='s/(creator="gpscorrelate )[^"]*/\1VERSION/;/\!--/s@[^ ]*/@@' # strip paths & version number

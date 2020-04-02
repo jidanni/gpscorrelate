@@ -1,0 +1,4 @@
+TITLE='Show GPS data in GPX format including invalid files'
+COMMAND='$PROGRAM -x -z 1 "$STAGINGDIR/noexif.jpg" "$STAGINGDIR/dummy.xhtml" "$STAGINGDIR/does-not-exist" "$STAGINGDIR/withgps.jpg" "$STAGINGDIR/noloc.jpg" > "$OUTFILE" 2>&1'
+RESULTCODE=0
+SEDCOMMAND='s/(creator="gpscorrelate )[^"]*/\1VERSION/;/\!--/s@[^ ]*/@@' # strip paths & version number

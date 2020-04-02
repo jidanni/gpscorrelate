@@ -1,0 +1,6 @@
+TITLE='Show GPS data in GPX format with file with invalid XML name'
+PRECOMMAND='cat "$STAGINGDIR/withgps.jpg" >"$LOGDIR/double--dash----dis-allowed.jpg"'
+COMMAND='$PROGRAM -x -z 0 "$LOGDIR/double--dash----dis-allowed.jpg" > "$OUTFILE" 2>&1'
+POSTCOMMAND='rm -f "$LOGDIR/double--dash----dis-allowed.jpg"'
+RESULTCODE=0
+SEDCOMMAND='s/(creator="gpscorrelate )[^"]*/\1VERSION/;/\!--/s@[^ ]*/@@' # strip paths & version number

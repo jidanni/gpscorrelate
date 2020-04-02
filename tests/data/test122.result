@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="gpscorrelate VERSION"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+ <trk>
+  <trkseg>
+   <trkpt lat="31.458741" lon="35.399847">
+    <ele>-422.243</ele>
+    <time>2012-11-22T20:34:56Z</time>
+    <!-- point1-3.jpg -->
+   </trkpt>
+   <trkpt lat="37.420418" lon="-122.084027">
+    <ele>10.000</ele>
+    <time>2012-11-22T20:34:56Z</time>
+    <!-- withgps.jpg -->
+   </trkpt>
+  </trkseg>
+ </trk>
+</gpx>
