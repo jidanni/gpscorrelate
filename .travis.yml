@@ -249,17 +249,16 @@ script:
   - |
     set -e
     if [ "$CONFIG" = "musl" ] ; then
-      docker run --rm -v "$PWD":/tmp/src alpine-build sh -c '
+      # Some tests fail if run as root (the ones to do with read only files)
+      # so run as another user.
+      docker run --user $(id -u) --rm -v "$PWD":/tmp/src alpine-build sh -c '
         cat /etc/os-release
-        # Some tests fail if run as root (the ones to do with read only files)
-        su -l build -c "
-          set -ex
-          cd /tmp/src
-          make CFLAGS=-DENABLE_NLS LDFLAGS=-lintl GTK=2 gpscorrelate gpscorrelate-gui
-          ./gpscorrelate -V
-          make check
-          make install-po install-desktop-file prefix= DESTDIR="\${HOME}"
-          "
+        set -ex
+        cd /tmp/src
+        make CFLAGS=-DENABLE_NLS LDFLAGS=-lintl GTK=2 gpscorrelate gpscorrelate-gui
+        ./gpscorrelate -V
+        make check
+        make install-po install-desktop-file prefix= DESTDIR="\${HOME}"
         '
     else
       make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" GTK="$GTK" $TARGET
