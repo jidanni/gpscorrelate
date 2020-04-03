@@ -69,8 +69,9 @@ matrix:
     os: linux
     dist: bionic
     compiler: gcc
-  - env: CONFIG=no-werror GTK=3
+  - env: CONFIG=no-werror DIST=xenial GTK=3
     os: linux
+    dist: xenial
     compiler: gcc
     addons:
       apt:
@@ -102,14 +103,6 @@ matrix:
     os: linux
     dist: bionic
     compiler: clang
-  - env: CONFIG=normal DIST=xenial
-    os: linux
-    dist: xenial
-    compiler: gcc
-  - env: CONFIG=no-werror  DIST=xenial
-    os: linux
-    dist: xenial
-    compiler: clang
   - env: CONFIG=clang6 DIST=xenial
     os: linux
     dist: xenial
@@ -117,31 +110,16 @@ matrix:
     addons:
       apt:
         packages:
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk2.0-dev
           - clang-6.0
-          - xsltproc
-  - env: CONFIG=clang7
-    os: linux
-    compiler: clang
-    addons:
-      apt:
-        sources:
-          - llvm-toolchain-trusty-7
-          - ubuntu-toolchain-r-test
-        packages:
           - desktop-file-utils
           - docbook-xsl
           - exiv2
           - libexiv2-dev
           - libgtk2.0-dev
-          - clang-7
           - xsltproc
-  - env: CONFIG=clang8
+  - env: CONFIG=clang8 DIST=xenial
     os: linux
+    dist: xenial
     compiler: clang
     addons:
       apt:
@@ -149,15 +127,16 @@ matrix:
           - llvm-toolchain-trusty-8
           - ubuntu-toolchain-r-test
         packages:
+          - clang-8
           - desktop-file-utils
           - docbook-xsl
           - exiv2
           - libexiv2-dev
           - libgtk2.0-dev
-          - clang-8
           - xsltproc
-  - env: CONFIG=gcc8
+  - env: CONFIG=gcc8 DIST=xenial
     os: linux
+    dist: xenial
     compiler: gcc
     addons:
       apt:
@@ -171,21 +150,22 @@ matrix:
           - libgtk2.0-dev
           - g++-8
           - xsltproc
-  - env: CONFIG=sanitize
+  - env: CONFIG=sanitize DIST=xenial
     os: linux
+    dist: xenial
     compiler: clang
     addons:
       apt:
         sources:
-          - llvm-toolchain-trusty-8
+          - llvm-toolchain-xenial-8
           - ubuntu-toolchain-r-test
         packages:
+          - clang-8
           - desktop-file-utils
           - docbook-xsl
           - exiv2
           - libexiv2-dev
           - libgtk2.0-dev
-          - clang-8
           - xsltproc
   - env: CONFIG=musl DIST=alpine
     os: linux
@@ -202,7 +182,7 @@ matrix:
           - exiv2
           - gtk+3
           - libxml2
-        # The default OS X image is now (August 2019) too old to work without this
+        # The default OS X image is now (April 2020) too old to work without this
         update: true
   - env: CONFIG=normal
     os: osx
@@ -216,8 +196,15 @@ matrix:
           - exiv2
           - gtk+
           - libxml2
+        # The default OS X image is now (April 2020) too old to work without this
+        update: true
   - env: CONFIG=normal DIST=bionic
     arch: arm64
+    os: linux
+    dist: bionic
+    compiler: gcc
+  - env: CONFIG=normal DIST=bionic GTK=3
+    arch: ppc64le
     os: linux
     dist: bionic
     compiler: gcc
