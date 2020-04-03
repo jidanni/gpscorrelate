@@ -25,6 +25,8 @@ task:
       - GTK: 3
 
   pkginstall_script:
+    # pkg install sometimes gets package size mismatches without this
+    - pkg update -f
     - pkg install -y pkgconf docbook-xsl exiv2 libxml2 gtk"$GTK" libxslt gettext-tools desktop-file-utils
 
   compile_script:
