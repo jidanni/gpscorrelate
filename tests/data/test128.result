@@ -1,0 +1,11 @@
+
+Reading GPS Data...
+
+Correlate: 
+test.jpg: Rounded: Lat 47.421240, Long 10.985200, Elev 2962.000.
+
+Completed correlation process.
+Used time zone offset 0:00
+Matched:     1 (0 Exact, 0 Interpolated, 1 Rounded).
+Failed:      0 (0 Not matched, 0 Write failure, 0 Too Far,
+                0 No Date, 0 GPS Already Present.)
