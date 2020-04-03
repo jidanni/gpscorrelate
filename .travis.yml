@@ -228,8 +228,8 @@ before_install:
   - if [ "${DIST}" = "bionic" ] ; then sudo apt-get install -y desktop-file-utils docbook-xsl exiv2 gettext libexiv2-dev libgtk${GTK/3/-}${GTK/2/.0}-dev libxml2-dev xsltproc; fi
 
 script:
-  # Build both the command-line tool and GUI by default
-  - TARGET='gpscorrelate gpscorrelate-gui'
+  # Build everything by default
+  - TARGET='all'
   - INSTALLTARGET='install install-po install-desktop-file'
   - if [ "$CONFIG" = "normal" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; fi
   - if [ "$CONFIG" = "debuglog" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1 -DDEBUG'; fi
@@ -243,8 +243,9 @@ script:
   - if [ "$CONFIG" = "clang8" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-8; CXX=clang++-8; fi
   - if [ "$CONFIG" = "gcc8" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; CC=gcc-8; CXX=g++-8; fi
 
-    # Explicitly point to Homebrew's gettext and pkg-config files on OS X
-  - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then CFLAGS="$CFLAGS -I/usr/local/opt/gettext/include"; LDFLAGS="$LDFLAGS -L/usr/local/opt/gettext/lib -lintl"; export PKG_CONFIG_PATH="$(brew --prefix libffi)/lib/pkgconfig/":"$(brew --prefix libxml2)/lib/pkgconfig/"; fi
+    # Explicitly point to Homebrew's gettext and pkg-config files on OS X.
+    # A couple of the Mac builds need XSLTFLAGS set to pass.
+  - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then CFLAGS="$CFLAGS -I/usr/local/opt/gettext/include"; LDFLAGS="$LDFLAGS -L/usr/local/opt/gettext/lib -lintl"; export PKG_CONFIG_PATH="$(brew --prefix libffi)/lib/pkgconfig/":"$(brew --prefix libxml2)/lib/pkgconfig/"; export XML_CATALOG_FILES="$(brew --prefix)/etc/xml/catalog"; fi
 
   - |
     set -e
@@ -261,7 +262,7 @@ script:
         make install-po install-desktop-file prefix= DESTDIR="\${HOME}"
         '
     else
-      make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" GTK="$GTK" $TARGET
+      make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" GTK="$GTK" $MAKE_OPTS $TARGET
      ./gpscorrelate -V
       if [ "$CONFIG" = "debuglog" ] ; then
         # Debug logging enabled makes some tests fail due to differing output
@@ -269,6 +270,8 @@ script:
       else
         make check
       fi
+      # Mac OS needs this or else it will sometimes rebuild the binary on install
+      sleep 1
       # Ensure brew gettext is in the PATH so xgettext is found on OS X
       PATH="$PATH:/usr/local/opt/gettext/bin" make prefix= DESTDIR="${HOME}" $INSTALLTARGET
     fi
