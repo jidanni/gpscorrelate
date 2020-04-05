@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpscorrelate 2.0\n"
 "Report-Msgid-Bugs-To: dan@coneharvesters.com\n"
-"POT-Creation-Date: 2020-04-03 03:00+0200\n"
+"POT-Creation-Date: 2020-04-06 17:04+0200\n"
 "PO-Revision-Date: 2013-01-15 13:58+0100\n"
 "Last-Translator: Vincent Gay <vgay@vintherine.org>\n"
 "Language-Team: français\n"
@@ -19,8 +19,8 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 
 #: gpx-read.c:132 gui.c:195 gui.c:763 gui.c:951 gui.c:1020 gui.c:1285
-#: gui.c:1311 main-command.c:193 main-command.c:214 main-command.c:396
-#: main-command.c:434
+#: gui.c:1311 main-command.c:193 main-command.c:219 main-command.c:401
+#: main-command.c:439
 #, c-format
 msgid "Out of memory.\n"
 msgstr "Manque de mémoire.\n"
@@ -511,7 +511,6 @@ msgid ""
 msgstr "-o, --machine            Similaire à --show mais en format machine"
 
 #: main-command.c:101
-#, fuzzy
 msgid "-x, --show-gpx           Similar to --show but with GPX output"
 msgstr "-x, --show-gpx           Similaire à --show mais en format GPX"
 
@@ -565,42 +564,49 @@ msgstr "-v, --verbose            Affichage détaillé en sortie"
 msgid "-V, --version            Display version information"
 msgstr "-V, --version            Affiche les information de version"
 
-#: main-command.c:231
+#: main-command.c:210
+#, c-format
+msgid "Warning: image files are not ordered by time.\n"
+msgstr ""
+"Attention : les fichiers d'images ne sont pas classés par ordre "
+"chronologique.\n"
+
+#: main-command.c:236
 #, c-format
 msgid "%s: %s, Lat %f, Long %f, Elevation "
 msgstr "%s: %s, Lat %f, Long %f, Altitude "
 
-#: main-command.c:236
+#: main-command.c:241
 #, c-format
 msgid "(unknown)"
 msgstr "(inconnu)"
 
-#: main-command.c:245
+#: main-command.c:250
 #, c-format
 msgid "%s: %s, No GPS Data.\n"
 msgstr "%s: %s, Aucune donnée GPS.\n"
 
-#: main-command.c:254 main-command.c:307
+#: main-command.c:259 main-command.c:312
 #, c-format
 msgid "%s: No EXIF data.\n"
 msgstr "%s : Aucune donnée EXIF.\n"
 
-#: main-command.c:283
+#: main-command.c:288
 #, c-format
 msgid "%s: Removed GPS tags.\n"
 msgstr "%s : Tags GPS retirés.\n"
 
-#: main-command.c:286
+#: main-command.c:291
 #, c-format
 msgid "%s: Tag removal failure.\n"
 msgstr "%s : Echec du retrait des tags.\n"
 
-#: main-command.c:310
+#: main-command.c:315
 #, c-format
 msgid "%s: No GPS data.\n"
 msgstr "%s : Aucune donnée GPS.\n"
 
-#: main-command.c:336
+#: main-command.c:341
 #, c-format
 msgid ""
 "%s: Wrong timestamp:\n"
@@ -613,27 +619,27 @@ msgstr ""
 "   GPS:       %s\n"
 "   Corrigé:   %s\n"
 
-#: main-command.c:341
+#: main-command.c:346
 #, c-format
 msgid "%s: Timestamp is OK: Photo %s (localtime), GPS %s (UTC).\n"
 msgstr "%s: Horodatage OK: Photo %s (heure locale), GPS %s (UTC).\n"
 
-#: main-command.c:420
+#: main-command.c:425
 #, c-format
 msgid "Reading GPS Data..."
 msgstr "Lecture des données GPS..."
 
-#: main-command.c:446
+#: main-command.c:451
 #, c-format
 msgid "Error parsing location.\n"
 msgstr "Erreur lors de l'analyse de l'emplacement.\n"
 
-#: main-command.c:451 main-command.c:460
+#: main-command.c:456 main-command.c:465
 #, c-format
 msgid "Out of memory\n"
 msgstr "Manque de mémoire.\n"
 
-#: main-command.c:532
+#: main-command.c:537
 #, c-format
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
@@ -645,22 +651,22 @@ msgstr ""
 "qu'il\n"
 "est DE QUALITÉ LOYALE ET MARCHANDE ou APPROPRIÉ POUR UN BUT PARTICULIER.\n"
 
-#: main-command.c:589
+#: main-command.c:594
 #, c-format
 msgid "At least one image file name must be given.\n"
 msgstr "Au moins un fichier est nécessaire.\n"
 
-#: main-command.c:645
+#: main-command.c:650
 #, c-format
 msgid "A time offset must be given with the -z option to fix photos.\n"
 msgstr "Vous devez indiquer le décalage horaire des photos avec l'option -z.\n"
 
-#: main-command.c:663
+#: main-command.c:668
 #, c-format
 msgid "Cannot continue since no GPS data is available.\n"
 msgstr "Impossible de continuer car il n'y a pas de données GPS.\n"
 
-#: main-command.c:671
+#: main-command.c:676
 #, c-format
 msgid ""
 "Legend: . = Ok, / = Interpolated, < = Rounded, - = No match, ^ = Too far\n"
@@ -670,7 +676,7 @@ msgstr ""
 "        ^ = Trop loin, w = Echec de l'écriture, ? = Pas de date EXIF,\n"
 "        ! = Données GPS déjà présentes.\n"
 
-#: main-command.c:676
+#: main-command.c:681
 #, c-format
 msgid ""
 "\n"
@@ -679,57 +685,57 @@ msgstr ""
 "\n"
 "Corrélation : "
 
-#: main-command.c:712
+#: main-command.c:717
 #, c-format
 msgid "%s: Exact match: "
 msgstr "%s : Correspondance exacte : "
 
-#: main-command.c:722
+#: main-command.c:727
 #, c-format
 msgid "%s: Interpolated: "
 msgstr "%s : Interpolée(s): "
 
-#: main-command.c:732
+#: main-command.c:737
 #, c-format
 msgid "%s: Rounded: "
 msgstr "%s : Arrondie(s): "
 
-#: main-command.c:742
+#: main-command.c:747
 #, c-format
 msgid "%s: EXIF write failure: "
 msgstr "%s : Echec de l'écriture des données Exif :"
 
-#: main-command.c:750
+#: main-command.c:755
 #, c-format
 msgid "Lat %f, Long %f, Elev "
 msgstr "Lat %f, Long %f, Alti "
 
-#: main-command.c:755
+#: main-command.c:760
 #, c-format
 msgid "(unknown).\n"
 msgstr "(inconnu).\n"
 
-#: main-command.c:766
+#: main-command.c:771
 #, c-format
 msgid "%s: No match.\n"
 msgstr "%s : Pas de correspondance.\n"
 
-#: main-command.c:776
+#: main-command.c:781
 #, c-format
 msgid "%s: Too far from nearest point.\n"
 msgstr "%s: Trop loin du point le plus proche.\n"
 
-#: main-command.c:786
+#: main-command.c:791
 #, c-format
 msgid "%s: No EXIF date tag present.\n"
 msgstr "%s: Date absente dans les tags EXIF.\n"
 
-#: main-command.c:796
+#: main-command.c:801
 #, c-format
 msgid "%s: GPS Data already present.\n"
 msgstr "%s: Données GPS déjà présentes.\n"
 
-#: main-command.c:821
+#: main-command.c:826
 #, c-format
 msgid ""
 "\n"
@@ -738,24 +744,24 @@ msgstr ""
 "\n"
 "Processus de corrélation terminé.\n"
 
-#: main-command.c:826
+#: main-command.c:831
 #, c-format
 msgid "Used time zone offset %d:%02d\n"
 msgstr "Décalage de fuseau horaire utilisé %d:%02d\n"
 
-#: main-command.c:828
+#: main-command.c:833
 #, c-format
 msgid "Matched: %5d (%d Exact, %d Interpolated, %d Rounded).\n"
 msgstr "Correspondances : %5d (%d Exactes, %d Interpolatées, %d Arrondies).\n"
 
-#: main-command.c:831
+#: main-command.c:836
 #, c-format
 msgid "Failed:  %5d (%d Not matched, %d Write failure, %d Too Far,\n"
 msgstr ""
 "Échec : %5d (%d Pas de correspondance, %d Problème d'écriture, %d Trop "
 "loin,\n"
 
-#: main-command.c:834
+#: main-command.c:839
 #, c-format
 msgid "                %d No Date, %d GPS Already Present.)\n"
 msgstr "                %d Pas de date, %d Données GPS déjà présentes.)\n"

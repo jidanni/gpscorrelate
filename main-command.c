@@ -205,6 +205,11 @@ static int ShowFileDetails(const char* File, enum OutputFormat Format,
 			{
 				/* Now convert the time into Unixtime. */
 				time_t PhotoTime = ConvertTimeToUnixTime(Time, EXIF_DATE_FORMAT, Options);
+				static time_t LastGpxTime;
+				if (PhotoTime < LastGpxTime)
+					fprintf(stderr, _("Warning: image files are not ordered by time.\n"));
+				LastGpxTime = PhotoTime;
+
 				char GpxTime[24];
 				struct tm* Tm = gmtime(&PhotoTime);
 				strftime(GpxTime, sizeof(GpxTime), "%Y-%m-%dT%H:%M:%SZ", Tm);
