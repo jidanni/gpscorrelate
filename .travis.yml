@@ -253,9 +253,9 @@ script:
      ./gpscorrelate -V
       if [ "$CONFIG" = "debuglog" ] ; then
         # Debug logging enabled makes some tests fail due to differing output
-        make check | tee /dev/stderr | grep -q '16 test(s) have FAILED'
+        make check CHECK_OPTIONS=-v | tee /dev/stderr | grep -q '16 test(s) have FAILED'
       else
-        make check
+        make check CHECK_OPTIONS=-v
       fi
       # Mac OS needs this or else it will sometimes rebuild the binary on install
       sleep 1

@@ -41,7 +41,7 @@ task:
     # tests as a normal user to get around that problem. The log directory
     # must be world-writable since files will be written there.
     - install -d -m 0777 tests/log
-    - sudo -u nobody make check
+    - sudo -u nobody make check CHECK_OPTIONS=-v
 
   install_script:
     - make prefix= DESTDIR="${HOME}" install install-po install-desktop-file

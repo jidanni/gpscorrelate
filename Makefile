@@ -9,6 +9,7 @@ PKG_CONFIG=pkg-config
 CFLAGS   = -Wall -O2
 LDFLAGS  = -Wall -O2 -lm
 GTK      = 3
+CHECK_OPTIONS=
 
 COBJS    = main-command.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
 GOBJS    = main-gui.o gui.o unixtime.o gpx-read.o correlate.o exif-gps.o latlong.o
@@ -56,7 +57,7 @@ gpscorrelate-gui$(EXEEXT): $(GOBJS)
 *.o: *.h
 
 check: gpscorrelate$(EXEEXT)
-	(cd tests && ./testsuite)
+	(cd tests && ./testsuite $(CHECK_OPTIONS))
 
 clean:
 	rm -f *.o gpscorrelate$(EXEEXT) gpscorrelate-gui$(EXEEXT) doc/gpscorrelate-manpage.xml tests/log/* $(TARGETS)
