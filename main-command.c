@@ -7,7 +7,7 @@
  * Writes the output back into the GPS exif tags.
  */
 
-/* Copyright 2005-2019 Daniel Foote, Dan Fandrich.
+/* Copyright 2005-2020 Daniel Foote, Dan Fandrich.
  *
  * This file is part of gpscorrelate.
  *
@@ -80,7 +80,7 @@ static void PrintVersion(const char* ProgramName)
 {
 	printf(_("%s, ver. %s. %s\n"),
 	       ProgramName, PACKAGE_VERSION,
-	       _("Copyright (C) 2005-2019 Daniel Foote, Dan Fandrich"));
+	       _("Copyright (C) 2005-2020 Daniel Foote, Dan Fandrich"));
 }
 
 /* Function to print the usage info. */

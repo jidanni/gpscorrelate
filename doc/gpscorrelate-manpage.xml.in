@@ -4,7 +4,7 @@
 
   <!ENTITY dhfirstname "<firstname>Stefano</firstname>">
   <!ENTITY dhsurname   "<surname>Zacchiroli</surname>">
-  <!ENTITY dhdate      "<date>24 Oct 2019</date>">
+  <!ENTITY dhdate      "<date>03 Apr 2020</date>">
   <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
   <!ENTITY dhemail     "<email>zack@debian.org</email>">
   <!ENTITY dhusername  "Stefano Zacchiroli">
@@ -27,7 +27,7 @@
       &dhsurname;, Till Maas
     </author>
     <copyright>
-      <year>2006-2019</year>
+      <year>2006-2020</year>
       <holder>&dhusername; &dhemail;, Till Maas, Dan Fandrich</holder>
     </copyright>
     <version>
