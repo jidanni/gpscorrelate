@@ -29,6 +29,13 @@ Indique le fichier contenant les données GPS
 
 <tr>
 <td valign="top" nowrap="nowrap">
+<b>--latlong or -l LAT,LONG[,É]</b>
+</td><td>
+Indiquer la latitude/longitude/élévation directement.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
 <b>--timeadd or -z +/-XX:[XX]</b>
 </td><td>
 Indique le fuseau horaire des photos. Par exemple +1:00 pour l’heure normale d’Europe centrale (CET&nbsp;: Paris, Bruxelles, Genève…) et +2:00 pour l’heure d’été d’Europe centrale (CEST). Il est possible de le spécifier sous la forme &quot;1&quot;, &quot;+1&quot;, &quot;1:00&quot; ou &quot;+1:00&quot;.
@@ -57,6 +64,13 @@ Ne pas écrire les balises EXIF GPS dans le fichier. Utile avec-v pour faire un 
 
 <tr>
 <td valign="top" nowrap="nowrap">
+<b>--replace or -R</b>
+</td><td>
+Effacer et remplacer les tags GPS déjà présentés dans l'image.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
 <b>--datum or -d "datum"</b>
 </td><td>
 Spécifie le «&nbsp;datum&nbsp;» à inscrire dans les tags GPS EXIF. Par défaut c’est le WGS-84. En fait le format GPX n’est pas sensé contenir autre-chose que du WGS-84, donc n’utilisez cette option qu’en toute connaissance de cause.
@@ -74,6 +88,13 @@ Indique l’écart de temps maximum entre un point GPS et une photo pour établi
 <b>--show or -s</b>
 </td><td>
 Montre les données GPS contenues dans les tags EXIF des photos indiquées puis quitte.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--show-gpx or -x</b>
+</td><td>
+Similaire à --show mais en format GPX.
 </td></tr>
 
 <tr>
@@ -99,6 +120,13 @@ Ignore les balises tracksegment dans le fichier GPX originel et interpole entre 
 
 <tr>
 <td valign="top" nowrap="nowrap">
+<b>--no-mtime or -M</b>
+</td><td>
+Ne pas changer la date de dernière modification des fichiers.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
 <b>--fix-datestamps or -f</b>
 </td><td>
 Avant la version 1.5.2 deux bugs entraînaient l’écriture de fausses valeur pour les tags GPSDateStamp (date) et GPSTimeStamp tag (horaire). Cette option vérifiera chaque fichier et le corrigera éventuellement. Utilisez --no-write pour empêcher l’écriture (simple vérification). Cette option implique également --no-mtime. Vous aurez aussi besoin d’utiliser --timeadd pour préciser la différence entre l’heure UTC et l’heure locale des photos indiquées.
@@ -116,6 +144,20 @@ Avant la version 1.5.3, Longitude et Latitude étaient écrits en DD MM.MM. Depu
 <b>--photooffset or -O seconds</b>
 </td><td>
 Ce paramètre indique le décalage photo, c’est-à-dire un nombre de secondes à ajouter à l’horodatage de la photo. C’est la différence entre le temps GPS et celui de la photo. Voir <A HREF="concepts.html">Concepts de corrélation GPS</A> pour plus de détail sur son utilisation.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--help or -h</b>
+</td><td>
+Afficher un message d'aide.
+</td></tr>
+
+<tr>
+<td valign="top" nowrap="nowrap">
+<b>--version or -V</b>
+</td><td>
+Affiche les information de version.
 </td></tr>
 
 </table>
