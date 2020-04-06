@@ -40,7 +40,7 @@ test_script:
 # 3) File names on NTFS may not contain the double quote character (test 97).
 # 4) Characters in ISO 8859/1 on the command line don't seem to make it through
 # unscathed (test 113).
-# Until these are addressed (if it's even possible), consider 7 tests failing
+# Until these are addressed (if it's even possible), consider 8 tests failing
 # as success.
 - cmd: if [%CONFIG%]==[msys2] (
     bash -lc "cd $APPVEYOR_BUILD_FOLDER && make check > test.log; cat test.log; grep -q '8 test(s) have FAILED' test.log" )
