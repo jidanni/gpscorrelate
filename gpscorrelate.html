@@ -2,16 +2,16 @@
 <html>
 <head>
 <meta name="generator" content=
-"HTML Tidy for Linux/x86 (vers 25 March 2009), see www.w3.org">
+"HTML Tidy for HTML5 for Linux/x86 version 5.6.0">
 <meta http-equiv="Content-Type" content=
 "text/html; charset=us-ascii">
 <title>GPSCORRELATE</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084"
 alink="#0000FF">
-<div class="refentry"><a name="idp1349269428" id=
-"idp1349269428"></a>
+<div class="refentry"><a name="idp1387401028" id=
+"idp1387401028"></a>
 <div class="titlepage"></div>
 <div class="refnamediv">
 <h2>Name</h2>
@@ -36,8 +36,8 @@ filling EXIF fields</p>
 ...</p>
 </div>
 <div class="cmdsynopsis">
-<p><code class="command">gpscorrelate</code> -s | --show | -o |
---machine <em class=
+<p><code class="command">gpscorrelate</code> -s | --show | -x |
+--show-gpx | -o | --machine <em class=
 "replaceable"><code>image.jpg</code></em>...</p>
 </div>
 <div class="cmdsynopsis">
@@ -57,8 +57,8 @@ filling EXIF fields</p>
 --help</p>
 </div>
 </div>
-<div class="refsect1"><a name="idp1367581308" id=
-"idp1367581308"></a>
+<div class="refsect1"><a name="idp1387527764" id=
+"idp1387527764"></a>
 <h2>DESCRIPTION</h2>
 <p>This manual page documents the <span class=
 "command"><strong>gpscorrelate</strong></span> command. There is
@@ -77,8 +77,8 @@ GPS data available at moments before and after the image was taken
 can be used. A measure of the approximate accuracy of the GPS
 location reading is preserved when written into the image.</p>
 </div>
-<div class="refsect1"><a name="idp1367584052" id=
-"idp1367584052"></a>
+<div class="refsect1"><a name="idp1387530452" id=
+"idp1387530452"></a>
 <h2>OPTIONS</h2>
 <p>These programs follow the usual <acronym class=
 "acronym">GNU</acronym> command line syntax, with long options
@@ -122,6 +122,19 @@ separator.</p>
 <dd>
 <p>Only show the GPS data already in the given image's EXIF tags
 instead of correlating them.</p>
+</dd>
+<dt><span class="term"><code class="option">-x</code>, <code class=
+"option">--show-gpx</code></span></dt>
+<dd>
+<p>Only show the GPS data in the given images in GPX format. Note
+that the points are written in the order in which the images are
+found on the command-line, so be sure to give them in the order in
+which they were photographed. The <code class=
+"option">-z</code>/<code class="option">--timeadd</code> and
+<code class="option">-O</code>/<code class=
+"option">--photooffset</code> options are honoured just as in
+correlation to determine the correct time zone of the images.
+Images that can't be read or aren't GPS tagged are ignored.</p>
 </dd>
 <dt><span class="term"><code class="option">-o</code>, <code class=
 "option">--machine</code></span></dt>
@@ -283,8 +296,8 @@ copyright information.</p>
 </dl>
 </div>
 </div>
-<div class="refsect1"><a name="idp1368165396" id=
-"idp1368165396"></a>
+<div class="refsect1"><a name="idp1390552500" id=
+"idp1390552500"></a>
 <h2>EXAMPLES</h2>
 <p>To correlate all photos in a directory taken in western Europe
 in the summer (i.e., UTC-2):</p>
@@ -313,6 +326,12 @@ photo.jpg</code></strong></p>
 <p>Show existing GPS tags in a photo and output in CSV format:</p>
 <p><strong class="userinput"><code>gpscorrelate --show --machine
 photo.jpg</code></strong></p>
+<p>Create a GPX track from a set of images taken in the UK in
+winter that are already GPS tagged (e.g., as might come from a cell
+phone camera), which can be used to correlate other photos taken on
+another nearby camera:</p>
+<p><strong class="userinput"><code>gpscorrelate --show-gpx -z 0
+IMG*.JPG</code></strong></p>
 <p>Remove GPS tags from photos:</p>
 <p><strong class="userinput"><code>gpscorrelate --remove
 *.jpg</code></strong></p>
@@ -321,8 +340,8 @@ M&uuml;nster:</p>
 <p><strong class="userinput"><code>gpscorrelate -l
 48.398620,9.991417,522 -z 2 ulm.jpg</code></strong></p>
 </div>
-<div class="refsect1"><a name="idp1368172668" id=
-"idp1368172668"></a>
+<div class="refsect1"><a name="idp1390560308" id=
+"idp1390560308"></a>
 <h2>EXIT STATUS</h2>
 <p><span class="command"><strong>gpscorrelate</strong></span>
 returns <span class="errorcode">0</span> in case of success,
@@ -331,8 +350,8 @@ read or write error) and <span class="errorcode">2</span> in case
 of minor error (such as the given GPS track not covering the time
 of an image).</p>
 </div>
-<div class="refsect1"><a name="idp1368174676" id=
-"idp1368174676"></a>
+<div class="refsect1"><a name="idp1390562356" id=
+"idp1390562356"></a>
 <h2>SEE ALSO</h2>
 <p><span class="citerefentry"><span class=
 "refentrytitle">gpsd</span>(1)</span>, <span class=
@@ -346,13 +365,13 @@ of an image).</p>
 the filesystem at <code class=
 "filename">/usr/local/share/doc/gpscorrelate</code>.</p>
 </div>
-<div class="refsect1"><a name="idp1368177444" id=
-"idp1368177444"></a>
+<div class="refsect1"><a name="idp1390565188" id=
+"idp1390565188"></a>
 <h2>LICENSE</h2>
 <p>This manual page was initially written by Stefano Zacchiroli
 <code class="email">&lt;<a class="email" href=
 "mailto:zack@debian.org">zack@debian.org</a>&gt;</code> for the
-<span class="productname">Debian</span>&trade; system. It was
+<span class="productname">Debian</span>&TRADE; system. It was
 extended by Till Maas <code class="email">&lt;<a class="email"
 href="mailto:opensource@till.name">opensource@till.name</a>&gt;</code>
 and Dan Fandrich <code class="email">&lt;<a class="email" href=
