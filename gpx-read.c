@@ -53,6 +53,7 @@ static void ExtractTrackPoints(xmlNodePtr Start)
 	const char* Long;
 	const char* Elev;
 	const char* Time;
+	const char* Heading;
 
 	for (Current = Start; Current; Current = Current->next)
 	{
@@ -67,6 +68,7 @@ static void ExtractTrackPoints(xmlNodePtr Start)
 			Long = NULL;
 			Elev = NULL;
 			Time = NULL;
+			Heading = NULL;
 			
 			/* To get the Lat and Long, we have to
 			 * extract the properties... another 
@@ -85,7 +87,7 @@ static void ExtractTrackPoints(xmlNodePtr Start)
 				}
 			}
 
-			/* Now, grab the elevation and time.
+			/* Now, grab the elevation, time and heading.
 			 * These are children of trkpt. */
 			/* Oh, and what's the deal with the
 			 * Node->children->content thing? */
@@ -98,10 +100,19 @@ static void ExtractTrackPoints(xmlNodePtr Start)
 					if (CCurrent->children)
 						Elev = (const char *)CCurrent->children->content;
 				}
-				if (strcmp((const char *)CCurrent->name, "time") == 0)
+				else if (strcmp((const char *)CCurrent->name, "time") == 0)
 				{
 					if (CCurrent->children)
 						Time = (const char *)CCurrent->children->content;
+				}
+				else if (strcmp((const char *)CCurrent->name, "course") == 0)
+				{
+					/* Technically, we want the heading, not the course, but if
+					 * that's all we have to work with, we'll have to use it. */
+					// TODO: is course even relevant? Is it the direction to the
+					// final destination, or is it the current direction of movement?
+					if (CCurrent->children)
+						Heading = (const char *)CCurrent->children->content;
 				}
 			}
 
@@ -140,6 +151,8 @@ static void ExtractTrackPoints(xmlNodePtr Start)
 			LastPoint->LongDecimals = 0;
 			LastPoint->Elev = 0;
 			LastPoint->ElevDecimals = -1; // default meaning no altitude was found
+			LastPoint->MoveHeading = -1; // default meaning no heading was found
+			LastPoint->Heading = -1; // this is set later, if enabled
 			LastPoint->Time = 0;
 			LastPoint->EndOfSegment = 0;
 
@@ -151,6 +164,9 @@ static void ExtractTrackPoints(xmlNodePtr Start)
 			if (Elev) {
 				LastPoint->Elev = atof(Elev);
 				LastPoint->ElevDecimals = NumDecimals(Elev);
+			}
+			if (Heading) {
+				LastPoint->MoveHeading = atof(Heading);
 			}
 			LastPoint->Time = ConvertToUnixTime(Time, GPX_DATE_FORMAT, 0, 0);
 			
