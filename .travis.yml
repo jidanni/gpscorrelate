@@ -150,6 +150,22 @@ matrix:
           - libgtk2.0-dev
           - g++-8
           - xsltproc
+  - env: CONFIG=gcc9 DIST=xenial
+    os: linux
+    dist: xenial
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - desktop-file-utils
+          - docbook-xsl
+          - exiv2
+          - libexiv2-dev
+          - libgtk2.0-dev
+          - g++-9
+          - xsltproc
   - env: CONFIG=sanitize DIST=xenial
     os: linux
     dist: xenial
@@ -229,6 +245,7 @@ script:
   - if [ "$CONFIG" = "clang7" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-7; CXX=clang++-7; fi
   - if [ "$CONFIG" = "clang8" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-8; CXX=clang++-8; fi
   - if [ "$CONFIG" = "gcc8" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; CC=gcc-8; CXX=g++-8; fi
+  - if [ "$CONFIG" = "gcc9" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; CC=gcc-9; CXX=g++-9; fi
 
     # Explicitly point to Homebrew's gettext and pkg-config files on OS X.
     # A couple of the Mac builds need XSLTFLAGS set to pass.
