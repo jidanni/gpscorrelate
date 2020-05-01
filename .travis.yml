@@ -95,6 +95,40 @@ matrix:
           - libexiv2-dev
           - libgtk-3-dev
           - xsltproc
+  - env: CONFIG=normal DIST=focal
+    os: linux
+    dist: focal
+    compiler: gcc
+  - env: CONFIG=normal DIST=focal GTK=3
+    os: linux
+    dist: focal
+    compiler: gcc
+    addons:
+      apt:
+        packages:
+          - desktop-file-utils
+          - docbook-xsl
+          - exiv2
+          - libexiv2-dev
+          - libgtk-3-dev
+          - xsltproc
+  - env: CONFIG=normal DIST=focal
+    os: linux
+    dist: focal
+    compiler: clang
+  - env: CONFIG=normal DIST=focal GTK=3
+    os: linux
+    dist: focal
+    compiler: clang
+    addons:
+      apt:
+        packages:
+          - desktop-file-utils
+          - docbook-xsl
+          - exiv2
+          - libexiv2-dev
+          - libgtk-3-dev
+          - xsltproc
   - env: CONFIG=normal DIST=bionic
     os: linux
     dist: bionic
@@ -188,22 +222,6 @@ matrix:
           - libgtk2.0-dev
           - g++-8
           - xsltproc
-  - env: CONFIG=gcc9 DIST=xenial
-    os: linux
-    dist: xenial
-    compiler: gcc
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk2.0-dev
-          - g++-9
-          - xsltproc
   - env: CONFIG=sanitize DIST=xenial
     os: linux
     dist: xenial
@@ -282,12 +300,10 @@ script:
     # FIXME: There are no tests for the GUI, so don't bother building it.
   - if [ "$CONFIG" = "coverage" ] ; then CFLAGS='-g -O0 --coverage'; LDFLAGS='$(CFLAGS)'; TARGET='gpscorrelate'; INSTALLTARGET='install-po install-desktop-file'; fi
   - if [ "$CONFIG" = "clang6" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-6.0; CXX=clang++-6.0; fi
-  - if [ "$CONFIG" = "clang7" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-7; CXX=clang++-7; fi
   - if [ "$CONFIG" = "clang8" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-8; CXX=clang++-8; fi
   - if [ "$CONFIG" = "clang9" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-9; CXX=clang++-9; fi
   - if [ "$CONFIG" = "clang10" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-10; CXX=clang++-10; fi
   - if [ "$CONFIG" = "gcc8" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; CC=gcc-8; CXX=g++-8; fi
-  - if [ "$CONFIG" = "gcc9" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; CC=gcc-9; CXX=g++-9; fi
 
     # Explicitly point to Homebrew's gettext and pkg-config files on OS X.
     # A couple of the Mac builds need XSLTFLAGS set to pass.
