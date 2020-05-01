@@ -52,6 +52,8 @@
 
 <p>Prior to version 1.1, this program ignored track segments and just hauled out points and considered them to be a single track. So if a photo was taken in between the time where there was no GPS data, you would not get a correct answer (depending on the situation). In current versions, the program will not match a photo between track segments. You can, however, choose to revert this behaviour. If the track was segmented during a period of steady, linear movement (like driving through a straight tunnel), then the interpolated position between segments will still end up being pretty accurate. Also, some apps will stop logging the position if you stay still for a while. The end of one segment will then be the same location as the beginning of the next.  In those cases it makes sense to interpolate between segments.</p>
 
+<p>Some GPX files include tags indicating the direction of movement. These can be used to write tags into the image indicating that direction as well as tags indicating the direction the camera was facing when the picture was taken. This is done by assuming that the camera is always facing a fixed orientation from the direction of movement, such as it the camera were mounted facing out the passenger window of a car, or mounted facing forward on the handlebars of a bicycle.</p>
+
 <h3>What you need to know:</h3>
 
 <ul>
@@ -86,6 +88,8 @@ GPS - Photo:             -80
 </pre>
 
 <p>The value determined in the above examples becomes the "Photo offset" time, in seconds, which is added to the photo's timestamp before the correlation is performed.</p>
+
+<p>Many GPS trackers allow setting the recording interval, which is often one second but can be considerably longer. The location will normally be interpolated between these two points which generally works well if any movement is linear and without a large change of speed and if the interval is short, but breaks down if either of those isn't true.  You can set a maximum time interval or maximum rotation beyond which tags won't be written, which reduces the chance of writing bad data into an image. For example, a car turning quickly relative to the storage of GPS course values (even if recorded at one second intervals) will invalidate an interpolated heading, and a bicycle riding down a windy trail being recorded at 15 second intervals can move far off an interpolated position in that time. Setting some limits will cause images taken during these times to be skipped.</p>
 
 <h3>What you need to know:</h3>
 
