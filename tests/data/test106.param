@@ -1,4 +1,4 @@
-TITLE='Specify out-of-range latitude (dms form)'
+TITLE='Specify out-of-range latitude minutes (dms form)'
 PRECOMMAND='cat "$STAGINGDIR/point1-1.jpg" >"$LOGDIR/test.jpg"'
 COMMAND='$PROGRAM -l -89d61m0s,123d0m0s "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1'
 POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'

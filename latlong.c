@@ -52,7 +52,7 @@ int NumDecimals(const char *Decimal)
    e.g. 12.3456 -123.45678 1234.56
 */
 #define DEC_DELIMS " \t,"
-#define DEC_NUMS "-+.0123456789"
+#define DEC_NUMS "-+.0123456789eE"  // E allows exponential notation
 static int ParseLatLongDecimal(const char *latlongstr, struct GPSPoint* point)
 {
 	char *num;
@@ -82,10 +82,12 @@ static int ParseLatLongDecimal(const char *latlongstr, struct GPSPoint* point)
 
 	/* Elevation */
 	num = strtok(NULL, DEC_DELIMS);
-	if (!num || strlen(num) != strspn(num, DEC_NUMS)) {
+	if (!num || !*num) {
 		/* No elevation given */
 		point->Elev = 0;
 		point->ElevDecimals = -1; /* default meaning no altitude was found */
+	} else if (strlen(num) != strspn(num, DEC_NUMS)) {
+		goto err;
 	} else {
 		point->Elev = strtod(num, NULL);
 		if (errno)
@@ -104,6 +106,13 @@ err:
 	return 0;
 }
 
+/* Skip leading spaces and commas. */
+static void SkipLeadingSep(char **str)
+{
+	while (**str == ' ' || **str == '\t' || **str == ',')
+		++*str;
+}
+
 #define D_DIGITS "-+0123456789"
 #define M_DIGITS "0123456789"
 #define S_DIGITS ".0123456789"
@@ -117,8 +126,7 @@ static double ParseDMS(char *latlongstr, char **endstr, int *dec)
 
 	/* Skip leading spaces and commas. Skipping commas at the beginning of
 	   the latitude isn't really very good, but GIGO. */
-	while (*latlongstr == ' ' || *latlongstr == '\t' || *latlongstr == ',')
-		++latlongstr;
+	SkipLeadingSep(&latlongstr);
 
 	/* Degrees
 	   The degrees symbol (\xc2\xb0 in UTF-8) only makes sense in UTF-8
@@ -198,6 +206,7 @@ static int ParseLatLongDMS(const char *latlongstr, struct GPSPoint* point)
 		point->Elev = 0;
 		point->ElevDecimals = -1; /* default meaning no altitude was found */
 	} else {
+		SkipLeadingSep(&endstr);
 		errno = 0; /* set by strtod */
 		point->Elev = strtod(endstr, NULL);
 		if (errno)

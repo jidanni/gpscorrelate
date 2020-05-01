@@ -1,9 +1,9 @@
-TITLE='Geotag a file from a specified latitude/longitude/elevation (dms forms with more spaces)'
+TITLE='Geotag a file from a specified latitude/longitude/elevation (dms forms with commas)'
 PRECOMMAND='cat "$STAGINGDIR/point1-1.jpg" >"$LOGDIR/test.jpg"'
 # A UTF-8 locale isn't strictly needed currently, but it's highly likely to be
 # present when the UTF-8 degrees symbol is being used, as it is here.
 # As can be seen, it's tricky to pass a single quote character into the test
 # suite.
-COMMAND='env LC_CTYPE=UTF-8 $PROGRAM -z+1 -l "-34d  56  08.9 	 -90°  0m  59.11111\"  -123.4 " "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
+COMMAND='env LC_CTYPE=UTF-8 $PROGRAM -z+1 -l "-34d56m8.9s,-90d0m59s,123.4" "$LOGDIR/test.jpg" > "$OUTFILE" 2>&1 && exiv2 -pv pr "$LOGDIR/test.jpg" >> "$OUTFILE" 2>&1'
 POSTCOMMAND='rm -f "$LOGDIR/test.jpg"'
 RESULTCODE=0
