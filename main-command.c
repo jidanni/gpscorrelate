@@ -449,17 +449,17 @@ int main(int argc, char** argv)
 				LatLong = NewGPSPoint();
 				if (!LatLong)
 				{
-					printf(_("Out of memory\n"));
+					fprintf(stderr, _("Out of memory.\n"));
 					exit(EXIT_FAILURE);
 				}
 				if (!ParseLatLong(optarg, LatLong))
 				{
-					printf(_("Error parsing location.\n"));
+					fprintf(stderr, _("Error parsing location.\n"));
 					exit(EXIT_FAILURE);
 				}
 				if (!MakeTrackFromLatLong(LatLong, &Track[NumTracks]))
 				{
-					printf(_("Out of memory\n"));
+					fprintf(stderr, _("Out of memory.\n"));
 					exit(EXIT_FAILURE);
 				}
 				free(LatLong);
@@ -470,7 +470,7 @@ int main(int argc, char** argv)
 				Track = (struct GPSTrack*) realloc(Track, sizeof(*Track)*(NumTracks+1));
 				if (!Track)
 				{
-					printf(_("Out of memory\n"));
+					fprintf(stderr, _("Out of memory.\n"));
 					exit(EXIT_FAILURE);
 				}
 				memset(&Track[NumTracks], 0, sizeof(*Track));
