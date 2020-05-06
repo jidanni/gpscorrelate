@@ -26,7 +26,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/* This data structure describes a single point. */
+/* This data structure describes a single point.
+ * The NewGpsPoint() function allocates an initialized one. */
 
 struct GPSPoint {
 	double Lat;

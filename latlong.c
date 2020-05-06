@@ -34,6 +34,23 @@
 #include "gpsstructure.h"
 #include "latlong.h"
 
+/* Initialize a new GPSPoint struct */
+struct GPSPoint *NewGPSPoint(void) {
+	struct GPSPoint *Point = (struct GPSPoint*) malloc(sizeof(struct GPSPoint));
+	if (Point) {
+		Point->Lat = 0;
+		Point->LatDecimals = 0;
+		Point->Long = 0;
+		Point->LongDecimals = 0;
+		Point->Elev = 0;
+		Point->ElevDecimals = -1;	// default meaning no altitude was found
+		Point->Time = 0;
+		Point->EndOfSegment = 0;
+		Point->Next = NULL;
+	}
+	return Point;
+}
+
 /* TODO: support locales that use other than "." as the decimal separator */
 
 /* Returns the number of decimal places in the given decimal number string
@@ -235,8 +252,8 @@ int ParseLatLong(const char *latlongstr, struct GPSPoint* point)
 /* Make a track from a single point */
 int MakeTrackFromLatLong(const struct GPSPoint* latlong, struct GPSTrack* track)
 {
-	struct GPSPoint* p1 = (struct GPSPoint*)malloc(sizeof(struct GPSPoint));
-	struct GPSPoint* p2 = (struct GPSPoint*)malloc(sizeof(struct GPSPoint));
+	struct GPSPoint* p1 = NewGPSPoint();
+	struct GPSPoint* p2 = NewGPSPoint();
 	if (!p1 || !p2) {
 		free(p1);
 		free(p2);

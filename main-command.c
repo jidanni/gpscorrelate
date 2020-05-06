@@ -392,7 +392,7 @@ int main(int argc, char** argv)
 	int FixDatestamps = 0;
 	int DegMinSecs = 1;
 	int PhotoOffset = 0;
-	struct GPSPoint LatLong;
+	struct GPSPoint *LatLong = NULL;
 
 	/* Create the empty terminating array entry */
 	Track = (struct GPSTrack*) calloc(1, sizeof(*Track));
@@ -446,16 +446,24 @@ int main(int argc, char** argv)
 				/* This parameter specifies a direct latitude/longitude
 				   coordinate to use for all images.
 				   It or 'g' must be present at least once. */
-				if (!ParseLatLong(optarg, &LatLong))
-				{
-					printf(_("Error parsing location.\n"));
-					exit(EXIT_FAILURE);
-				}
-				if (!MakeTrackFromLatLong(&LatLong, &Track[NumTracks]))
+				LatLong = NewGPSPoint();
+				if (!LatLong)
 				{
 					printf(_("Out of memory\n"));
 					exit(EXIT_FAILURE);
 				}
+				if (!ParseLatLong(optarg, LatLong))
+				{
+					printf(_("Error parsing location.\n"));
+					exit(EXIT_FAILURE);
+				}
+				if (!MakeTrackFromLatLong(LatLong, &Track[NumTracks]))
+				{
+					printf(_("Out of memory\n"));
+					exit(EXIT_FAILURE);
+				}
+				free(LatLong);
+				LatLong = NULL;
 
 				/* Make room for a new end-of-array entry */
 				++NumTracks;

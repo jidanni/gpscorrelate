@@ -119,12 +119,12 @@ static void ExtractTrackPoints(xmlNodePtr Start)
 			if (FirstPoint)
 			{
 				/* Ok, adding to the list... */
-				LastPoint->Next = (struct GPSPoint*) malloc(sizeof(struct GPSPoint));
+				LastPoint->Next = NewGPSPoint();
 				LastPoint = LastPoint->Next;
 				LastPoint->Next = NULL;
 			} else {
 				/* This is the first one. */
-				FirstPoint = (struct GPSPoint*) malloc(sizeof(struct GPSPoint));
+				FirstPoint = NewGPSPoint();
 				FirstPoint->Next = NULL;
 				LastPoint = FirstPoint;
 			}
@@ -132,16 +132,6 @@ static void ExtractTrackPoints(xmlNodePtr Start)
 				fprintf(stderr, _("Out of memory.\n"));
 				abort();
 			}
-
-			/* Clear the structure first... */
-			LastPoint->Lat = 0;
-			LastPoint->LatDecimals = 0;
-			LastPoint->Long = 0;
-			LastPoint->LongDecimals = 0;
-			LastPoint->Elev = 0;
-			LastPoint->ElevDecimals = -1; // default meaning no altitude was found
-			LastPoint->Time = 0;
-			LastPoint->EndOfSegment = 0;
 
 			/* Write the data into LastPoint, which should be a new point. */
 			LastPoint->Lat = atof(Lat);
