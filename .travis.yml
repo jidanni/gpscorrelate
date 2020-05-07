@@ -61,9 +61,9 @@ os:
 matrix:
   include:
   # Only run the coverage build in one configuration
-  - env: CONFIG=coverage DIST=bionic
+  - env: CONFIG=coverage DIST=focal
     os: linux
-    dist: bionic
+    dist: focal
     compiler: gcc
   - env: CONFIG=debuglog DIST=bionic
     os: linux
@@ -151,15 +151,12 @@ matrix:
           - libexiv2-dev
           - libgtk2.0-dev
           - xsltproc
-  - env: CONFIG=clang8 DIST=xenial
+  - env: CONFIG=clang8 DIST=focal
     os: linux
-    dist: xenial
+    dist: focal
     compiler: clang
     addons:
       apt:
-        sources:
-          - llvm-toolchain-trusty-8
-          - ubuntu-toolchain-r-test
         packages:
           - clang-8
           - desktop-file-utils
@@ -168,15 +165,15 @@ matrix:
           - libexiv2-dev
           - libgtk2.0-dev
           - xsltproc
-  - env: CONFIG=clang9 DIST=xenial
+  - env: CONFIG=clang9 DIST=focal
     os: linux
-    dist: xenial
+    dist: focal
     compiler: clang
     addons:
       apt:
         sources:
           sourceline:
-            - deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main
+            - deb http://apt.llvm.org/focal/ llvm-toolchain-focal-9 main
           key_url:
             - https://apt.llvm.org/llvm-snapshot.gpg.key
         packages:
@@ -187,15 +184,15 @@ matrix:
           - libexiv2-dev
           - libgtk2.0-dev
           - xsltproc
-  - env: CONFIG=clang10 DIST=xenial
+  - env: CONFIG=clang10 DIST=focal
     os: linux
-    dist: xenial
+    dist: focal
     compiler: clang
     addons:
       apt:
         sources:
           sourceline:
-            - deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-10 main
+            - deb http://apt.llvm.org/focal/ llvm-toolchain-focal-10 main
           key_url:
             - https://apt.llvm.org/llvm-snapshot.gpg.key
         packages:
@@ -222,15 +219,15 @@ matrix:
           - libgtk2.0-dev
           - g++-8
           - xsltproc
-  - env: CONFIG=sanitize DIST=xenial
+  - env: CONFIG=sanitize DIST=focal
     os: linux
-    dist: xenial
+    dist: focal
     compiler: clang
     addons:
       apt:
         sources:
           sourceline:
-            - deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-10 main
+            - deb http://apt.llvm.org/focal/ llvm-toolchain-focal-10 main
           key_url:
             - https://apt.llvm.org/llvm-snapshot.gpg.key
         packages:
@@ -277,11 +274,41 @@ matrix:
     os: linux
     dist: bionic
     compiler: gcc
+  - env: CONFIG=normal DIST=focal
+    arch: arm64
+    os: linux
+    dist: focal
+    compiler: gcc
+    addons:
+      apt:
+        packages:
+          - desktop-file-utils
+          - docbook-xsl
+          - exiv2
+          - gettext
+          - libexiv2-dev
+          - libgtk2.0-dev
+          - xsltproc
   - env: CONFIG=normal DIST=bionic GTK=3
     arch: ppc64le
     os: linux
     dist: bionic
     compiler: gcc
+  - env: CONFIG=normal DIST=focal GTK=3
+    arch: ppc64le
+    os: linux
+    dist: focal
+    compiler: gcc
+    addons:
+      apt:
+        packages:
+          - desktop-file-utils
+          - docbook-xsl
+          - exiv2
+          - gettext
+          - libexiv2-dev
+          - libgtk-3-dev
+          - xsltproc
 
 before_install:
   - GTK=${GTK:-2}
