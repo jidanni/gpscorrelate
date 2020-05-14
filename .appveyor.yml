@@ -28,6 +28,8 @@ test_script:
 # Cygwin allows overwriting read-only files for some strange reason, which
 # causes 4 tests to fail. Until that's sorted, consider 4 tests failing as
 # success.
+# This is probably because tasks are run with Administrator privileges; see:
+# https://help.appveyor.com/discussions/questions/1888-running-tests-with-reduced-privileges
 - cmd: if [%CONFIG%]==[cygwin] (
     C:\%CONFIG%\bin\bash -l -c "cd $APPVEYOR_BUILD_FOLDER && make check CHECK_OPTIONS=-v > test.log; cat test.log; grep -q '4 test(s) have FAILED' test.log" )
 - cmd: if [%CONFIG%]==[cygwin64] (
