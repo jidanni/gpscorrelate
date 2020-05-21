@@ -360,7 +360,7 @@ script:
         make check CHECK_OPTIONS=-v
       fi
       # Mac OS needs this or else it will sometimes rebuild the binary on install
-      sleep 1
+      sleep 2
       # Ensure brew gettext is in the PATH so xgettext is found on OS X
       PATH="$PATH:/usr/local/opt/gettext/bin" make prefix= DESTDIR="${HOME}" $INSTALLTARGET
     fi
