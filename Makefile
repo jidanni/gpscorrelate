@@ -103,17 +103,11 @@ install-po: build-po
 clean-po:
 	(cd po && $(MAKE) VERSION="$(PACKAGE_VERSION)" prefix="$(prefix)" top_srcdir="$(PWD)" clean)
 
-AUTHORS:
+AUTHORS: AUTHORS.extra
 	# Include authors here who aren't in the git commits
-	(git log HEAD | sed -n -e '/^Author:/s/^[^:]*: //p' ; printf "\
-Julio Castillo (Win32 support)\n\
-Marc Horowitz (remove tag, timezone patches)\n\
-Russell Steicke (mtime patch)\n\
-Tessa Fandrich (German translation)\n\
-Till Maas (install, doc patches)\n\
-Vincent Gay (French translation)\n\
-	" ) | sort -u > $@
+	(git log HEAD | sed -n -e '/^Author:/s/^[^:]*: //p' && cat AUTHORS.extra ) | sort -u > $@
 
+# Create a distribution archive
 dist: AUTHORS docs
 	mkdir gpscorrelate-$(PACKAGE_VERSION)
 	git archive --prefix=gpscorrelate-$(PACKAGE_VERSION)/ HEAD | tar xf -
