@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpscorrelate 2.0\n"
 "Report-Msgid-Bugs-To: dan@coneharvesters.com\n"
-"POT-Creation-Date: 2020-04-06 17:04+0200\n"
+"POT-Creation-Date: 2020-10-16 23:52-0700\n"
 "PO-Revision-Date: 2019-03-18 10:12+0300\n"
 "Last-Translator: Nikolay Korotkiy <sikmir@gmail.com>\n"
 "Language-Team: russian\n"
@@ -19,22 +19,22 @@ msgstr ""
 
 #: gpx-read.c:132 gui.c:195 gui.c:763 gui.c:951 gui.c:1020 gui.c:1285
 #: gui.c:1311 main-command.c:193 main-command.c:219 main-command.c:401
-#: main-command.c:439
+#: main-command.c:439 main-command.c:452 main-command.c:462 main-command.c:473
 #, c-format
 msgid "Out of memory.\n"
 msgstr ""
 
-#: gpx-read.c:233
+#: gpx-read.c:223
 #, c-format
 msgid "Failed to parse GPX data from %s.\n"
 msgstr "Не удалось прочитать GPX данные из %s.\n"
 
-#: gpx-read.c:244
+#: gpx-read.c:234
 #, c-format
 msgid "Invalid GPX file has no root.\n"
 msgstr "Неверный GPX файл не имеет корня.\n"
 
-#: gpx-read.c:257
+#: gpx-read.c:247
 #, c-format
 msgid "Invalid GPX file.\n"
 msgstr "Неверный GPX файл.\n"
@@ -592,125 +592,136 @@ msgstr ""
 msgid "Reading GPS Data..."
 msgstr ""
 
-#: main-command.c:451
+#: main-command.c:457
 #, c-format
 msgid "Error parsing location.\n"
 msgstr ""
 
-#: main-command.c:456 main-command.c:465
-#, c-format
-msgid "Out of memory\n"
-msgstr ""
-
-#: main-command.c:537
+#: main-command.c:545
 #, c-format
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
 
-#: main-command.c:594
+#: main-command.c:602
 #, c-format
 msgid "At least one image file name must be given.\n"
 msgstr ""
 
-#: main-command.c:650
+#: main-command.c:658
 #, c-format
 msgid "A time offset must be given with the -z option to fix photos.\n"
 msgstr ""
 
-#: main-command.c:668
+#: main-command.c:676
 #, c-format
 msgid "Cannot continue since no GPS data is available.\n"
 msgstr ""
 
-#: main-command.c:676
+#: main-command.c:684
 #, c-format
 msgid ""
 "Legend: . = Ok, / = Interpolated, < = Rounded, - = No match, ^ = Too far\n"
 "        w = Write Fail, ? = No EXIF date, ! = GPS already present\n"
 msgstr ""
 
-#: main-command.c:681
+#: main-command.c:689
 #, c-format
 msgid ""
 "\n"
 "Correlate: "
 msgstr ""
 
-#: main-command.c:717
+#: main-command.c:725
 #, c-format
 msgid "%s: Exact match: "
 msgstr ""
 
-#: main-command.c:727
+#: main-command.c:735
 #, c-format
 msgid "%s: Interpolated: "
 msgstr ""
 
-#: main-command.c:737
+#: main-command.c:745
 #, c-format
 msgid "%s: Rounded: "
 msgstr ""
 
-#: main-command.c:747
+#: main-command.c:755
 #, c-format
 msgid "%s: EXIF write failure: "
 msgstr ""
 
-#: main-command.c:755
+#: main-command.c:763
 #, c-format
 msgid "Lat %f, Long %f, Elev "
 msgstr ""
 
-#: main-command.c:760
+#: main-command.c:768
 #, c-format
 msgid "(unknown).\n"
 msgstr ""
 
-#: main-command.c:771
+#: main-command.c:779
 #, c-format
 msgid "%s: No match.\n"
 msgstr ""
 
-#: main-command.c:781
+#: main-command.c:789
 #, c-format
 msgid "%s: Too far from nearest point.\n"
 msgstr ""
 
-#: main-command.c:791
+#: main-command.c:799
 #, c-format
 msgid "%s: No EXIF date tag present.\n"
 msgstr ""
 
-#: main-command.c:801
+#: main-command.c:809
 #, c-format
 msgid "%s: GPS Data already present.\n"
 msgstr ""
 
-#: main-command.c:826
+#: main-command.c:834
 #, c-format
 msgid ""
 "\n"
 "Completed correlation process.\n"
 msgstr ""
 
-#: main-command.c:831
+#: main-command.c:839
 #, c-format
 msgid "Used time zone offset %d:%02d\n"
 msgstr ""
 
-#: main-command.c:833
+#: main-command.c:841
 #, c-format
 msgid "Matched: %5d (%d Exact, %d Interpolated, %d Rounded).\n"
 msgstr ""
 
-#: main-command.c:836
+#: main-command.c:844
 #, c-format
 msgid "Failed:  %5d (%d Not matched, %d Write failure, %d Too Far,\n"
 msgstr ""
 
-#: main-command.c:839
+#: main-command.c:847
 #, c-format
 msgid "                %d No Date, %d GPS Already Present.)\n"
+msgstr ""
+
+#: io.github.dfandrich.gpscorrelate.metainfo.xml.in:9
+msgid ""
+"GPS Correlate takes a GPS track stored by any of a number of GPS devices and "
+"phone apps and correlates the time stamp of a digital photo with the "
+"location of the track at that same moment. The location of the image is then "
+"stamped directly into the image file using the appropriate EXIF GPS tags. "
+"The resulting image then contains not just the time the photo was taken but "
+"its exact location, too. The location is used by various other applications "
+"and services (such as Google Photos) to display a map of where the photo was "
+"taken."
+msgstr ""
+
+#: io.github.dfandrich.gpscorrelate.metainfo.xml.in:39
+msgid "Daniel Fandrich"
 msgstr ""

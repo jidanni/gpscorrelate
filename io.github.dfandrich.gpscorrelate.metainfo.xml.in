@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.dfandrich.gpscorrelate</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <_name>GPS Correlate</_name>
+  <_summary>GPS Correlate attaches EXIF GPS location tags to images.</_summary>
+  <description>
+    <_p>
+      GPS Correlate takes a GPS track stored by any of a number of GPS
+      devices and phone apps and correlates the time stamp of a digital
+      photo with the location of the track at that same moment. The
+      location of the image is then stamped directly into the image
+      file using the appropriate EXIF GPS tags. The resulting image
+      then contains not just the time the photo was taken but its exact
+	  location, too. The location is used by various other applications
+	  and services (such as Google Photos) to display a map of where
+	  the photo was taken.
+    </_p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image xml:lang="en">https://dfandrich.github.io/gpscorrelate/corr.png</image>
+      <image xml:lang="fr">https://dfandrich.github.io/gpscorrelate/fr/corr.png</image>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://dfandrich.github.io/gpscorrelate</url>
+  <url type="help">https://dfandrich.github.io/gpscorrelate/gui.html</url>
+  <url type="bugtracker">https://github.com/dfandrich/gpscorrelate/issues</url>
+  <url type="translate">https://github.com/dfandrich/gpscorrelate/tree/master/po</url>
+  <update_contact>dan_at_coneharvesters.com</update_contact>
+  <launchable type="desktop-id">gpscorrelate.desktop</launchable>
+  <kudos>
+    <kudo>HiDpiIcon</kudo>
+    <kudo>ModernToolkit</kudo>
+    <kudo>UserDocs</kudo>
+  </kudos>
+  <translation type="gettext">gpscorrelate</translation>
+  <developer_name>Daniel Fandrich</developer_name>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="@PACKAGE_VERSION@" date="@DATE@">
+      <url>https://github.com/dfandrich/gpscorrelate/releases/tag/@PACKAGE_VERSION@</url>
+    </release>
+  </releases>
+</component>

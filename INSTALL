@@ -11,6 +11,7 @@ To build, you will need these prerequisites:
   with manpages/docbook.xsl properly installed from
   http://docbook.sourceforge.net/projects/xsl/ or Internet access (xsltproc
   will download it automatically if it is not installed)
+* intltool (only for rebuilding the AppStream metadata file)
 
 You can build the command line version and the GUI together simply with:
   make

@@ -60,7 +60,7 @@ check: gpscorrelate$(EXEEXT)
 	(cd tests && ./testsuite $(CHECK_OPTIONS))
 
 clean:
-	rm -f *.o gpscorrelate$(EXEEXT) gpscorrelate-gui$(EXEEXT) doc/gpscorrelate-manpage.xml tests/log/* $(TARGETS)
+	rm -f *.o gpscorrelate$(EXEEXT) gpscorrelate-gui$(EXEEXT) doc/gpscorrelate-manpage.xml tests/log/* io.github.dfandrich.gpscorrelate.metainfo.xml $(TARGETS)
 
 distclean: clean clean-po
 	rm -f AUTHORS
@@ -93,6 +93,13 @@ doc/gpscorrelate.1: doc/gpscorrelate-manpage.xml
 doc/gpscorrelate.html: doc/gpscorrelate-manpage.xml
 	xsltproc $(XSLTFLAGS) -o $@ http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl $?
 
+# This is intended to be used only by the maintainer
+io.github.dfandrich.gpscorrelate.metainfo.xml: io.github.dfandrich.gpscorrelate.metainfo.xml.in
+	intltool-merge -x po $< $@
+	# Template substitutions plus hack to remove period to avoid having nearly duplicate translations
+	sed -E -e "s,@PACKAGE_VERSION@,$(PACKAGE_VERSION),g" -e "s,@DATE@,`date +%F`,g" -e 's,\.(</summary>),\1,' $@ > $@.tmp
+	mv -f $@.tmp $@
+
 build-po:
 	(cd po && $(MAKE) VERSION="$(PACKAGE_VERSION)" prefix="$(prefix)" top_srcdir="$(PWD)" update-po)
 	(cd po && $(MAKE) VERSION="$(PACKAGE_VERSION)" prefix="$(prefix)" top_srcdir="$(PWD)" all)
@@ -108,10 +115,10 @@ AUTHORS: AUTHORS.extra
 	(git log HEAD | sed -n -e '/^Author:/s/^[^:]*: //p' && cat AUTHORS.extra ) | sort -u > $@
 
 # Create a distribution archive
-dist: AUTHORS docs
+dist: AUTHORS io.github.dfandrich.gpscorrelate.metainfo.xml docs
 	mkdir gpscorrelate-$(PACKAGE_VERSION)
 	git archive --prefix=gpscorrelate-$(PACKAGE_VERSION)/ HEAD | tar xf -
-	install -m 0644 AUTHORS gpscorrelate-$(PACKAGE_VERSION)
+	install -m 0644 AUTHORS io.github.dfandrich.gpscorrelate.metainfo.xml gpscorrelate-$(PACKAGE_VERSION)
 	install -m 0644 doc/gpscorrelate.1 doc/gpscorrelate-manpage.xml doc/gpscorrelate.html gpscorrelate-$(PACKAGE_VERSION)/doc
 	-rm gpscorrelate-$(PACKAGE_VERSION)/po/stamp-po
 	cd gpscorrelate-$(PACKAGE_VERSION)/po && $(MAKE) VERSION="$(PACKAGE_VERSION)" prefix="$(prefix)" top_srcdir="$(PWD)" gpscorrelate.pot-update clean

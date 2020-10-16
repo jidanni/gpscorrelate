@@ -1,5 +1,6 @@
 *.o
 AUTHORS
+io.github.dfandrich.gpscorrelate.metainfo.xml
 doc/gpscorrelate.1
 doc/gpscorrelate-manpage.xml
 doc/gpscorrelate.html
