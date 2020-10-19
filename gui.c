@@ -844,15 +844,26 @@ void AddPhotosButtonPress( GtkWidget *Widget, gpointer Data )
 	(void) Data;    // Unused
 
 	/* Add some photos to this thing. */
+#if GTK_CHECK_VERSION(3, 20, 0)
+	GtkFileChooserNative *AddPhotosDialog;
+#else
 	GtkWidget *AddPhotosDialog;
+#endif
 
 	/* Get the dialog ready. */
+#if GTK_CHECK_VERSION(3, 20, 0)
+	AddPhotosDialog = gtk_file_chooser_native_new (_("Add Photos..."),
+			GTK_WINDOW(MatchWindow),
+			GTK_FILE_CHOOSER_ACTION_OPEN,
+			NULL, NULL);
+#else
 	AddPhotosDialog = gtk_file_chooser_dialog_new (_("Add Photos..."),
 			GTK_WINDOW(MatchWindow),
 			GTK_FILE_CHOOSER_ACTION_OPEN,
 			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 			NULL);
+#endif
 	gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(AddPhotosDialog), TRUE);
 	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(AddPhotosDialog), PhotoOpenDir);
 
@@ -871,10 +882,12 @@ void AddPhotosButtonPress( GtkWidget *Widget, gpointer Data )
 	}
 
 	/* Run the dialog. */
+#if GTK_CHECK_VERSION(3, 20, 0)
+	if (gtk_native_dialog_run (GTK_NATIVE_DIALOG (AddPhotosDialog)) == GTK_RESPONSE_ACCEPT)
+#else
 	if (gtk_dialog_run (GTK_DIALOG (AddPhotosDialog)) == GTK_RESPONSE_ACCEPT)
+#endif
 	{
-		/* Hide the dialog. */
-		gtk_widget_hide(AddPhotosDialog);
 		/* Haul out the selected files. 
 		 * We pass them along to another function that will
 		 * add them to the internal list and onto the screen. */
@@ -902,8 +915,11 @@ void AddPhotosButtonPress( GtkWidget *Widget, gpointer Data )
 	PhotoOpenDir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(AddPhotosDialog));
 
 	/* Now we're done with the dialog. See you! */
+#if GTK_CHECK_VERSION(3, 20, 0)
+	g_object_unref (AddPhotosDialog);
+#else
 	gtk_widget_destroy (AddPhotosDialog);
-
+#endif
 }
 
 void AddPhotoToList(const char* Filename)
@@ -1199,16 +1215,27 @@ void SelectGPSButtonPress( GtkWidget *Widget, gpointer Data )
 	(void) Data;    // Unused
 
 	/* Select and load some GPS data! */
+#if GTK_CHECK_VERSION(3, 20, 0)
+	GtkFileChooserNative *GPSDataDialog;
+#else
 	GtkWidget *GPSDataDialog;
+#endif
 	GtkWidget *ErrorDialog;
 	
 	/* Get the dialog ready... */
+#if GTK_CHECK_VERSION(3, 20, 0)
+	GPSDataDialog = gtk_file_chooser_native_new (_("Select GPS Data..."),
+			GTK_WINDOW(MatchWindow),
+			GTK_FILE_CHOOSER_ACTION_OPEN,
+			NULL, NULL);
+#else
 	GPSDataDialog = gtk_file_chooser_dialog_new (_("Select GPS Data..."),
 			GTK_WINDOW(MatchWindow),
 			GTK_FILE_CHOOSER_ACTION_OPEN,
 			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 			NULL);
+#endif
 
 	gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(GPSDataDialog), TRUE);
 	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(GPSDataDialog), GPXOpenDir);
@@ -1227,7 +1254,11 @@ void SelectGPSButtonPress( GtkWidget *Widget, gpointer Data )
 	}
 
 	/* Run the dialog... */
+#if GTK_CHECK_VERSION(3, 20, 0)
+	if (gtk_native_dialog_run (GTK_NATIVE_DIALOG (GPSDataDialog)) == GTK_RESPONSE_ACCEPT)
+#else
 	if (gtk_dialog_run (GTK_DIALOG (GPSDataDialog)) == GTK_RESPONSE_ACCEPT)
+#endif
 	{
 		/* Sanity check: free the GPS tracks in case we already have one.
 		 * Note: we check this now, because if we cancelled the dialog,
@@ -1238,10 +1269,7 @@ void SelectGPSButtonPress( GtkWidget *Widget, gpointer Data )
 			FreeTrack(&GPSData[NumTracks]);
 		}
 
-		/* Hide the "open" dialog. */
-		gtk_widget_hide(GPSDataDialog);
-
-		/* Display a dialog so the user knows whats going down. */
+		/* Display a dialog so the user knows what's going down. */
 		ErrorDialog = gtk_message_dialog_new (GTK_WINDOW(MatchWindow),
 			(GtkDialogFlags) (GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL),
 			GTK_MESSAGE_INFO,
@@ -1353,7 +1381,11 @@ void SelectGPSButtonPress( GtkWidget *Widget, gpointer Data )
 	GPXOpenDir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(GPSDataDialog));
 	
 	/* Now we're finished with the dialog... free it. */
+#if GTK_CHECK_VERSION(3, 20, 0)
+	g_object_unref (GPSDataDialog);
+#else
 	gtk_widget_destroy (GPSDataDialog);
+#endif
 
 }
 
