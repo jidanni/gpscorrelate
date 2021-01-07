@@ -1,0 +1,48 @@
+# Github Actions configuration
+name: Linux CI
+
+on:
+  # Trigger the workflow on push or pull requests, but only for the
+  # master and CI branches
+  push:
+    branches:
+      - master
+      - '*/ci'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build:
+        - name: normal
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          ldflags:
+          cc: gcc
+          cxx: g++
+          gtk: 2
+          make_opts:
+          target: all
+          install_target: install install-po install-desktop-file
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: 'install deps'
+      run: sudo apt-get install -y ${{ matrix.build.install }}
+
+    - name: 'build'
+      run: make CFLAGS="${{ matrix.build.cflags }}" LDFLAGS="${{ matrix.build.ldflags }}" CC="${{ matrix.build.cc }}" CXX="${{ matrix.build.cxx }}" GTK="${{ matrix.build.gtk }}" ${{ matrix.build.make_opts }} ${{ matrix.build.target }}
+
+    - name: 'smoke test'
+      run: ./gpscorrelate -V
+
+    - name: 'test'
+      run: make check CHECK_OPTIONS=-v
+
+    - name: 'install test'
+      run: make prefix= DESTDIR="${HOME}" ${{ matrix.build.target }}
