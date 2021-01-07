@@ -21,18 +21,8 @@ addons:
       - xsltproc
     config:
       retries: true
-  homebrew:
-    packages:
-      - desktop-file-utils
-      - docbook-xsl
-      - exiv2
-      - gtk+
-      - libxml2
-    # The default OS X image is now (August 2019) too old to work without this
-    update: true
 
 install:
-  - if [ "$CONFIG" = "coverage" ] ; then pip install --user cpp-coveralls; fi
   - |
     if [ "$CONFIG" = "musl" ] ; then
       echo > Dockerfile "
@@ -45,252 +35,15 @@ install:
     fi
 
 env:
-  # More configurations are configured in the matrix section
-  matrix:
-    - CONFIG=normal
-    - CONFIG=no-nls
   global:
     - MAKEFLAGS='-j 2'
 
-compiler:
-  - clang
-  - gcc
-
-os:
-  - linux
-  - osx
-
 matrix:
   include:
-  # Only run the coverage build in one configuration
-  - env: CONFIG=coverage DIST=focal
-    os: linux
-    dist: focal
-    compiler: gcc
-  - env: CONFIG=debuglog DIST=bionic
-    os: linux
-    dist: bionic
-    compiler: gcc
-  - env: CONFIG=no-werror DIST=xenial GTK=3
-    os: linux
-    dist: xenial
-    compiler: gcc
-    addons:
-      apt:
-        packages:
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk-3-dev
-          - xsltproc
-        config:
-          retries: true
-  - env: CONFIG=no-werror DIST=bionic GTK=3
-    os: linux
-    dist: bionic
-    compiler: gcc
-    addons:
-      apt:
-        packages:
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk-3-dev
-          - xsltproc
-        config:
-          retries: true
-  - env: CONFIG=normal DIST=focal
-    os: linux
-    dist: focal
-    compiler: gcc
-  - env: CONFIG=normal DIST=focal GTK=3
-    os: linux
-    dist: focal
-    compiler: gcc
-    addons:
-      apt:
-        packages:
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk-3-dev
-          - xsltproc
-        config:
-          retries: true
-  - env: CONFIG=normal DIST=focal
-    os: linux
-    dist: focal
-    compiler: clang
-  - env: CONFIG=normal DIST=focal GTK=3
-    os: linux
-    dist: focal
-    compiler: clang
-    addons:
-      apt:
-        packages:
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk-3-dev
-          - xsltproc
-        config:
-          retries: true
-  - env: CONFIG=normal DIST=bionic
-    os: linux
-    dist: bionic
-    compiler: gcc
-  - env: CONFIG=no-werror DIST=bionic
-    os: linux
-    dist: bionic
-    compiler: clang
-  - env: CONFIG=clang6 DIST=xenial
-    os: linux
-    dist: xenial
-    compiler: clang
-    addons:
-      apt:
-        packages:
-          - clang-6.0
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk2.0-dev
-          - xsltproc
-        config:
-          retries: true
-  - env: CONFIG=clang8 DIST=focal
-    os: linux
-    dist: focal
-    compiler: clang
-    addons:
-      apt:
-        packages:
-          - clang-8
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk2.0-dev
-          - xsltproc
-        config:
-          retries: true
-  - env: CONFIG=clang9 DIST=focal
-    os: linux
-    dist: focal
-    compiler: clang
-    addons:
-      apt:
-        sources:
-          sourceline:
-            - deb http://apt.llvm.org/focal/ llvm-toolchain-focal-9 main
-          key_url:
-            - https://apt.llvm.org/llvm-snapshot.gpg.key
-        packages:
-          - clang-9
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk2.0-dev
-          - xsltproc
-        config:
-          retries: true
-  - env: CONFIG=clang10 DIST=focal
-    os: linux
-    dist: focal
-    compiler: clang
-    addons:
-      apt:
-        sources:
-          sourceline:
-            - deb http://apt.llvm.org/focal/ llvm-toolchain-focal-10 main
-          key_url:
-            - https://apt.llvm.org/llvm-snapshot.gpg.key
-        packages:
-          - clang-10
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk2.0-dev
-          - xsltproc
-        config:
-          retries: true
-  - env: CONFIG=gcc8 DIST=xenial
-    os: linux
-    dist: xenial
-    compiler: gcc
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk2.0-dev
-          - g++-8
-          - xsltproc
-        config:
-          retries: true
-  - env: CONFIG=sanitize DIST=focal
-    os: linux
-    dist: focal
-    compiler: clang
-    addons:
-      apt:
-        sources:
-          sourceline:
-            - deb http://apt.llvm.org/focal/ llvm-toolchain-focal-10 main
-          key_url:
-            - https://apt.llvm.org/llvm-snapshot.gpg.key
-        packages:
-          - clang-10
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - libexiv2-dev
-          - libgtk2.0-dev
-          - xsltproc
-        config:
-          retries: true
   - env: CONFIG=musl DIST=alpine
     os: linux
     sudo: required
     services: docker
-  - env: CONFIG=no-werror GTK=3
-    os: osx
-    compiler: gcc
-    addons:
-      homebrew:
-        packages:
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - gtk+3
-          - libxml2
-        # The default OS X image is now (April 2020) too old to work without this
-        update: true
-  - env: CONFIG=normal
-    os: osx
-    osx_image: xcode11
-    compiler: clang
-    addons:
-      homebrew:
-        packages:
-          - desktop-file-utils
-          - docbook-xsl
-          - exiv2
-          - gtk+
-          - libxml2
-        # The default OS X image is now (April 2020) too old to work without this
-        update: true
   - env: CONFIG=normal DIST=bionic
     arch: arm64
     os: linux
@@ -346,21 +99,6 @@ script:
   - TARGET='all'
   - INSTALLTARGET='install install-po install-desktop-file'
   - if [ "$CONFIG" = "normal" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; fi
-  - if [ "$CONFIG" = "debuglog" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1 -DDEBUG'; fi
-  - if [ "$CONFIG" = "no-werror" ] ; then CFLAGS='-Wall -Wextra -O3 -DENABLE_NLS=1'; fi
-  - if [ "$CONFIG" = "no-nls" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3'; fi
-  - if [ "$CONFIG" = "sanitize" ] ; then CFLAGS='-g -O0 -fsanitize=address -fsanitize=undefined -DENABLE_NLS=1'; LDFLAGS='$(CFLAGS)'; export CC=clang-10; export ASAN_OPTIONS=strict_string_checks=0:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1; fi
-    # FIXME: There are no tests for the GUI, so don't bother building it.
-  - if [ "$CONFIG" = "coverage" ] ; then CFLAGS='-g -O0 --coverage'; LDFLAGS='$(CFLAGS)'; TARGET='gpscorrelate'; INSTALLTARGET='install-po install-desktop-file'; fi
-  - if [ "$CONFIG" = "clang6" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-6.0; CXX=clang++-6.0; fi
-  - if [ "$CONFIG" = "clang8" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-8; CXX=clang++-8; fi
-  - if [ "$CONFIG" = "clang9" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-9; CXX=clang++-9; fi
-  - if [ "$CONFIG" = "clang10" ] ; then CFLAGS='-Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1'; CC=clang-10; CXX=clang++-10; fi
-  - if [ "$CONFIG" = "gcc8" ] ; then CFLAGS='-Wall -Wextra -Werror -O3 -DENABLE_NLS=1'; CC=gcc-8; CXX=g++-8; fi
-
-    # Explicitly point to Homebrew's gettext and pkg-config files on OS X.
-    # A couple of the Mac builds need XSLTFLAGS set to pass.
-  - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then CFLAGS="$CFLAGS -I/usr/local/opt/gettext/include"; LDFLAGS="$LDFLAGS -L/usr/local/opt/gettext/lib -lintl"; export PKG_CONFIG_PATH="$(brew --prefix libffi)/lib/pkgconfig/":"$(brew --prefix libxml2)/lib/pkgconfig/"; export XML_CATALOG_FILES="$(brew --prefix)/etc/xml/catalog"; fi
 
   - |
     set -e
@@ -379,18 +117,10 @@ script:
     else
       make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" CC="$CC" CXX="$CXX" GTK="$GTK" $MAKE_OPTS $TARGET
      ./gpscorrelate -V
-      if [ "$CONFIG" = "debuglog" ] ; then
-        # Debug logging enabled makes some tests fail due to differing output
-        make check CHECK_OPTIONS=-v | tee /dev/stderr | grep -q '16 test(s) have FAILED'
-      else
-        make check CHECK_OPTIONS=-v
-      fi
+      make check CHECK_OPTIONS=-v
       # Mac OS needs this or else it will sometimes rebuild the binary on install
       sleep 5
       # Ensure brew gettext is in the PATH so xgettext is found on OS X
       PATH="$PATH:/usr/local/opt/gettext/bin" make prefix= DESTDIR="${HOME}" $INSTALLTARGET
     fi
     set +e
-
-after_success:
-  - if [ "$CONFIG" = "coverage" ] ; then coveralls --gcov-options '\-lp'; fi

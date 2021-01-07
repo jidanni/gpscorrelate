@@ -1,48 +1,448 @@
 # Github Actions configuration
-name: Linux CI
+name: CI
 
 on:
   # Trigger the workflow on push or pull requests, but only for the
-  # master and CI branches
+  # master and ci branches
   push:
     branches:
       - master
-      - '*/ci'
+      - ci
   pull_request:
     branches:
       - master
 
+env:
+  MAKEFLAGS: -j 2
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-18_04:
+    runs-on: ubuntu-18.04
     strategy:
+      fail-fast: false
       matrix:
         build:
-        - name: normal
+        - cc: gcc
+          gtk: 2
           install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc
           cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
-          ldflags:
-          cc: gcc
           cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang
           gtk: 2
-          make_opts:
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: clang++
+          target: all
+          install_target: install install-po install-desktop-file
+        - name: no-nls
+          cc: gcc
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: gcc
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: clang++
+          target: all
+          install_target: install install-po install-desktop-file
+        - name: no-nls
+          cc: gcc
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - name: debuglog
+          cc: gcc
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1 -DDEBUG
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+          failing_tests: 16
+        - cc: gcc-8
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc gcc-8
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: gcc-8
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc gcc-8
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang-8
+          gtk: 2
+          install: clang-8 desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: clang++-8
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang-9
+          gtk: 2
+          install: clang-9 desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: clang++-9
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang-10
+          gtk: 2
+          install: clang-10 desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: clang++-10
+          target: all
+          install_target: install install-po install-desktop-file
+        - name: sanitize
+          cc: clang-10
+          gtk: 3
+          install: clang-10 desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc
+          cflags: -g -O0 -fsanitize=address -fsanitize=undefined -DENABLE_NLS=1
+          ldflags: -g -O0 -fsanitize=address -fsanitize=undefined
+          cxx: clang++-10
+          target: all
+          install_target: install install-po install-desktop-file
+          asan_options: strict_string_checks=0:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: 'install deps'
+      run: sudo apt-get update -y; sudo apt-get install -y ${{ matrix.build.install }}
+    - name: 'build'
+      run: make CFLAGS="${{ matrix.build.cflags }}" LDFLAGS="${{ matrix.build.ldflags }}" CC="${{ matrix.build.cc }}" CXX="${{ matrix.build.cxx }}" GTK="${{ matrix.build.gtk }}" ${{ matrix.build.make_opts }} ${{ matrix.build.target }}
+    - name: 'smoke test'
+      run: ./gpscorrelate -V
+    - name: 'test'
+      run: |
+        if [[ -z "${{ matrix.build.failing_tests }}" ]] ; then
+          make check CHECK_OPTIONS=-v ASAN_OPTIONS="${{ matrix.build.asan_options }}"
+        else
+          # Debug logging enabled makes some tests fail due to differing output
+          echo 'Expecting ${{ matrix.build.failing_tests }} test failures'
+          make check CHECK_OPTIONS=-v | tee /dev/stderr | grep -q '${{ matrix.build.failing_tests }} test(s) have FAILED'
+        fi
+    - name: 'install test'
+      run: make prefix= DESTDIR="${PWD}" ${{ matrix.build.install_target }}
+
+# 20.04 is still in "preview" only (as of 2021-01), so don't switch to it by default yet
+  build-20_04:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        build:
+        - cc: gcc
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc gettext
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc gettext
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: clang++
+          target: all
+          install_target: install install-po install-desktop-file
+        - name: no-nls
+          cc: gcc
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc gettext
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: gcc
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc gettext
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc gettext
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: clang++
+          target: all
+          install_target: install install-po install-desktop-file
+        - name: no-nls
+          cc: gcc
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc gettext
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: gcc-10
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc gettext gcc-10
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: gcc-10
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc gettext gcc-10
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: g++
           target: all
           install_target: install install-po install-desktop-file
 
     steps:
     - uses: actions/checkout@v2
-
     - name: 'install deps'
-      run: sudo apt-get install -y ${{ matrix.build.install }}
-
+      run: sudo apt-get update -y; sudo apt-get install -y ${{ matrix.build.install }}
     - name: 'build'
       run: make CFLAGS="${{ matrix.build.cflags }}" LDFLAGS="${{ matrix.build.ldflags }}" CC="${{ matrix.build.cc }}" CXX="${{ matrix.build.cxx }}" GTK="${{ matrix.build.gtk }}" ${{ matrix.build.make_opts }} ${{ matrix.build.target }}
-
     - name: 'smoke test'
       run: ./gpscorrelate -V
-
     - name: 'test'
-      run: make check CHECK_OPTIONS=-v
-
+      run: |
+        if [[ -z "${{ matrix.build.failing_tests }}" ]] ; then
+          make check CHECK_OPTIONS=-v ASAN_OPTIONS="${{ matrix.build.asan_options }}"
+        else
+          # Debug logging enabled makes some tests fail due to differing output
+          echo 'Expecting ${{ matrix.build.failing_tests }} test failures'
+          make check CHECK_OPTIONS=-v | tee /dev/stderr | grep -q '${{ matrix.build.failing_tests }} test(s) have FAILED'
+        fi
     - name: 'install test'
-      run: make prefix= DESTDIR="${HOME}" ${{ matrix.build.target }}
+      run: make prefix= DESTDIR="${PWD}" ${{ matrix.build.install_target }}
+
+  build-16_04:
+    runs-on: ubuntu-16.04
+    strategy:
+      fail-fast: false
+      matrix:
+        build:
+        - cc: gcc
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: clang++
+          target: all
+          install_target: install install-po install-desktop-file
+        - name: no-nls
+          cc: gcc
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk2.0-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: gcc
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: clang++
+          target: all
+          install_target: install install-po install-desktop-file
+        - name: no-nls
+          cc: gcc
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: 'install deps'
+      run: sudo apt-get update -y; sudo apt-get install -y ${{ matrix.build.install }}
+    - name: 'build'
+      run: make CFLAGS="${{ matrix.build.cflags }}" LDFLAGS="${{ matrix.build.ldflags }}" CC="${{ matrix.build.cc }}" CXX="${{ matrix.build.cxx }}" GTK="${{ matrix.build.gtk }}" ${{ matrix.build.make_opts }} ${{ matrix.build.target }}
+    - name: 'smoke test'
+      run: ./gpscorrelate -V
+    - name: 'test'
+      run: |
+        if [[ -z "${{ matrix.build.failing_tests }}" ]] ; then
+          make check CHECK_OPTIONS=-v ASAN_OPTIONS="${{ matrix.build.asan_options }}"
+        else
+          # Debug logging enabled makes some tests fail due to differing output
+          echo 'Expecting ${{ matrix.build.failing_tests }} test failures'
+          make check CHECK_OPTIONS=-v | tee /dev/stderr | grep -q '${{ matrix.build.failing_tests }} test(s) have FAILED'
+        fi
+    - name: 'install test'
+      run: make prefix= DESTDIR="${PWD}" ${{ matrix.build.install_target }}
+
+  coverage:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        build:
+        - cc: gcc
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc lcov
+          cflags: -g -O0 --coverage
+          ldflags: -g -O0 --coverage
+          cxx: g++
+          target: gpscorrelate
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: 'install deps'
+      run: sudo apt-get update -y; sudo apt-get install -y ${{ matrix.build.install }}
+    - name: 'build'
+      run: make CFLAGS="${{ matrix.build.cflags }}" LDFLAGS="${{ matrix.build.ldflags }}" CC="${{ matrix.build.cc }}" CXX="${{ matrix.build.cxx }}" GTK="${{ matrix.build.gtk }}" ${{ matrix.build.make_opts }} ${{ matrix.build.target }}
+    - name: 'smoke test'
+      run: ./gpscorrelate -V
+    - name: 'test'
+      run: make check CHECK_OPTIONS=-v ASAN_OPTIONS="${{ matrix.build.asan_options }}"
+    - name: coverage analysis
+      run: mkdir coverage && lcov -c -d . -o coverage/lcov.info
+    - name: push to Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+
+  build-osx11:
+    runs-on: macos-11.0
+    strategy:
+      fail-fast: false
+      matrix:
+        build:
+        - cc: gcc
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 gtk+
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          ldflags: -O3 -lintl
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: gcc
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 gtk+3
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          ldflags: -O3 -lintl
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 gtk+
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          ldflags: -O3 -lintl
+          cxx: clang++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 gtk+3
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          ldflags: -O3 -lintl
+          cxx: clang++
+          target: all
+          install_target: install install-po install-desktop-file
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: install deps
+      run: brew install ${{ matrix.build.install }}
+    - name: build
+      run: make CFLAGS="${{ matrix.build.cflags }}" LDFLAGS="${{ matrix.build.ldflags }}" CC="${{ matrix.build.cc }}" CXX="${{ matrix.build.cxx }}" GTK="${{ matrix.build.gtk }}" ${{ matrix.build.make_opts }} XML_CATALOG_FILES="$(brew --prefix)/etc/xml/catalog" XSLTFLAGS=--nonet ${{ matrix.build.target }}
+    - name: smoke test
+      run: ./gpscorrelate -V
+    - name: test
+      run: |
+        if [[ -z "${{ matrix.build.failing_tests }}" ]] ; then
+          make check CHECK_OPTIONS=-v ASAN_OPTIONS="${{ matrix.build.asan_options }}"
+        else
+          # Debug logging enabled makes some tests fail due to differing output
+          echo 'Expecting ${{ matrix.build.failing_tests }} test failures'
+          make check CHECK_OPTIONS=-v | tee /dev/stderr | grep -q '${{ matrix.build.failing_tests }} test(s) have FAILED'
+        fi
+    - name: install test
+      run: make prefix= DESTDIR="${PWD}" ${{ matrix.build.install_target }}
+
+  build-osx10:
+    runs-on: macos-10.15
+    strategy:
+      fail-fast: false
+      matrix:
+        build:
+        - cc: gcc
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 gtk+
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          ldflags: -O3 -lintl
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: gcc
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 gtk+3
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          ldflags: -O3 -lintl
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang
+          gtk: 2
+          install: desktop-file-utils docbook-xsl exiv2 gtk+
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          ldflags: -O3 -lintl
+          cxx: clang++
+          target: all
+          install_target: install install-po install-desktop-file
+        - cc: clang
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 gtk+3
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          ldflags: -O3 -lintl
+          cxx: clang++
+          target: all
+          install_target: install install-po install-desktop-file
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: install deps
+      run: brew install ${{ matrix.build.install }}
+    - name: build
+      run: make CFLAGS="${{ matrix.build.cflags }}" LDFLAGS="${{ matrix.build.ldflags }}" CC="${{ matrix.build.cc }}" CXX="${{ matrix.build.cxx }}" GTK="${{ matrix.build.gtk }}" ${{ matrix.build.make_opts }} XML_CATALOG_FILES="$(brew --prefix)/etc/xml/catalog" XSLTFLAGS=--nonet ${{ matrix.build.target }}
+    - name: smoke test
+      run: ./gpscorrelate -V
+    - name: test
+      run: |
+        if [[ -z "${{ matrix.build.failing_tests }}" ]] ; then
+          make check CHECK_OPTIONS=-v ASAN_OPTIONS="${{ matrix.build.asan_options }}"
+        else
+          # Debug logging enabled makes some tests fail due to differing output
+          echo 'Expecting ${{ matrix.build.failing_tests }} test failures'
+          make check CHECK_OPTIONS=-v | tee /dev/stderr | grep -q '${{ matrix.build.failing_tests }} test(s) have FAILED'
+        fi
+    - name: install test
+      run: make prefix= DESTDIR="${PWD}" ${{ matrix.build.install_target }}
+
