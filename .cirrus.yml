@@ -5,8 +5,7 @@ task:
   name: FreeBSD
   freebsd_instance:
     matrix:
-      # A stable 13.0 image is expected 2021-03
-      image_family: freebsd-13-0-snap
+      image_family: freebsd-13-0
       image_family: freebsd-12-2
       image_family: freebsd-11-4
 
