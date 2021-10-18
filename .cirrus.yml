@@ -7,7 +7,6 @@ task:
     matrix:
       image_family: freebsd-13-0
       image_family: freebsd-12-2
-      image_family: freebsd-11-4
 
   env:
     # Set to 10 instead of 1 to avoid problems when new commits are submitted
