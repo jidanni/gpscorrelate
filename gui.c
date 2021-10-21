@@ -253,7 +253,7 @@ static void timezone_toggle_visibility(GtkWidget *widget,
 
 GtkWidget* CreateMatchWindow (void)
 {
-  GError *error;
+  GError *error = NULL;
   gboolean b;
 
   /* Load the settings. */
