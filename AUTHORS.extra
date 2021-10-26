@@ -1,6 +1,8 @@
 Julio Castillo (Win32 support)
 Marc Horowitz (remove tag, timezone patches)
+psykose (error init patch)
 Russell Steicke (mtime patch)
+Saijin-Naib (error init patch)
 Stefano Zacchiroli (man page)
 Tessa Fandrich (German translation)
 Till Maas (install, doc patches)
