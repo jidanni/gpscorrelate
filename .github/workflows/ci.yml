@@ -120,6 +120,14 @@ jobs:
           target: all
           install_target: install install-po install-desktop-file
           asan_options: strict_string_checks=0:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1
+        - name: 'compile as c++'
+          cc: g++
+          gtk: 3
+          install: desktop-file-utils docbook-xsl exiv2 libexiv2-dev libgtk-3-dev xsltproc gettext
+          cflags: -Wall -Wextra -Werror -Wno-error=deprecated-declarations -O3 -DENABLE_NLS=1
+          cxx: g++
+          target: all
+          install_target: install install-po install-desktop-file
 
     steps:
     - uses: actions/checkout@v2
