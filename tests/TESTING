@@ -3,11 +3,12 @@ gpscorrelate Test Framework
 The gpscorrelate test suite consists of a simple framework plus test data
 that allows basic regression tests to be run to validate the gpscorrelate
 code. It is designed primarily to run tests on the "gpscorrelate" executable
-but is flexible enough to run other programs as well.
+but is flexible enough to be used as the test framework to test other
+executables as well.
 
 The test framework provides the facility to compare the output of the
-program under test with an expected file, massage that file to make it
-easier to compare first, perform tests that are expected to fail, and
+program under test with an expected file, first massage that file to make it
+easier to compare, perform tests that are expected to fail, and
 perform arbitrary checks following the test.  It is driven by a test
 parameters file which contains instructions for running that test,
 plus a data file containing the data expected after running the test.
@@ -32,12 +33,13 @@ PRECOMMAND - A command to run before COMMAND (which must have a 0
 POSTCOMMAND - A command to run after COMMAND (which must have a 0
   exit status)
 RESULTCODE - The return status expected by the command (default 0)
-RESULTFILE - A file containing the expected output of the program; this will
-  be compared to $OUTFILE (default result/testN.result)
-SEDCOMMAND - A command passed to sed which modifies the output file
-  $OUTFILE; this can be used to remove parts of the file (like absolute
-  paths) that can be inconsistent between test runs
-SKIP - Set to "true" if this test should be skipped
+RESULTFILE - Path to a file containing the expected output of the program; this
+  will be compared to $OUTFILE (default result/testN.result)
+SEDCOMMAND - A command passed to sed (with extended regexes) which modifies the
+  output file $OUTFILE; this can be used to remove parts of the file (like
+  absolute paths) that can be inconsistent between test runs
+SKIP - Set to "true" if this test should be skipped (useful temporarily during
+  development)
 TITLE - A short descriptive name for the test (mandatory)
 
 These are the variables that are available for use in the parameters file:
