@@ -1,21 +1,18 @@
 # AppVeyor CI configuration file https://www.appveyor.com
 image: Visual Studio 2019
 environment:
-  CYGWIN_MIRROR: http://cygwin.mirror.constant.com
+  CYGWIN_MIRROR: https://cygwin.mirror.constant.com
   matrix:
   - CONFIG: cygwin
   - CONFIG: cygwin64
   - CONFIG: msys2
 
 install:
-# sed removes an unnecessary include in libexiv2-devel 0.27.3-1 that causes compile failure
 - cmd: if [%CONFIG%]==[cygwin] (
-    C:\cygwin\setup-x86.exe -qgnNdO -l C:\cygwin\var\cache\setup -R c:\cygwin -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel -P libgtk3-devel &&
-    C:\%CONFIG%\bin\sed -i -e "/winsock2.h/s@^@//@" /usr/include/exiv2/config.h
+    C:\cygwin\setup-x86.exe -qgnNdO -l C:\cygwin\var\cache\setup -R c:\cygwin -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel -P libgtk3-devel
     )
 - cmd: if [%CONFIG%]==[cygwin64] (
-    C:\cygwin64\setup-x86_64.exe -qgnNdO -l C:\cygwin64\var\cache\setup -R c:\cygwin64 -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel -P libgtk3-devel &&
-    C:\%CONFIG%\bin\sed -i -e "/winsock2.h/s@^@//@" /usr/include/exiv2/config.h
+    C:\cygwin64\setup-x86_64.exe -qgnNdO -l C:\cygwin64\var\cache\setup -R c:\cygwin64 -s "%CYGWIN_MIRROR%" -P exiv2 -P libexiv2-devel -P libxml2-devel -P libiconv-devel -P libgtk3-devel
     )
 - cmd: if [%CONFIG%]==[msys2] (
     set "PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%PATH%" )
@@ -52,3 +49,7 @@ test_script:
 # as success.
 - cmd: if [%CONFIG%]==[msys2] (
     bash -lc "cd $APPVEYOR_BUILD_FOLDER && make check CHECK_OPTIONS=-v > test.log; cat test.log; grep -q '8 test(s) have FAILED' test.log" )
+
+artifacts:
+  - path: gpscorrelate.exe
+  - path: gpscorrelate-gui.exe
