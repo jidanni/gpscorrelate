@@ -17,7 +17,7 @@ install:
 - cmd: if [%CONFIG%]==[msys2] (
     set "PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%PATH%" )
 - cmd: if [%CONFIG%]==[msys2] (
-    bash -lc "pacman -S --noconfirm --noprogressbar --needed mingw-w64-x86_64-{libxml2,libiconv,exiv2,pkg-config}" )
+    bash -lc "pacman -S --noconfirm --noprogressbar --needed mingw-w64-x86_64-{libxml2,libiconv,exiv2,gtk3,pkg-config}" )
 
 build_script:
 - cmd: if [%CONFIG%]==[cygwin] (
@@ -25,7 +25,7 @@ build_script:
 - cmd: if [%CONFIG%]==[cygwin64] (
     C:\%CONFIG%\bin\bash -e -l -c "cd $APPVEYOR_BUILD_FOLDER && make gpscorrelate gpscorrelate-gui CFLAGS='-Wall -Wextra -O3 -DENABLE_NLS' LDFLAGS='-lintl'" )
 - cmd: if [%CONFIG%]==[msys2] (
-    make EXEEXT=.exe gpscorrelate.exe CC=gcc CXX=g++ CFLAGS="-Wall -Wextra -O3 -DENABLE_NLS" LDFLAGS="-lintl" )
+    make EXEEXT=.exe gpscorrelate.exe gpscorrelate-gui.exe CC=gcc CXX=g++ CFLAGS="-Wall -Wextra -O3 -DENABLE_NLS" LDFLAGS="-lintl" )
 
 test_script:
 # Cygwin allows overwriting read-only files for some strange reason, which
