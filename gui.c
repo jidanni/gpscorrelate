@@ -146,12 +146,15 @@ struct GUIPhotoList* LastPhoto = NULL;
 struct GPSTrack* GPSData;  	// Array of track entries; empty entry is last
 int NumTracks;			// Number of entries at GPSData
 
+// Default values for configuration options
 static const char* const ConfigDefaults[] = {
 	"interpolate", "true",
 	"dontwrite", "false",
 	"nochangemtime", "false",
 	"betweensegments", "false",
 	"writeddmmss", "true",
+	"replace", "false",
+	"autotimezone", "true",
 	"maxgap", "0",
 	"timezone", "+0:00",
 	"photooffset", "0",
@@ -254,7 +257,6 @@ static void timezone_toggle_visibility(GtkWidget *widget,
 GtkWidget* CreateMatchWindow (void)
 {
   GError *error = NULL;
-  gboolean b;
 
   /* Load the settings. */
   LoadSettings();
@@ -471,10 +473,7 @@ GtkWidget* CreateMatchWindow (void)
   gtk_tooltips_set_tip (tooltips, AutoTimeZoneCheck,
     _("Assume the camera time zone is the same as the local time zone."), NULL);
 #endif
-  b = g_key_file_get_boolean(GUISettings, "default", "autotimezone", &error);
-  if (error && error->code)
-      b = TRUE;  /* Default this to true */
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (AutoTimeZoneCheck), b);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (AutoTimeZoneCheck), g_key_file_get_boolean(GUISettings, "default", "autotimezone", &error));
 
   OptionsTable = gtk_table_new (4, 2, FALSE);
   gtk_widget_show (OptionsTable);
