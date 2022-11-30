@@ -1,5 +1,5 @@
 # AppVeyor CI configuration file https://www.appveyor.com
-image: Visual Studio 2019
+image: Visual Studio 2022
 environment:
   CYGWIN_MIRROR: https://cygwin.mirror.constant.com
   matrix:
