@@ -44,7 +44,7 @@ freebsd_task:
 linux_arm_task:
   name: ARM Linux
   arm_container:
-    image: ubuntu:21.04
+    image: ubuntu:22.04
     memory: 400M
 
   env:
@@ -84,7 +84,7 @@ linux_arm_task:
 linux_musl_task:
   name: Linux MUSL
   container:
-    image: alpine:3.16
+    image: alpine:3.17
     memory: 400M
 
   env:
