@@ -1,15 +1,84 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+ <!DOCTYPE html>
 <html><head>
 <link rel="alternate" hreflang="fr" href="fr/index.html">
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <link rel="icon" href="gpscorrelate-gui.svg">
 <title>GPS Correlate</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'nonce-QPyZJx8eYaVnIw'; script-src 'nonce-5sRIQ2e0mvI7Ig'; img-src 'self' img.shields.io github.com ci.appveyor.com api.cirrus-ci.com coveralls.io s3.amazonaws.com;">
+<link rel="author" href="mailto:dan&#64;coneharvesters.com">
+<style type="text/css" nonce="QPyZJx8eYaVnIw">
+<!--
+/* Flow text around the logo */
+.logo {
+  float: left;
+  padding-right: 2em;
+  padding-bottom: 1em;
+}
+h1 {
+  text-align: center;
+}
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: #eee;
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 150%;
+  font-weight: bold;
+  font-family: "serif";
+}
+.collapsible:after {
+  content: "+";
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+.collapsible.active:after {
+  content: "\2013"; /* UNICODE en dash */
+}
+/* Add a background color to the button if it is clicked on (.active
+   class is added in JS), and when the mouse hovers over it */
+.active, .collapsible:hover {
+  background-color: #ccc;
+}
+/* Style the collapsible content */
+.content {
+  padding: 0 0.5em;
+  display: block; /* starts as visible and collapsed after loading in JS */
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+-->
+</style>
+
+<script type="text/javascript" nonce="5sRIQ2e0mvI7Ig">
+function setup_collapsible() {
+  var coll = document.getElementsByClassName("collapsible");
+  for (var i = 0; i < coll.length; i++) {
+    /* Collapse text in JS so we know it can be uncollapsed later */
+    coll[i].nextElementSibling.style.display = "none";
+    /* Add click handler */
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    });
+  }
+}
+window.onload = setup_collapsible
+</script>
 </head>
 
 <body>
 
-<img src="gpscorrelate-gui.svg" alt="GPS Correlate logo" width="128" height="128" style="float: left; padding-right: 2em; padding-bottom: 1em;">
-<h1 align="center">GPS Correlate</h1>
+<img src="gpscorrelate-gui.svg" alt="GPS Correlate logo" width="128" height="128" class="logo">
+<h1>GPS Correlate</h1>
 
 <h2>What is it?</h2>
 
@@ -29,7 +98,16 @@ location, too. The location is used by various other applications and services
 <p>
 A typical use case would be to start a GPS tracking app on the phone in your
 pocket while taking pictures. After the shoot, download the track in GPX format
-to your computer along with the photos, then use gpscorrelate to combine the two.
+to your computer along with the photos, then use gpscorrelate to combine the
+two.
+<p>
+Most high-end DSLR and mirrorless cameras these days (as well as smartphones)
+have built-in GPS receivers that tag pictures automatically, but entry level
+models often do not. There are also cases where GPS signals are not available,
+such as inside some newer airplanes. In this latter case, the airplane's course
+can often be downloaded from web sites like FlightAware, converted to GPX
+format using gpsbabel, then correlated with pictures taken on board the plane
+with your camera.
 
 
 <h2>Documentation</h2>
@@ -75,7 +153,8 @@ Download the <a href="https://github.com/dfandrich/gpscorrelate/releases/latest"
 If you've found a problem with gpscorrelate, please
 <a href="https://github.com/dfandrich/gpscorrelate/issues">open an issue</a>.</p>
 
-<h2>Important Note for users before 1.5.2</h2>
+<button type="button" class="collapsible">Important Note for users before 1.5.2</button>
+<div class="content">
 
 <p>Prior to version 1.5.2, there was a bug in gpscorrelate that caused gpscorrelate to incorrectly parse dates. The result is that the internal date format was one month out (ie, December was considered as the following January, and January was considered as February).</p>
 
@@ -86,6 +165,7 @@ If you've found a problem with gpscorrelate, please
 <p>Version 1.5.2 introduces a new command line option, --fix-datestamps. Running gpscorrelate with this option and then a series of JPEG files that were tagged will detect and correct the problem. This will modify the GPSDateStamp and GPSTimeStamp tag to be correct, but only if this is required. You can run gpscorrelate with the -n (no write) option just to see which files are affected without making any changes. When correcting files, --no-mtime (don't change the mtime of the file) is implied.</p>
 
 <p>When using --fix-datestamps, you will also need to use --timeadd to specify the difference between the photo time and UTC.</p>
+</div>
 
 <h2>More information</h2>
 
